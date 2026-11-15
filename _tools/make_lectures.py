@@ -105,7 +105,7 @@ html{{scroll-behavior:smooth}}
 <p style="margin: 0; {F}; font-size: 14px; letter-spacing: 2px; color: #9CC3E8">LECTURES</p>
 <h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">AI 에이전트 유한요소 해석</h1>
 <p style="margin: 0; font-size: 18px; color: #C9D3E0">경북대학교 김영석 교수 · 스타웍스 신동우 · 강의 영상 {total}편</p>
-<p style="margin: 0; font-size: 14px; color: #9CC3E8">목록 확인 {D["checked"]}</p>
+<p style="margin: 0; font-size: 14px; color: #9CC3E8">최근 갱신 {D["updated"]}</p>
 </div>
 </section>
 
