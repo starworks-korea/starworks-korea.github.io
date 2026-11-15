@@ -6,13 +6,13 @@ D = json.load(open(os.path.join(HERE, "lectures.json"), encoding="utf-8"))
 FIELDS = [(f["key"], f["name"], f["color"], f["desc"]) for f in D["fields"]]
 V = {k: [] for k, *_ in FIELDS}
 for v in sorted(D["videos"], key=lambda x: x["num"]):
-    V[v["field"]].append((v["id"], v["title"], v["dur"], v["date"]))
+    V[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개")))
 # 해석 기초 예제 (강의 시리즈 밖 — 예약 작업이 videos를 바꿔도 그대로 둠)
 EX = D.get("examples", {"title": "", "desc": "", "fields": [], "videos": []})
 EXF = [(f["key"], f["name"], f["color"], f["desc"]) for f in EX["fields"]]
 EV = {k: [] for k, *_ in EXF}
 for v in sorted(EX["videos"], key=lambda x: x["num"]):
-    EV[v["field"]].append((v["id"], v["title"], v["dur"], v["date"]))
+    EV[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개")))
 F = "font-family: 'Noto Sans KR', sans-serif"
 e = html.escape
 total = sum(len(v) for v in V.values())
@@ -35,12 +35,14 @@ chips_ex = "\n".join(
  f'<a href="#{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{n} <span style="font-weight: 500; color: #5A6478">{len(EV[k])}</span></a>'
  for k,n,c,_ in EXF if EV[k])
 
-def card(name,color,num,vid,title,dur,date):
+VISC = {"공개": "#22C55E", "일부 공개": "#F59E0B"}
+def card(name,color,num,vid,title,dur,date,vis):
     ds=date.replace("-",". ")+"."
     url=f"https://youtu.be/{vid}"
     return f'''<a href="{url}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="{e(name)} {num} 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; {F}; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {VISC.get(vis, '#9CA3AF')}; display: inline-block"></span>{vis}</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">{dur}</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
@@ -67,6 +69,34 @@ def section_list(fields, vids):
 </section>''')
   return out
 sections = section_list(FIELDS, V)
+
+# 공개 범위 요약 (페이지 위쪽)
+def vis_rows(vis):
+    rows=[]
+    for fields, vids in ((FIELDS, V), (EXF, EV)):
+        for k,n,c,_ in fields:
+            for i,(vid,title,dur,date,vv) in enumerate(vids[k]):
+                if vv!=vis: continue
+                ds=date.replace("-",". ")+"."
+                rows.append(f'''<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/{vid}" target="_blank" rel="noopener"><span class="b" style="background: {c}">{e(n)} {i+1}</span><span class="t">{e(title)}</span><span class="d">{ds}</span></a></li>''')
+    return rows
+VIS_INFO = [("공개", "누구나 검색해서 볼 수 있는 영상"), ("일부 공개", "링크가 있는 사람만 볼 수 있는 영상")]
+vis_panels=[]
+for vis, note in VIS_INFO:
+    rows=vis_rows(vis)
+    if not rows: continue
+    vis_panels.append(f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
+<span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: {VISC[vis]}; display: inline-block"></span>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{vis} 영상</h2>
+<span style="font-size: 15px; font-weight: 700; color: #0070C0">{len(rows)}편</span>
+<span style="font-size: 14px; color: #5A6478">{note}</span>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none">
+{chr(10).join(rows)}
+</ul>
+</div>''')
+vis_html = chr(10).join(vis_panels)
 ex_sections = section_list(EXF, EV)
 
 desc_meta = f"김영석 교수(경북대학교)와 함께하는 「AI 에이전트 유한요소 해석」 강의 영상 {total}편 바로 가기 — 스타웍스"
@@ -98,6 +128,12 @@ html{{scroll-behavior:smooth}}
 .vcard{{transition:box-shadow .15s,transform .15s}}
 .vcard:hover{{box-shadow:0 6px 18px rgba(30,50,82,.14);transform:translateY(-2px);color:inherit}}
 .vcard:focus-visible{{outline:3px solid #0070C0;outline-offset:2px}}
+.vrow{{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}}
+.vrow .b{{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}}
+.vrow .t{{color:#1E3252}}
+.vrow .d{{font-size:13px;color:#5A6478;white-space:nowrap}}
+.vrow:hover .t{{color:#0070C0}}
+@media (max-width:600px){{.vrow{{grid-template-columns:auto 1fr}}.vrow .d{{justify-self:end}}.vrow .t{{grid-column:1 / -1;grid-row:2}}}}
 </style>
 </head>
 <body>
@@ -123,7 +159,13 @@ html{{scroll-behavior:smooth}}
 </div>
 </section>
 
-<section style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 24px">
+<section id="visibility" aria-label="공개 범위" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; align-items: start">
+{vis_html}
+</div>
+</section>
+
+<section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
 <nav aria-label="분야 바로 가기" style="display: flex; flex-wrap: wrap; gap: 8px">
 {chips}
 {chips_ex}
