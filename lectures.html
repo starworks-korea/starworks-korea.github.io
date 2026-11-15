@@ -1,21 +1,24 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>스타웍스 강의 영상 — AI 에이전트 유한요소 해석</title>
-<meta name="description" content="김영석 교수(경북대학교)와 함께하는 「AI 에이전트 유한요소 해석」 강의 영상 15편 바로 가기 — 스타웍스">
+<title>STAR Works Lectures — Finite Element Analysis with AI Agents</title>
+<meta name="description" content="15 lecture videos of “Finite Element Analysis with AI Agents” with Prof. Young-Suk Kim (Kyungpook National University) — STAR Works">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="스타웍스 STARWORKS">
-<meta property="og:title" content="스타웍스 강의 영상 — AI 에이전트 유한요소 해석">
-<meta property="og:description" content="김영석 교수(경북대학교)와 함께하는 「AI 에이전트 유한요소 해석」 강의 영상 15편 바로 가기 — 스타웍스">
+<meta property="og:site_name" content="STAR Works STARWORKS">
+<meta property="og:title" content="STAR Works Lectures — Finite Element Analysis with AI Agents">
+<meta property="og:description" content="15 lecture videos of “Finite Element Analysis with AI Agents” with Prof. Young-Suk Kim (Kyungpook National University) — STAR Works">
 <meta property="og:url" content="https://starworks-korea.github.io/lectures.html">
 <meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="https://starworks-korea.github.io/lectures.html">
+<link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/lectures.html">
+<link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/lectures.html">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap">
 <style>
 body{margin:0;background:#F4F6F9;word-break:keep-all;overflow-wrap:anywhere}
@@ -37,7 +40,7 @@ html{scroll-behavior:smooth}
 .vrow .t{color:#1E3252}
 .vrow .d{font-size:13px;color:#5A6478;white-space:nowrap}
 .vrow:hover .t{color:#0070C0}
-@media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}}
+@media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}h1{font-size:34px !important}}
 </style>
 </head>
 <body>
@@ -48,15 +51,16 @@ html{scroll-behavior:smooth}
 <a href="index.html" style="display: flex; align-items: center; gap: 10px; color: #FFFFFF">
 <img src="images/logo.svg" alt="STAR Works" style="height: 40px; width: auto; display: block">
 </a>
-<nav aria-label="주 메뉴" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
-<a href="index.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">회사소개</a>
-<a href="projects.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">프로젝트</a>
-<a href="lectures.html" aria-current="page" style="padding: 12px 14px; font-size: 15px; font-weight: 700; color: #FFFFFF; border-bottom: 2px solid #FFFFFF">강의 영상</a>
-<a href="tech.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">기술 영상</a>
-<a href="promo.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">홍보 영상</a>
-<a href="stories.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">이야기</a>
-<a href="contact.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">연락처</a>
-<a href="contact.html" style="margin-left: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">제작 문의</a>
+<nav aria-label="Main menu" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+<a href="index.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">About</a>
+<a href="projects.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Projects</a>
+<a href="lectures.html" aria-current="page" style="padding: 12px 14px; font-size: 15px; font-weight: 700; color: #FFFFFF; border-bottom: 2px solid #FFFFFF">Lectures</a>
+<a href="tech.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Tech</a>
+<a href="promo.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Promo</a>
+<a href="stories.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Stories</a>
+<a href="contact.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Contact</a>
+<a href="contact.html" style="margin-left: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">Request a Quote</a>
+<a href="ko/lectures.html" hreflang="ko" lang="ko" title="Korean version" style="margin-left: 4px; padding: 8px 12px; font-size: 13px; font-weight: 700; color: #FFFFFF; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px">🌐 한국어</a>
 </nav>
 </div>
 </header>
@@ -64,353 +68,353 @@ html{scroll-behavior:smooth}
 <section class="grid-bg" style="color: #FFFFFF">
 <div style="max-width: 1200px; margin: 0 auto; padding: 64px 24px 56px; display: flex; flex-direction: column; gap: 14px">
 <p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; letter-spacing: 2px; color: #9CC3E8">LECTURES</p>
-<h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">AI 에이전트 유한요소 해석</h1>
-<p style="margin: 0; font-size: 18px; color: #C9D3E0">경북대학교 김영석 교수 · 스타웍스 신동우 · 강의 영상 15편 · 해석 기초 예제 4편</p>
-<p style="margin: 0; font-size: 14px; color: #9CC3E8">최근 갱신 2026-11-15 19:00</p>
+<h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">Finite Element Analysis with AI Agents</h1>
+<p style="margin: 0; font-size: 18px; color: #C9D3E0">Prof. Young-Suk Kim, Kyungpook National University · Dong-Woo Shin, STAR Works · 15 lectures · 4 basic examples</p>
+<p style="margin: 0; font-size: 14px; color: #9CC3E8">Last updated 2026-11-15 19:00 (KST)</p>
 </div>
 </section>
 
-<section id="visibility" aria-label="공개 범위" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
+<section id="visibility" aria-label="Visibility" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; align-items: start">
 <div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
 <span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: #22C55E; display: inline-block"></span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">공개 영상</h2>
-<span style="font-size: 15px; font-weight: 700; color: #0070C0">9편</span>
-<span style="font-size: 14px; color: #5A6478">누구나 검색해서 볼 수 있는 영상</span>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">Public Videos</h2>
+<span style="font-size: 15px; font-weight: 700; color: #0070C0">9 videos</span>
+<span style="font-size: 14px; color: #5A6478">Anyone can find and watch these</span>
 </div>
 <ul style="margin: 0; padding: 0; list-style: none">
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/0QXhANZQQEI" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">파괴역학 1</span><span class="t">피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)</span><span class="d">2026. 11. 08.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/wbEDfxQmUjg" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">파괴역학 2</span><span class="t">CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄</span><span class="d">2026. 11. 08.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/ciChJzgvNv4" target="_blank" rel="noopener"><span class="b" style="background: #1f5fa8">소성역학 1</span><span class="t">열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)</span><span class="d">2026. 11. 08.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/RgkMhYia7k0" target="_blank" rel="noopener"><span class="b" style="background: #2f855a">고무역학 1</span><span class="t">고무 변형의 기초 — 세 가지 시험과 초탄성</span><span class="d">2026. 11. 08.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/quWufgmxWtU" target="_blank" rel="noopener"><span class="b" style="background: #2f855a">고무역학 2</span><span class="t">고무 뮬린스 효과 — Ogden–Roxburgh 모델</span><span class="d">2026. 11. 08.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/uCJZ7hxlCqU" target="_blank" rel="noopener"><span class="b" style="background: #4a5568">부트 구조해석 1</span><span class="t">AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 &amp; ANSYS (CVJ 부트)</span><span class="d">2026. 11. 06.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/cP24a6nVUZA" target="_blank" rel="noopener"><span class="b" style="background: #4a5568">부트 구조해석 2</span><span class="t">AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주</span><span class="d">2026. 11. 06.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/y8Lb9_IyAY8" target="_blank" rel="noopener"><span class="b" style="background: #0b84c6">유동해석 1</span><span class="t">해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다</span><span class="d">2026. 11. 06.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/bHiXW7Af56Q" target="_blank" rel="noopener"><span class="b" style="background: #0b84c6">유동해석 2</span><span class="t">(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model</span><span class="d">2026. 11. 06.</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/0QXhANZQQEI" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">Fracture Mechanics 1</span><span class="t">Fatigue Crack Growth — Newman Crack-Closure Model (Example 6-4)</span><span class="d">Nov 8, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/wbEDfxQmUjg" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">Fracture Mechanics 2</span><span class="t">Residual Stress at the Crack Tip of a CT Specimen — 2024-T3 Aluminum</span><span class="d">Nov 8, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/ciChJzgvNv4" target="_blank" rel="noopener"><span class="b" style="background: #1f5fa8">Plasticity 1</span><span class="t">Shrink-Fit Compound Cylinder and Thermal Stress in Semiconductor Interconnects (Examples 6-8 · 6-9)</span><span class="d">Nov 8, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/RgkMhYia7k0" target="_blank" rel="noopener"><span class="b" style="background: #2f855a">Rubber Mechanics 1</span><span class="t">Rubber Deformation Basics — Three Tests and Hyperelasticity</span><span class="d">Nov 8, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/quWufgmxWtU" target="_blank" rel="noopener"><span class="b" style="background: #2f855a">Rubber Mechanics 2</span><span class="t">The Mullins Effect in Rubber — Ogden–Roxburgh Model</span><span class="d">Nov 8, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/uCJZ7hxlCqU" target="_blank" rel="noopener"><span class="b" style="background: #4a5568">Boot Structural Analysis 1</span><span class="t">AI Agent vs. Rubber Boot FEA — CCX, In-House Fortran Solver &amp; ANSYS (CVJ Boot)</span><span class="d">Nov 6, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/cP24a6nVUZA" target="_blank" rel="noopener"><span class="b" style="background: #4a5568">Boot Structural Analysis 2</span><span class="t">Nonlinear Rubber Boot Analysis with an AI Agent — No Commercial Software, In-House Fortran Solver to 52°</span><span class="d">Nov 6, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/y8Lb9_IyAY8" target="_blank" rel="noopener"><span class="b" style="background: #0b84c6">CFD 1</span><span class="t">CFD by Chat, No Analysis Software — AI Is Just the Tool, People Choose the Model</span><span class="d">Nov 6, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/bHiXW7Af56Q" target="_blank" rel="noopener"><span class="b" style="background: #0b84c6">CFD 2</span><span class="t">CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model (English Version)</span><span class="d">Nov 6, 2026</span></a></li>
 </ul>
 </div>
 <div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
 <span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">회원 공개 영상</h2>
-<span style="font-size: 15px; font-weight: 700; color: #0070C0">10편</span>
-<span style="font-size: 14px; color: #5A6478">링크를 받은 분께만 공개하는 영상</span>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">Unlisted Videos</h2>
+<span style="font-size: 15px; font-weight: 700; color: #0070C0">10 videos</span>
+<span style="font-size: 14px; color: #5A6478">Shared by link only</span>
 </div>
 <ul style="margin: 0; padding: 0; list-style: none">
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/Q2sy-o0cyQg" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">파괴역학 3</span><span class="t">CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)</span><span class="d">2026. 11. 10.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/HGGTSTMd9A8" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">파괴역학 4</span><span class="t">그림 3.16 식 정정 · J-적분 (검토용)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/3cfDfa7IRRY" target="_blank" rel="noopener"><span class="b" style="background: #1f5fa8">소성역학 2</span><span class="t">반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기</span><span class="d">2026. 11. 15.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/0Fy96KIkfAA" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">공업수학 1</span><span class="t">스프링-질량 강제진동 (예제 1-40)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/hznzu9yaNRE" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">공업수학 2</span><span class="t">사각형 막의 진동 (문제 1)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/-9DGrv6BE5E" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">공업수학 3</span><span class="t">정사각 평판 열전도 (문제 3)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/au0dfKm9ieM" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">공업수학 4</span><span class="t">정전기 포아송 방정식 (문제 4)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/3W3CjQu6VDk" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">공업수학 5</span><span class="t">확산 방정식과 기어 질화 (문제 5·6)</span><span class="d">2026. 11. 14.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/w4MPJeswcgQ" target="_blank" rel="noopener"><span class="b" style="background: #0e7c86">분자동역학 1</span><span class="t">나노 인덴테이션 분자동역학 — 2003 논문 검산부터 LAMMPS · 포트란, 전위 · EAM 비교까지</span><span class="d">2026. 11. 15.</span></a></li>
-<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/wX1IDBqFKXg" target="_blank" rel="noopener"><span class="b" style="background: #7b4a1e">이산요소법 1</span><span class="t">전기차 배터리 전극 압착 — LFP 계열 양극을 눌러 공극률 줄이기 (3D 이산요소법)</span><span class="d">2026. 11. 15.</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/Q2sy-o0cyQg" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">Fracture Mechanics 3</span><span class="t">CT Specimen VCCT &amp; Compliance — Back to Standards and Theory (Research in Progress)</span><span class="d">Nov 10, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/HGGTSTMd9A8" target="_blank" rel="noopener"><span class="b" style="background: #c0392b">Fracture Mechanics 4</span><span class="t">Correcting the Equation in Fig. 3.16 · J-Integral (Under Review)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/3cfDfa7IRRY" target="_blank" rel="noopener"><span class="b" style="background: #1f5fa8">Plasticity 2</span><span class="t">Short-Circuit Risk from Thermal Deformation in Semiconductor Circuits — Example 6-9 Revisited</span><span class="d">Nov 15, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/0Fy96KIkfAA" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">Engineering Math 1</span><span class="t">Forced Vibration of a Spring–Mass System (Example 1-40)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/hznzu9yaNRE" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">Engineering Math 2</span><span class="t">Vibration of a Rectangular Membrane (Problem 1)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/-9DGrv6BE5E" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">Engineering Math 3</span><span class="t">Heat Conduction in a Square Plate (Problem 3)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/au0dfKm9ieM" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">Engineering Math 4</span><span class="t">Electrostatic Poisson Equation (Problem 4)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/3W3CjQu6VDk" target="_blank" rel="noopener"><span class="b" style="background: #d9730d">Engineering Math 5</span><span class="t">Diffusion Equation and Gear Nitriding (Problems 5 · 6)</span><span class="d">Nov 14, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/w4MPJeswcgQ" target="_blank" rel="noopener"><span class="b" style="background: #0e7c86">Molecular Dynamics 1</span><span class="t">Nanoindentation Molecular Dynamics — From Re-checking a 2003 Paper to LAMMPS · Fortran, Dislocations and EAM</span><span class="d">Nov 15, 2026</span></a></li>
+<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/wX1IDBqFKXg" target="_blank" rel="noopener"><span class="b" style="background: #7b4a1e">Discrete Element Method 1</span><span class="t">EV Battery Electrode Compaction — Pressing LFP-Type Cathodes to Reduce Porosity (3D DEM)</span><span class="d">Nov 15, 2026</span></a></li>
 </ul>
 </div>
 </div>
 <div style="margin-top: 20px">
 <div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
 <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">언어 버전</h2>
-<span style="font-size: 14px; color: #5A6478">한국어 · 영어 · 일본어 · 스페인어 · 기타 — 영상 수</span>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">Language Versions</h2>
+<span style="font-size: 14px; color: #5A6478">Korean · English · Japanese · Spanish · other — number of videos</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
 <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">한국어</p>
-<div class="lgrow"><span class="lg lg-o">원본 17</span><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 1</span></div>
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Korean</p>
+<div class="lgrow"><span class="lg lg-o">Original 17</span><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 1</span></div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">영어</p>
-<div class="lgrow"><span class="lg lg-o">원본 2</span><span class="lg lg-d">직접 더빙 5</span><span class="lg lg-a">자동 더빙 9</span><span class="lg lg-n">준비 중 3</span></div>
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">English</p>
+<div class="lgrow"><span class="lg lg-o">Original 2</span><span class="lg lg-d">Our dub 5</span><span class="lg lg-a">Auto dub 9</span><span class="lg lg-n">Coming soon 3</span></div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">일본어</p>
-<div class="lgrow"><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 18</span></div>
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Japanese</p>
+<div class="lgrow"><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 18</span></div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">스페인어</p>
-<div class="lgrow"><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 18</span></div>
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Spanish</p>
+<div class="lgrow"><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 18</span></div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">기타 언어</p>
-<div class="lgrow"><span class="lg lg-a">자동 더빙 18</span><span class="lg lg-n">준비 중 1</span></div>
-<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">인도네시아어 18편 · <span title="아랍어 · 벵골어 · 독일어 · 프랑스어 · 힌디어 · 이탈리아어 · 히브리어 · 말라얄람어 · 네덜란드어 · 펀자브어 · 폴란드어 · 포르투갈어 · 러시아어 · 타밀어 · 텔루구어 · 우크라이나어" style="text-decoration: underline dotted">그 밖의 16개 언어 1편</span></p>
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Other languages</p>
+<div class="lgrow"><span class="lg lg-a">Auto dub 18</span><span class="lg lg-n">Coming soon 1</span></div>
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">Indonesian 18 videos · <span title="Arabic · Bengali · German · French · Hindi · Italian · Hebrew · Malayalam · Dutch · Punjabi · Polish · Portuguese · Russian · Tamil · Telugu · Ukrainian" style="text-decoration: underline dotted">16 more languages in 1 video</span></p>
 </div>
 </div>
 <div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
-<span><span class="lg lg-o">원본</span> 원본 음성</span>
-<span><span class="lg lg-d">직접 더빙</span> 직접 만든 더빙·자막</span>
-<span><span class="lg lg-a">자동 더빙</span> 유튜브 자동 더빙</span>
-<span><span class="lg lg-n">준비 중</span> 제작 예정</span>
-<span>음성 언어 바꾸기: 유튜브 ⚙ 설정 → 오디오 트랙</span>
+<span><span class="lg lg-o">Original</span> original audio</span>
+<span><span class="lg lg-d">Our dub</span> our own dub & subtitles</span>
+<span><span class="lg lg-a">Auto dub</span> YouTube auto-dub</span>
+<span><span class="lg lg-n">Coming soon</span> in production</span>
+<span>Change audio language: YouTube ⚙ Settings → Audio track</span>
 </div>
 </div>
 </div>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
-<nav aria-label="분야 바로 가기" style="display: flex; flex-wrap: wrap; gap: 8px">
-<a href="#fracture" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #c0392b; display: inline-block"></span>파괴역학 <span style="font-weight: 500; color: #5A6478">4</span></a>
-<a href="#plasticity" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #1f5fa8; display: inline-block"></span>소성역학 <span style="font-weight: 500; color: #5A6478">2</span></a>
-<a href="#rubber" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #2f855a; display: inline-block"></span>고무역학 <span style="font-weight: 500; color: #5A6478">2</span></a>
-<a href="#math" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #d9730d; display: inline-block"></span>공업수학 <span style="font-weight: 500; color: #5A6478">5</span></a>
-<a href="#md" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #0e7c86; display: inline-block"></span>분자동역학 <span style="font-weight: 500; color: #5A6478">1</span></a>
-<a href="#dem" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #7b4a1e; display: inline-block"></span>이산요소법 <span style="font-weight: 500; color: #5A6478">1</span></a>
-<a href="#ex-boot" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #4a5568; display: inline-block"></span>부트 구조해석 <span style="font-weight: 500; color: #5A6478">2</span></a>
-<a href="#ex-cfd" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #0b84c6; display: inline-block"></span>유동해석 <span style="font-weight: 500; color: #5A6478">2</span></a>
+<nav aria-label="Jump to a field" style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="#fracture" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #c0392b; display: inline-block"></span>Fracture Mechanics <span style="font-weight: 500; color: #5A6478">4</span></a>
+<a href="#plasticity" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #1f5fa8; display: inline-block"></span>Plasticity <span style="font-weight: 500; color: #5A6478">2</span></a>
+<a href="#rubber" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #2f855a; display: inline-block"></span>Rubber Mechanics <span style="font-weight: 500; color: #5A6478">2</span></a>
+<a href="#math" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #d9730d; display: inline-block"></span>Engineering Math <span style="font-weight: 500; color: #5A6478">5</span></a>
+<a href="#md" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #0e7c86; display: inline-block"></span>Molecular Dynamics <span style="font-weight: 500; color: #5A6478">1</span></a>
+<a href="#dem" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #7b4a1e; display: inline-block"></span>Discrete Element Method <span style="font-weight: 500; color: #5A6478">1</span></a>
+<a href="#ex-boot" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #4a5568; display: inline-block"></span>Boot Structural Analysis <span style="font-weight: 500; color: #5A6478">2</span></a>
+<a href="#ex-cfd" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: #0b84c6; display: inline-block"></span>CFD <span style="font-weight: 500; color: #5A6478">2</span></a>
 </nav>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 16px 24px 32px">
 <section id="fracture" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #c0392b">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">파괴역학</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">4편</span>
-<span style="font-size: 14px; color: #5A6478">피로균열 · CT 시편 · VCCT · J-적분</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Fracture Mechanics</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">4 videos</span>
+<span style="font-size: 14px; color: #5A6478">Fatigue cracks · CT specimens · VCCT · J-integral</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/0QXhANZQQEI" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/0QXhANZQQEI/hqdefault.jpg" alt="파괴역학 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/0QXhANZQQEI/hqdefault.jpg" alt="Fracture Mechanics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">8:43</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">Fracture Mechanics 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 8, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Fatigue Crack Growth — Newman Crack-Closure Model (Example 6-4)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-d" title="English: our own dub & subtitles">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/wbEDfxQmUjg" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/wbEDfxQmUjg/hqdefault.jpg" alt="파괴역학 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/wbEDfxQmUjg/hqdefault.jpg" alt="Fracture Mechanics 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">9:51</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">Fracture Mechanics 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 8, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Residual Stress at the Crack Tip of a CT Specimen — 2024-T3 Aluminum</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-d" title="English: our own dub & subtitles">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/Q2sy-o0cyQg" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/Q2sy-o0cyQg/hqdefault.jpg" alt="파괴역학 3 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/Q2sy-o0cyQg/hqdefault.jpg" alt="Fracture Mechanics 3 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">7:41</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 3</span><time datetime="2026-11-10" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 10.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">Fracture Mechanics 3</span><time datetime="2026-11-10" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 10, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CT Specimen VCCT &amp; Compliance — Back to Standards and Theory (Research in Progress)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/HGGTSTMd9A8" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/HGGTSTMd9A8/hqdefault.jpg" alt="파괴역학 4 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/HGGTSTMd9A8/hqdefault.jpg" alt="Fracture Mechanics 4 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">5:40</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">그림 3.16 식 정정 · J-적분 (검토용)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">Fracture Mechanics 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Correcting the Equation in Fig. 3.16 · J-Integral (Under Review)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-n" title="English: coming soon">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="plasticity" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #1f5fa8">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">소성역학</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">2편</span>
-<span style="font-size: 14px; color: #5A6478">열박음 복합원관 · 반도체 회로 열응력</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Plasticity</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">2 videos</span>
+<span style="font-size: 14px; color: #5A6478">Shrink-fit compound cylinders · thermal stress in semiconductor circuits</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/ciChJzgvNv4" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/ciChJzgvNv4/hqdefault.jpg" alt="소성역학 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/ciChJzgvNv4/hqdefault.jpg" alt="Plasticity 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">10:30</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">소성역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">Plasticity 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 8, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Shrink-Fit Compound Cylinder and Thermal Stress in Semiconductor Interconnects (Examples 6-8 · 6-9)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-d" title="English: our own dub & subtitles">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/3cfDfa7IRRY" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/3cfDfa7IRRY/hqdefault.jpg" alt="소성역학 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/3cfDfa7IRRY/hqdefault.jpg" alt="Plasticity 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">6:28</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">소성역학 2</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 15.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">Plasticity 2</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 15, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Short-Circuit Risk from Thermal Deformation in Semiconductor Circuits — Example 6-9 Revisited</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-n" title="English: coming soon">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="rubber" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #2f855a">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">고무역학</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">2편</span>
-<span style="font-size: 14px; color: #5A6478">초탄성 · 뮬린스 효과</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Rubber Mechanics</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">2 videos</span>
+<span style="font-size: 14px; color: #5A6478">Hyperelasticity · Mullins effect</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/RgkMhYia7k0" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/RgkMhYia7k0/hqdefault.jpg" alt="고무역학 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/RgkMhYia7k0/hqdefault.jpg" alt="Rubber Mechanics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">7:42</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">고무역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">고무 변형의 기초 — 세 가지 시험과 초탄성</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">Rubber Mechanics 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 8, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Rubber Deformation Basics — Three Tests and Hyperelasticity</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-d" title="English: our own dub & subtitles">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/quWufgmxWtU" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/quWufgmxWtU/hqdefault.jpg" alt="고무역학 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/quWufgmxWtU/hqdefault.jpg" alt="Rubber Mechanics 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">5:41</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">고무역학 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">고무 뮬린스 효과 — Ogden–Roxburgh 모델</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">Rubber Mechanics 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 8, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">The Mullins Effect in Rubber — Ogden–Roxburgh Model</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-d" title="English: our own dub & subtitles">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="math" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #d9730d">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">공업수학</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">5편</span>
-<span style="font-size: 14px; color: #5A6478">진동 · 열전도 · 포아송 · 확산</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Engineering Math</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">5 videos</span>
+<span style="font-size: 14px; color: #5A6478">Vibration · heat conduction · Poisson · diffusion</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/0Fy96KIkfAA" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/0Fy96KIkfAA/hqdefault.jpg" alt="공업수학 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/0Fy96KIkfAA/hqdefault.jpg" alt="Engineering Math 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">2:23</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 1</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">스프링-질량 강제진동 (예제 1-40)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">Engineering Math 1</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Forced Vibration of a Spring–Mass System (Example 1-40)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/hznzu9yaNRE" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/hznzu9yaNRE/hqdefault.jpg" alt="공업수학 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/hznzu9yaNRE/hqdefault.jpg" alt="Engineering Math 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">5:09</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 2</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">사각형 막의 진동 (문제 1)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">Engineering Math 2</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Vibration of a Rectangular Membrane (Problem 1)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/-9DGrv6BE5E" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/-9DGrv6BE5E/hqdefault.jpg" alt="공업수학 3 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/-9DGrv6BE5E/hqdefault.jpg" alt="Engineering Math 3 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">3:37</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 3</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">정사각 평판 열전도 (문제 3)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">Engineering Math 3</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Heat Conduction in a Square Plate (Problem 3)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/au0dfKm9ieM" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/au0dfKm9ieM/hqdefault.jpg" alt="공업수학 4 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/au0dfKm9ieM/hqdefault.jpg" alt="Engineering Math 4 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">3:35</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">정전기 포아송 방정식 (문제 4)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">Engineering Math 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Electrostatic Poisson Equation (Problem 4)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/3W3CjQu6VDk" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/3W3CjQu6VDk/hqdefault.jpg" alt="공업수학 5 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/3W3CjQu6VDk/hqdefault.jpg" alt="Engineering Math 5 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">4:26</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 5</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">확산 방정식과 기어 질화 (문제 5·6)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">Engineering Math 5</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 14, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Diffusion Equation and Gear Nitriding (Problems 5 · 6)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="md" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #0e7c86">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">분자동역학</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">1편</span>
-<span style="font-size: 14px; color: #5A6478">나노 인덴테이션 · LAMMPS · 포트란 · 전위 · EAM</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Molecular Dynamics</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">1 video</span>
+<span style="font-size: 14px; color: #5A6478">Nanoindentation · LAMMPS · Fortran · dislocations · EAM</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/w4MPJeswcgQ" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/w4MPJeswcgQ/hqdefault.jpg" alt="분자동역학 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/w4MPJeswcgQ/hqdefault.jpg" alt="Molecular Dynamics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">9:06</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0e7c86; border-radius: 999px">분자동역학 1</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 15.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">나노 인덴테이션 분자동역학 — 2003 논문 검산부터 LAMMPS · 포트란, 전위 · EAM 비교까지</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0e7c86; border-radius: 999px">Molecular Dynamics 1</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 15, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Nanoindentation Molecular Dynamics — From Re-checking a 2003 Paper to LAMMPS · Fortran, Dislocations and EAM</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="dem" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #7b4a1e">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">이산요소법</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">1편</span>
-<span style="font-size: 14px; color: #5A6478">전기차 배터리 전극 압착 · 3D 이산요소법</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Discrete Element Method</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">1 video</span>
+<span style="font-size: 14px; color: #5A6478">EV battery electrode compaction · 3D DEM</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/wX1IDBqFKXg" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/wX1IDBqFKXg/hqdefault.jpg" alt="이산요소법 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>회원 공개</span>
+<img src="https://i.ytimg.com/vi/wX1IDBqFKXg/hqdefault.jpg" alt="Discrete Element Method 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block"></span>Unlisted</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">12:39</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #7b4a1e; border-radius: 999px">이산요소법 1</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 15.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">전기차 배터리 전극 압착 — LFP 계열 양극을 눌러 공극률 줄이기 (3D 이산요소법)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-n" title="기타: 준비 중">기타</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #7b4a1e; border-radius: 999px">Discrete Element Method 1</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 15, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">EV Battery Electrode Compaction — Pressing LFP-Type Cathodes to Reduce Porosity (3D DEM)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-n" title="English: coming soon">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-n" title="Other: coming soon">Other</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
@@ -420,75 +424,75 @@ html{scroll-behavior:smooth}
 <section id="examples" style="max-width: 1200px; margin: 0 auto; padding: 0 24px 32px">
 <div style="border-top: 1px solid #C9D3E0; padding-top: 32px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px">
 <p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; letter-spacing: 2px; color: #5A6478">EXAMPLES</p>
-<h2 style="margin: 0; font-size: 30px; font-weight: 900; color: #1E3252">해석 기초 예제</h2>
-<p style="margin: 0; font-size: 15px; color: #4A5568">스타웍스 · 상용 해석 프로그램 없이 AI 에이전트와 대화로 푼 기초 예제</p>
+<h2 style="margin: 0; font-size: 30px; font-weight: 900; color: #1E3252">Basic Analysis Examples</h2>
+<p style="margin: 0; font-size: 15px; color: #4A5568">STAR Works · basic examples solved by talking with an AI agent, without commercial analysis software</p>
 </div>
 <section id="ex-boot" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #4a5568">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">부트 구조해석</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">2편</span>
-<span style="font-size: 14px; color: #5A6478">CVJ 고무 부트 비선형 해석 · CCX · 자체 포트란 솔버 · ANSYS 비교</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">Boot Structural Analysis</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">2 videos</span>
+<span style="font-size: 14px; color: #5A6478">Nonlinear CVJ rubber boot analysis · CCX · in-house Fortran solver · ANSYS comparison</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/uCJZ7hxlCqU" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/uCJZ7hxlCqU/hqdefault.jpg" alt="부트 구조해석 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/uCJZ7hxlCqU/hqdefault.jpg" alt="Boot Structural Analysis 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">5:14</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">부트 구조해석 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 &amp; ANSYS (CVJ 부트)</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-a" title="한국어: 유튜브 자동 더빙">한국어</span><span class="lg lg-o" title="영어: 원본 음성">영어</span><span class="lg lg-a" title="일본어: 유튜브 자동 더빙">일본어</span><span class="lg lg-a" title="스페인어: 유튜브 자동 더빙">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 아랍어 · 벵골어 · 독일어 · 프랑스어 · 힌디어 · 인도네시아어 · 이탈리아어 · 히브리어 · 말라얄람어 · 네덜란드어 · 펀자브어 · 폴란드어 · 포르투갈어 · 러시아어 · 타밀어 · 텔루구어 · 우크라이나어">기타 17개</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">Boot Structural Analysis 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 6, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">AI Agent vs. Rubber Boot FEA — CCX, In-House Fortran Solver &amp; ANSYS (CVJ Boot)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-a" title="Korean: YouTube auto-dub">Korean</span><span class="lg lg-o" title="English: original audio">English</span><span class="lg lg-a" title="Japanese: YouTube auto-dub">Japanese</span><span class="lg lg-a" title="Spanish: YouTube auto-dub">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Arabic · Bengali · German · French · Hindi · Indonesian · Italian · Hebrew · Malayalam · Dutch · Punjabi · Polish · Portuguese · Russian · Tamil · Telugu · Ukrainian">Other 17</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/cP24a6nVUZA" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/cP24a6nVUZA/hqdefault.jpg" alt="부트 구조해석 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/cP24a6nVUZA/hqdefault.jpg" alt="Boot Structural Analysis 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">4:10</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">부트 구조해석 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">Boot Structural Analysis 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 6, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">Nonlinear Rubber Boot Analysis with an AI Agent — No Commercial Software, In-House Fortran Solver to 52°</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
 </section>
 <section id="ex-cfd" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid #0b84c6">
-<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">유동해석</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">2편</span>
-<span style="font-size: 14px; color: #5A6478">대화로 푸는 유동해석 · 모델은 사람이 정함 · 한국어판·영어판</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">CFD</h2>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">2 videos</span>
+<span style="font-size: 14px; color: #5A6478">CFD by chat · people choose the model · Korean &amp; English versions</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 <a href="https://youtu.be/y8Lb9_IyAY8" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/y8Lb9_IyAY8/hqdefault.jpg" alt="유동해석 1 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/y8Lb9_IyAY8/hqdefault.jpg" alt="CFD 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">4:48</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">유동해석 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">CFD 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 6, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CFD by Chat, No Analysis Software — AI Is Just the Tool, People Choose the Model</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-o" title="Korean: original audio">Korean</span><span class="lg lg-a" title="English: YouTube auto-dub">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 <a href="https://youtu.be/bHiXW7Af56Q" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
-<img src="https://i.ytimg.com/vi/bHiXW7Af56Q/hqdefault.jpg" alt="유동해석 2 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>공개</span>
+<img src="https://i.ytimg.com/vi/bHiXW7Af56Q/hqdefault.jpg" alt="CFD 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">4:38</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">유동해석 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
-<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model</h3>
-<div class="lgrow" aria-label="언어 버전"><span class="lg lg-n" title="한국어: 준비 중">한국어</span><span class="lg lg-o" title="영어: 원본 음성">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span><span class="lg lg-a" title="기타 유튜브 자동 더빙: 인도네시아어">기타 · 인도네시아어</span></div>
-<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">CFD 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">Uploaded Nov 6, 2026</time></div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model (English Version)</h3>
+<div class="lgrow" aria-label="Language versions"><span class="lg lg-n" title="Korean: coming soon">Korean</span><span class="lg lg-o" title="English: original audio">English</span><span class="lg lg-n" title="Japanese: coming soon">Japanese</span><span class="lg lg-n" title="Spanish: coming soon">Spanish</span><span class="lg lg-a" title="Other — YouTube auto-dub: Indonesian">Other · Indonesian</span></div>
+<span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
 </div>
@@ -498,18 +502,18 @@ html{scroll-behavior:smooth}
 <section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 72px">
 <div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; letter-spacing: 2px; color: #5A6478">교재</p>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">「소성역학과 응용」 2nd Ed. (2023)</h2>
-<p style="margin: 0; font-size: 15px; color: #4A5568">김영석 지음 · 시그마프레스 · 영문판 출간 예정</p>
+<p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; letter-spacing: 2px; color: #5A6478">TEXTBOOK</p>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">Plasticity and Its Applications (「소성역학과 응용」), 2nd Ed. (2023)</h2>
+<p style="margin: 0; font-size: 15px; color: #4A5568">By Young-Suk Kim · Sigma Press · Korean edition — English edition coming soon</p>
 </div>
-<a href="https://ridibooks.com/books/2224000497" target="_blank" rel="noopener" style="padding: 14px 22px; font-size: 15px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">리디북스 전자책 ↗</a>
+<a href="https://ridibooks.com/books/2224000497" target="_blank" rel="noopener" style="padding: 14px 22px; font-size: 15px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">e-Book on RIDIBOOKS ↗</a>
 </div>
 </section>
 
 <section class="cf" style="color: #FFFFFF">
 <div style="max-width: 1200px; margin: 0 auto; padding: 56px 24px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between">
-<h2 style="margin: 0; font-size: 28px; font-weight: 900">해석이 필요하신가요?</h2>
-<a href="contact.html" style="padding: 16px 28px; font-size: 16px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">해석 문의하기</a>
+<h2 style="margin: 0; font-size: 28px; font-weight: 900">Need an analysis?</h2>
+<a href="contact.html" style="padding: 16px 28px; font-size: 16px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">Ask About Analysis</a>
 </div>
 </section>
 
@@ -517,9 +521,9 @@ html{scroll-behavior:smooth}
 <div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; font-size: 14px; line-height: 1.8">
 <div>
 <img src="images/logo.svg" alt="STAR Works" style="height: 34px; width: auto; display: block; margin-bottom: 10px">
-<p style="margin: 0">스타웍스 · 대표 신동우</p>
-<p style="margin: 0">경북 경산시 남매공원로2길 10, 1층</p>
-<p style="margin: 0">Tel 010-4401-7115 · shindongwoo@gmail.com</p>
+<p style="margin: 0">STAR Works · CEO Dong-Woo Shin</p>
+<p style="margin: 0">1F, 10 Nammaegongwon-ro 2-gil, Gyeongsan-si, Gyeongsangbuk-do, Korea</p>
+<p style="margin: 0">Tel +82-10-4401-7115 · shindongwoo@gmail.com</p>
 </div>
 <p style="margin: 0; align-self: flex-end">© STARWORKS</p>
 </div>

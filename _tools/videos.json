@@ -13,19 +13,25 @@
      "key": "machining",
      "name": "가공",
      "color": "#c05621",
-     "desc": "AI 가공(라우터 CNC · 머시닝센터) · 조각기 MCT G코드"
+     "desc": "AI 가공(라우터 CNC · 머시닝센터) · 조각기 MCT G코드",
+     "name_en": "Machining",
+     "desc_en": "AI machining (router CNC · machining center) · engraver MCT G-code"
     },
     {
      "key": "product",
      "name": "제품 개발",
      "color": "#1f5fa8",
-     "desc": "휴머노이드 구동기 · 복합재 판스프링 · 면도기 · CFRP 소재분리기"
+     "desc": "휴머노이드 구동기 · 복합재 판스프링 · 면도기 · CFRP 소재분리기",
+     "name_en": "Product Development",
+     "desc_en": "Humanoid actuators · composite leaf springs · razor · CFRP material separator"
     },
     {
      "key": "fem",
      "name": "오픈소스 해석",
      "color": "#2f855a",
-     "desc": "FreeCAD FEM · 복합재 · 2재료"
+     "desc": "FreeCAD FEM · 복합재 · 2재료",
+     "name_en": "Open-Source Analysis",
+     "desc_en": "FreeCAD FEM · composites · two materials"
     }
    ],
    "videos": [
@@ -46,7 +52,8 @@
        ]
       }
      },
-     "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT (재업로드)"
+     "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT (재업로드)",
+     "title_en": "From One Drawing Photo to Machining-Center NC Code | AI Machining Part 2: MCT (Re-upload)"
     },
     {
      "field": "machining",
@@ -65,7 +72,8 @@
        ]
       }
      },
-     "title": "캠 프로그램 없이 말로만 시편을 깎다가 공구가 부러졌습니다 | AI 가공 1탄 라우터 CNC"
+     "title": "캠 프로그램 없이 말로만 시편을 깎다가 공구가 부러졌습니다 | AI 가공 1탄 라우터 CNC",
+     "title_en": "We Cut Test Specimens by Voice, No CAM — and Broke a Tool | AI Machining Part 1: Router CNC"
     },
     {
      "field": "machining",
@@ -80,7 +88,8 @@
       "es": "",
       "etc": {}
      },
-     "title": "복합소재 가공 조각기 MCT Gcode만들기 가공하기 나무 및 복합소재 시편 가공 및 모델링 포함"
+     "title": "복합소재 가공 조각기 MCT Gcode만들기 가공하기 나무 및 복합소재 시편 가공 및 모델링 포함",
+     "title_en": "Machining Composites on an Engraver/MCT — Making G-code, Cutting Wood & Composite Specimens, with Modeling"
     },
     {
      "field": "product",
@@ -99,7 +108,8 @@
        ]
       }
      },
-     "title": "산업용 휴머노이드 관절·손 구동기 — 우리가 만들 제품 (개념 설명)"
+     "title": "산업용 휴머노이드 관절·손 구동기 — 우리가 만들 제품 (개념 설명)",
+     "title_en": "Industrial Humanoid Joint & Hand Actuators — The Product We Will Build (Concept)"
     },
     {
      "field": "product",
@@ -114,7 +124,8 @@
       "es": "",
       "etc": {}
      },
-     "title": "[Composite Spring] Rear spring for 22-ton cargo truck"
+     "title": "[Composite Spring] Rear spring for 22-ton cargo truck",
+     "title_en": "[Composite Spring] Rear spring for 22-ton cargo truck"
     },
     {
      "field": "product",
@@ -129,7 +140,8 @@
       "es": "",
       "etc": {}
      },
-     "title": "[Composite Spring] Front spring for 22-ton cargo trucks"
+     "title": "[Composite Spring] Front spring for 22-ton cargo trucks",
+     "title_en": "[Composite Spring] Front spring for 22-ton cargo trucks"
     },
     {
      "field": "product",
@@ -140,7 +152,8 @@
      "lang": {
       "none": true
      },
-     "title": "카트리지 방식 면도기(친환경 플라스틱, 저자극 면도기)"
+     "title": "카트리지 방식 면도기(친환경 플라스틱, 저자극 면도기)",
+     "title_en": "Cartridge Razor (Eco-Friendly Plastic, Low-Irritation)"
     },
     {
      "field": "product",
@@ -151,7 +164,8 @@
      "lang": {
       "none": true
      },
-     "title": "CFRP 적용 고밀도 소재분리기"
+     "title": "CFRP 적용 고밀도 소재분리기",
+     "title_en": "High-Density Material Separator with CFRP"
     },
     {
      "field": "fem",
@@ -162,7 +176,8 @@
      "lang": {
       "none": true
      },
-     "title": "FreeCAD FEM Composite"
+     "title": "FreeCAD FEM Composite",
+     "title_en": "FreeCAD FEM Composite"
     },
     {
      "field": "fem",
@@ -173,7 +188,8 @@
      "lang": {
       "none": true
      },
-     "title": "FREECAD-FEM-2MAT"
+     "title": "FREECAD-FEM-2MAT",
+     "title_en": "FREECAD-FEM-2MAT"
     },
     {
      "field": "fem",
@@ -184,9 +200,13 @@
      "lang": {
       "none": true
      },
-     "title": "FreeCAD-FEM-Composite 오픈소스 프로그램으로 설계해석하기"
+     "title": "FreeCAD-FEM-Composite 오픈소스 프로그램으로 설계해석하기",
+     "title_en": "FreeCAD-FEM-Composite — Design Analysis with Open-Source Software"
     }
-   ]
+   ],
+   "nav_en": "Tech",
+   "title_en": "Tech & Product Videos",
+   "sub_en": "AI machining · product development · open-source analysis — what STAR Works built and tested"
   },
   {
    "key": "promo",
@@ -200,13 +220,17 @@
      "key": "irang",
      "name": "이랑산업",
      "color": "#1f5fa8",
-     "desc": "기업 소개 · SP3(셀토스) 가니쉬 로봇 조립 라인"
+     "desc": "기업 소개 · SP3(셀토스) 가니쉬 로봇 조립 라인",
+     "name_en": "E-Rang Industry",
+     "desc_en": "Company profile · SP3 (Seltos) garnish robotic assembly line"
     },
     {
      "key": "starworks",
      "name": "스타웍스",
      "color": "#0e7c86",
-     "desc": "플라스틱 골판지"
+     "desc": "플라스틱 골판지",
+     "name_en": "STAR Works",
+     "desc_en": "Plastic corrugated board"
     }
    ],
    "videos": [
@@ -243,7 +267,8 @@
        ]
       }
      },
-     "title": "이랑산업 | 자동차 인테리어에서 항공우주 및 AI 로봇까지 — 2026년 기업 소개"
+     "title": "이랑산업 | 자동차 인테리어에서 항공우주 및 AI 로봇까지 — 2026년 기업 소개",
+     "title_en": "E-Rang Industry | From Automotive Interiors to Aerospace and AI Robotics — 2026 Company Profile"
     },
     {
      "field": "irang",
@@ -262,7 +287,8 @@
        ]
       }
      },
-     "title": "이랑산업 | 자동차 실내부품에서 항공, AI 로봇까지 — 회사 소개 2026"
+     "title": "이랑산업 | 자동차 실내부품에서 항공, AI 로봇까지 — 회사 소개 2026",
+     "title_en": "E-Rang Industry | From Car Interior Parts to Aerospace and AI Robots — Company Introduction 2026"
     },
     {
      "field": "irang",
@@ -277,7 +303,8 @@
       "es": "",
       "etc": {}
      },
-     "title": "SP3(셀토스) 가니쉬 로봇 자동화 조립 라인 | 협동로봇·Fool-proof 공정 | 이랑산업·대한기계·스타웍스"
+     "title": "SP3(셀토스) 가니쉬 로봇 자동화 조립 라인 | 협동로봇·Fool-proof 공정 | 이랑산업·대한기계·스타웍스",
+     "title_en": "SP3 (Seltos) Garnish Robotic Assembly Line | Cobots & Fool-Proof Process | E-Rang Industry · Daehan Machinery · STAR Works"
     },
     {
      "field": "starworks",
@@ -292,9 +319,13 @@
       "es": "",
       "etc": {}
      },
-     "title": "체험학습용 플라스틱 골판지"
+     "title": "체험학습용 플라스틱 골판지",
+     "title_en": "Plastic Corrugated Board for Hands-On Learning"
     }
-   ]
+   ],
+   "nav_en": "Promo",
+   "title_en": "Promotional Videos",
+   "sub_en": "E-Rang Industry company profile · automated assembly line · STAR Works products"
   },
   {
    "key": "stories",
@@ -308,7 +339,9 @@
      "key": "old",
      "name": "옛날이야기",
      "color": "#b7791f",
-     "desc": "1950 대전 상공 · 마릴린 먼로 · 그 시절 컴퓨터 · 1991년 컴퓨터 학원"
+     "desc": "1950 대전 상공 · 마릴린 먼로 · 그 시절 컴퓨터 · 1991년 컴퓨터 학원",
+     "name_en": "Old Stories",
+     "desc_en": "Over Daejeon, 1950 · Marilyn Monroe · computers of that era · a computer school in 1991"
     }
    ],
    "videos": [
@@ -329,7 +362,8 @@
        ]
       }
      },
-     "title": "떨어지는 비행기를 본 소년 | 1950 한국 대전 상공의 F-80 vs Yak-9 · 옛날이야기 6편"
+     "title": "떨어지는 비행기를 본 소년 | 1950 한국 대전 상공의 F-80 vs Yak-9 · 옛날이야기 6편",
+     "title_en": "The Boy Who Saw a Plane Fall | F-80 vs. Yak-9 over Daejeon, Korea, 1950 · Old Stories #6"
     },
     {
      "field": "old",
@@ -348,7 +382,8 @@
        ]
       }
      },
-     "title": "마릴린 먼로는 백치미가 아니다 | 재미는 재능을 이긴다 · 옛날이야기 4편"
+     "title": "마릴린 먼로는 백치미가 아니다 | 재미는 재능을 이긴다 · 옛날이야기 4편",
+     "title_en": "Marilyn Monroe Was No Airhead | Fun Beats Talent · Old Stories #4"
     },
     {
      "field": "old",
@@ -367,7 +402,8 @@
        ]
       }
      },
-     "title": "그 시절 컴퓨터 3종 | MSX·애플Ⅱ·IBM PC, 옛날이야기 후속"
+     "title": "그 시절 컴퓨터 3종 | MSX·애플Ⅱ·IBM PC, 옛날이야기 후속",
+     "title_en": "Three Computers of That Era | MSX · Apple II · IBM PC — Old Stories Sequel"
     },
     {
      "field": "old",
@@ -386,9 +422,13 @@
        ]
       }
      },
-     "title": "1991년, 토요일의 컴퓨터 학원 | MSX·코딩 용지·로고에서 멈춘 컴퓨터"
+     "title": "1991년, 토요일의 컴퓨터 학원 | MSX·코딩 용지·로고에서 멈춘 컴퓨터",
+     "title_en": "1991, a Saturday Computer School | MSX, Coding Sheets, and the Computer That Stopped at LOGO"
     }
-   ]
+   ],
+   "nav_en": "Stories",
+   "title_en": "Story Videos",
+   "sub_en": "Old stories and essays made solo by CEO Dong-Woo Shin"
   }
  ]
 }

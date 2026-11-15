@@ -1,3 +1,13 @@
+# 홈페이지 두 언어 (2026-11-15 대표 지시: 홈페이지도 영어 기본)
+- 루트 = 영어(기본), `ko/` = 한국어. 파일 이름은 같음 (예: `lectures.html` ↔ `ko/lectures.html`)
+- 모든 페이지 메뉴 끝에 언어 버튼(🌐 한국어 / 🌐 English), hreflang 서로 연결 — 공통 코드 `_tools/i18n.py`
+- 영상 페이지: `make_lectures.py`·`make_videos.py` 한 번 실행으로 영어·한국어 둘 다 생성
+  - 영어 글은 json의 `_en` 칸: 분야 `name_en`·`desc_en`, 영상 `title_en`, 페이지 `title_en`·`sub_en`·`nav_en`, 예제 `title_en`·`desc_en`
+  - `title_en`이 비면 한국어 제목이 영어 페이지에 나옴 → 새 영상은 반드시 채움 (영어 기본으로 올린 영상은 유튜브 제목이 영어이므로 그대로, 한국어 `title`은 한국어 번역 제목)
+- 고정 페이지(회사소개·프로젝트·연락처): 원본은 `ko/index.html`·`ko/projects.html`·`ko/contact.html`(한국어, 손으로 고침)
+  - 고친 뒤 `python3 _tools/make_static.py` → 메뉴 맞춤 + 번역표(`TX`)로 영어판 생성. 번역표에 없는 한글이 남으면 그 문장을 출력하고 멈춤 → 번역표에 추가
+- 사이트맵: 고정 페이지 영어·한국어 6개 (영상 페이지는 noindex)
+
 # 강의 영상 페이지 (lectures.html) 만들기
 
 - `_tools/` 폴더는 GitHub Pages(Jekyll)에서 공개되지 않습니다.
