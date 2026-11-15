@@ -26,6 +26,12 @@ html{scroll-behavior:smooth}
 .vcard{transition:box-shadow .15s,transform .15s}
 .vcard:hover{box-shadow:0 6px 18px rgba(30,50,82,.14);transform:translateY(-2px);color:inherit}
 .vcard:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
+.lgrow{display:flex;flex-wrap:wrap;gap:4px}
+.lg{padding:2px 8px;font-size:12px;font-weight:700;border-radius:4px;line-height:1.5;border:1px solid transparent}
+.lg-o{background:#1E3252;color:#FFFFFF;border-color:#1E3252}
+.lg-d{background:#0070C0;color:#FFFFFF;border-color:#0070C0}
+.lg-a{background:#FFFFFF;color:#0070C0;border-color:#0070C0}
+.lg-n{background:#FFFFFF;color:#A0AEC0;border:1px dashed #CBD5E0}
 .vrow{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}
 .vrow .b{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}
 .vrow .t{color:#1E3252}
@@ -57,7 +63,7 @@ html{scroll-behavior:smooth}
 <p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; letter-spacing: 2px; color: #9CC3E8">LECTURES</p>
 <h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">AI 에이전트 유한요소 해석</h1>
 <p style="margin: 0; font-size: 18px; color: #C9D3E0">경북대학교 김영석 교수 · 스타웍스 신동우 · 강의 영상 16편 · 해석 기초 예제 4편</p>
-<p style="margin: 0; font-size: 14px; color: #9CC3E8">최근 갱신 2026-11-15 16:50</p>
+<p style="margin: 0; font-size: 14px; color: #9CC3E8">최근 갱신 2026-11-15 17:00</p>
 </div>
 </section>
 
@@ -104,6 +110,39 @@ html{scroll-behavior:smooth}
 </ul>
 </div>
 </div>
+<div style="margin-top: 20px">
+<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
+<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">언어 버전</h2>
+<span style="font-size: 14px; color: #5A6478">한국어 · 영어 · 일본어 · 스페인어 — 영상 수</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">한국어</p>
+<div class="lgrow"><span class="lg lg-o">원본 18</span><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 1</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">영어</p>
+<div class="lgrow"><span class="lg lg-o">원본 2</span><span class="lg lg-d">직접 더빙 5</span><span class="lg lg-a">자동 더빙 10</span><span class="lg lg-n">준비 중 3</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">일본어</p>
+<div class="lgrow"><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 19</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">스페인어</p>
+<div class="lgrow"><span class="lg lg-a">자동 더빙 1</span><span class="lg lg-n">준비 중 19</span></div>
+</div>
+</div>
+<div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
+<span><span class="lg lg-o">원본</span> 원본 음성</span>
+<span><span class="lg lg-d">직접 더빙</span> 직접 만든 더빙·자막</span>
+<span><span class="lg lg-a">자동 더빙</span> 유튜브 자동 더빙</span>
+<span><span class="lg lg-n">준비 중</span> 제작 예정</span>
+<span>음성 언어 바꾸기: 유튜브 ⚙ 설정 → 오디오 트랙</span>
+</div>
+</div>
+</div>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
@@ -136,6 +175,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -148,6 +188,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -160,6 +201,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 3</span><time datetime="2026-11-10" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 10.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -172,6 +214,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #c0392b; border-radius: 999px">파괴역학 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">그림 3.16 식 정정 · J-적분 (검토용)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -193,6 +236,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">소성역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -205,6 +249,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">소성역학 2</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 15.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -226,6 +271,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">고무역학 1</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">고무 변형의 기초 — 세 가지 시험과 초탄성</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -238,6 +284,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">고무역학 2</span><time datetime="2026-11-08" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 08.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">고무 뮬린스 효과 — Ogden–Roxburgh 모델</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-d" title="영어: 직접 만든 더빙·자막">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -259,6 +306,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 1</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">스프링-질량 강제진동 (예제 1-40)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -271,6 +319,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 2</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">사각형 막의 진동 (문제 1)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -283,6 +332,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 3</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">정사각 평판 열전도 (문제 3)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -295,6 +345,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 4</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">정전기 포아송 방정식 (문제 4)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -307,6 +358,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #d9730d; border-radius: 999px">공업수학 5</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">확산 방정식과 기어 질화 (문제 5·6)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -328,6 +380,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0e7c86; border-radius: 999px">분자동역학 1</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">나노 인덴테이션 논문 다시 읽기 — 조사·검산</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -340,6 +393,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0e7c86; border-radius: 999px">분자동역학 2</span><time datetime="2026-11-15" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 15.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-n" title="영어: 준비 중">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -361,6 +415,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #7b4a1e; border-radius: 999px">이산요소법 1</span><time datetime="2026-11-14" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 14.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">전기차 배터리 전극 압연 — 문제 정의·조사</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -390,6 +445,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">부트 구조해석 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 &amp; ANSYS (CVJ 부트)</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-a" title="한국어: 유튜브 자동 더빙">한국어</span><span class="lg lg-o" title="영어: 원본 음성">영어</span><span class="lg lg-a" title="일본어: 유튜브 자동 더빙">일본어</span><span class="lg lg-a" title="스페인어: 유튜브 자동 더빙">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -402,6 +458,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #4a5568; border-radius: 999px">부트 구조해석 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -423,6 +480,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">유동해석 1</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-o" title="한국어: 원본 음성">한국어</span><span class="lg lg-a" title="영어: 유튜브 자동 더빙">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>
@@ -435,6 +493,7 @@ html{scroll-behavior:smooth}
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #0b84c6; border-radius: 999px">유동해석 2</span><time datetime="2026-11-06" style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: #5A6478">업로드 2026. 11. 06.</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model</h3>
+<div class="lgrow" aria-label="언어 버전"><span class="lg lg-n" title="한국어: 준비 중">한국어</span><span class="lg lg-o" title="영어: 원본 음성">영어</span><span class="lg lg-n" title="일본어: 준비 중">일본어</span><span class="lg lg-n" title="스페인어: 준비 중">스페인어</span></div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>

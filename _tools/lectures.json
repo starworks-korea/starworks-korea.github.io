@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15 16:50",
+  "updated": "2026-11-15 17:00",
   "fields": [
     {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분"},
     {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력"},
@@ -9,22 +9,22 @@
     {"key": "dem",        "name": "이산요소법", "color": "#7b4a1e", "desc": "전기차 배터리 전극 압연"}
   ],
   "videos": [
-    {"field": "fracture",   "num": 1, "id": "0QXhANZQQEI", "vis": "공개", "date": "2026-11-08", "dur": "8:43",  "title": "피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)"},
-    {"field": "fracture",   "num": 2, "id": "wbEDfxQmUjg", "vis": "공개", "date": "2026-11-08", "dur": "9:51",  "title": "CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄"},
-    {"field": "fracture",   "num": 3, "id": "Q2sy-o0cyQg", "vis": "일부 공개", "date": "2026-11-10", "dur": "7:41",  "title": "CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)"},
-    {"field": "fracture",   "num": 4, "id": "HGGTSTMd9A8", "vis": "일부 공개", "date": "2026-11-14", "dur": "5:40",  "title": "그림 3.16 식 정정 · J-적분 (검토용)"},
-    {"field": "plasticity", "num": 1, "id": "ciChJzgvNv4", "vis": "공개", "date": "2026-11-08", "dur": "10:30", "title": "열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)"},
-    {"field": "plasticity", "num": 2, "id": "3cfDfa7IRRY", "vis": "일부 공개", "date": "2026-11-15", "dur": "6:28",  "title": "반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기"},
-    {"field": "rubber",     "num": 1, "id": "RgkMhYia7k0", "vis": "공개", "date": "2026-11-08", "dur": "7:42",  "title": "고무 변형의 기초 — 세 가지 시험과 초탄성"},
-    {"field": "rubber",     "num": 2, "id": "quWufgmxWtU", "vis": "공개", "date": "2026-11-08", "dur": "5:41",  "title": "고무 뮬린스 효과 — Ogden–Roxburgh 모델"},
-    {"field": "math",       "num": 1, "id": "0Fy96KIkfAA", "vis": "일부 공개", "date": "2026-11-14", "dur": "2:23",  "title": "스프링-질량 강제진동 (예제 1-40)"},
-    {"field": "math",       "num": 2, "id": "hznzu9yaNRE", "vis": "일부 공개", "date": "2026-11-14", "dur": "5:09",  "title": "사각형 막의 진동 (문제 1)"},
-    {"field": "math",       "num": 3, "id": "-9DGrv6BE5E", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:37",  "title": "정사각 평판 열전도 (문제 3)"},
-    {"field": "math",       "num": 4, "id": "au0dfKm9ieM", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:35",  "title": "정전기 포아송 방정식 (문제 4)"},
-    {"field": "math",       "num": 5, "id": "3W3CjQu6VDk", "vis": "일부 공개", "date": "2026-11-14", "dur": "4:26",  "title": "확산 방정식과 기어 질화 (문제 5·6)"},
-    {"field": "md",         "num": 1, "id": "DlCktoc-Ysk", "vis": "일부 공개", "date": "2026-11-14", "dur": "2:59",  "title": "나노 인덴테이션 논문 다시 읽기 — 조사·검산"},
-    {"field": "md",         "num": 2, "id": "uYC5zyBtPHI", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:32",  "title": "LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구"},
-    {"field": "dem",        "num": 1, "id": "fEElZ00C2Rs", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:10",  "title": "전기차 배터리 전극 압연 — 문제 정의·조사"}
+    {"field": "fracture",   "num": 1, "id": "0QXhANZQQEI", "vis": "공개", "date": "2026-11-08", "dur": "8:43", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": ""},  "title": "피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)"},
+    {"field": "fracture",   "num": 2, "id": "wbEDfxQmUjg", "vis": "공개", "date": "2026-11-08", "dur": "9:51", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": ""},  "title": "CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄"},
+    {"field": "fracture",   "num": 3, "id": "Q2sy-o0cyQg", "vis": "일부 공개", "date": "2026-11-10", "dur": "7:41", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)"},
+    {"field": "fracture",   "num": 4, "id": "HGGTSTMd9A8", "vis": "일부 공개", "date": "2026-11-14", "dur": "5:40", "lang": {"ko": "원본", "en": "", "ja": "", "es": ""},  "title": "그림 3.16 식 정정 · J-적분 (검토용)"},
+    {"field": "plasticity", "num": 1, "id": "ciChJzgvNv4", "vis": "공개", "date": "2026-11-08", "dur": "10:30", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": ""}, "title": "열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)"},
+    {"field": "plasticity", "num": 2, "id": "3cfDfa7IRRY", "vis": "일부 공개", "date": "2026-11-15", "dur": "6:28", "lang": {"ko": "원본", "en": "", "ja": "", "es": ""},  "title": "반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기"},
+    {"field": "rubber",     "num": 1, "id": "RgkMhYia7k0", "vis": "공개", "date": "2026-11-08", "dur": "7:42", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": ""},  "title": "고무 변형의 기초 — 세 가지 시험과 초탄성"},
+    {"field": "rubber",     "num": 2, "id": "quWufgmxWtU", "vis": "공개", "date": "2026-11-08", "dur": "5:41", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": ""},  "title": "고무 뮬린스 효과 — Ogden–Roxburgh 모델"},
+    {"field": "math",       "num": 1, "id": "0Fy96KIkfAA", "vis": "일부 공개", "date": "2026-11-14", "dur": "2:23", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "스프링-질량 강제진동 (예제 1-40)"},
+    {"field": "math",       "num": 2, "id": "hznzu9yaNRE", "vis": "일부 공개", "date": "2026-11-14", "dur": "5:09", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "사각형 막의 진동 (문제 1)"},
+    {"field": "math",       "num": 3, "id": "-9DGrv6BE5E", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:37", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "정사각 평판 열전도 (문제 3)"},
+    {"field": "math",       "num": 4, "id": "au0dfKm9ieM", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:35", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "정전기 포아송 방정식 (문제 4)"},
+    {"field": "math",       "num": 5, "id": "3W3CjQu6VDk", "vis": "일부 공개", "date": "2026-11-14", "dur": "4:26", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "확산 방정식과 기어 질화 (문제 5·6)"},
+    {"field": "md",         "num": 1, "id": "DlCktoc-Ysk", "vis": "일부 공개", "date": "2026-11-14", "dur": "2:59", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "나노 인덴테이션 논문 다시 읽기 — 조사·검산"},
+    {"field": "md",         "num": 2, "id": "uYC5zyBtPHI", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:32", "lang": {"ko": "원본", "en": "", "ja": "", "es": ""},  "title": "LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구"},
+    {"field": "dem",        "num": 1, "id": "fEElZ00C2Rs", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:10", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""},  "title": "전기차 배터리 전극 압연 — 문제 정의·조사"}
   ],
   "examples": {
     "title": "해석 기초 예제",
@@ -34,10 +34,10 @@
       {"key": "ex-cfd",  "name": "유동해석",             "color": "#0b84c6", "desc": "대화로 푸는 유동해석 · 모델은 사람이 정함 · 한국어판·영어판"}
     ],
     "videos": [
-      {"field": "ex-boot", "num": 1, "id": "uCJZ7hxlCqU", "vis": "공개", "date": "2026-11-06", "dur": "5:14", "title": "AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 & ANSYS (CVJ 부트)"},
-      {"field": "ex-boot", "num": 2, "id": "cP24a6nVUZA", "vis": "공개", "date": "2026-11-06", "dur": "4:10", "title": "AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주"},
-      {"field": "ex-cfd",  "num": 1, "id": "y8Lb9_IyAY8", "vis": "공개", "date": "2026-11-06", "dur": "4:48", "title": "해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다"},
-      {"field": "ex-cfd",  "num": 2, "id": "bHiXW7Af56Q", "vis": "공개", "date": "2026-11-06", "dur": "4:38", "title": "(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model"}
+      {"field": "ex-boot", "num": 1, "id": "uCJZ7hxlCqU", "vis": "공개", "date": "2026-11-06", "dur": "5:14", "lang": {"ko": "자동", "en": "원본", "ja": "자동", "es": "자동"}, "title": "AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 & ANSYS (CVJ 부트)"},
+      {"field": "ex-boot", "num": 2, "id": "cP24a6nVUZA", "vis": "공개", "date": "2026-11-06", "dur": "4:10", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""}, "title": "AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주"},
+      {"field": "ex-cfd",  "num": 1, "id": "y8Lb9_IyAY8", "vis": "공개", "date": "2026-11-06", "dur": "4:48", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": ""}, "title": "해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다"},
+      {"field": "ex-cfd",  "num": 2, "id": "bHiXW7Af56Q", "vis": "공개", "date": "2026-11-06", "dur": "4:38", "lang": {"ko": "", "en": "원본", "ja": "", "es": ""}, "title": "(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model"}
     ]
   }
 }

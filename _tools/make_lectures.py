@@ -6,13 +6,13 @@ D = json.load(open(os.path.join(HERE, "lectures.json"), encoding="utf-8"))
 FIELDS = [(f["key"], f["name"], f["color"], f["desc"]) for f in D["fields"]]
 V = {k: [] for k, *_ in FIELDS}
 for v in sorted(D["videos"], key=lambda x: x["num"]):
-    V[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개")))
+    V[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개"), v.get("lang", {"ko": "원본"})))
 # 해석 기초 예제 (강의 시리즈 밖 — 예약 작업이 videos를 바꿔도 그대로 둠)
 EX = D.get("examples", {"title": "", "desc": "", "fields": [], "videos": []})
 EXF = [(f["key"], f["name"], f["color"], f["desc"]) for f in EX["fields"]]
 EV = {k: [] for k, *_ in EXF}
 for v in sorted(EX["videos"], key=lambda x: x["num"]):
-    EV[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개")))
+    EV[v["field"]].append((v["id"], v["title"], v["dur"], v["date"], v.get("vis", "공개"), v.get("lang", {"ko": "원본"})))
 F = "font-family: 'Noto Sans KR', sans-serif"
 e = html.escape
 total = sum(len(v) for v in V.values())
@@ -36,7 +36,12 @@ chips_ex = "\n".join(
  for k,n,c,_ in EXF if EV[k])
 
 VISC = {"공개": "#22C55E", "일부 공개": "#F59E0B"}
-def card(name,color,num,vid,title,dur,date,vis):
+LANGS = [("ko", "한국어"), ("en", "영어"), ("ja", "일본어"), ("es", "스페인어")]
+LSTATE = {"원본": "원본 음성", "더빙": "직접 만든 더빙·자막", "자동": "유튜브 자동 더빙", "": "준비 중"}
+LCLASS = {"원본": "lg-o", "더빙": "lg-d", "자동": "lg-a", "": "lg-n"}
+def lang_chips(lg):
+    return "".join(f'<span class="lg {LCLASS.get(lg.get(k, ""), "lg-n")}" title="{n}: {LSTATE.get(lg.get(k, ""), "준비 중")}">{n}</span>' for k, n in LANGS)
+def card(name,color,num,vid,title,dur,date,vis,lg):
     ds=date.replace("-",". ")+"."
     url=f"https://youtu.be/{vid}"
     return f'''<a href="{url}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
@@ -48,6 +53,7 @@ def card(name,color,num,vid,title,dur,date,vis):
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="padding: 3px 10px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: {color}; border-radius: 999px">{e(name)} {num}</span><time datetime="{date}" style="{F}; font-size: 13px; color: #5A6478">업로드 {ds}</time></div>
 <h3 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.45; color: #1E3252">{e(title)}</h3>
+<div class="lgrow" aria-label="언어 버전">{lang_chips(lg)}</div>
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">유튜브에서 보기 ↗</span>
 </div>
 </a>'''
@@ -75,7 +81,7 @@ def vis_rows(vis):
     rows=[]
     for fields, vids in ((FIELDS, V), (EXF, EV)):
         for k,n,c,_ in fields:
-            for i,(vid,title,dur,date,vv) in enumerate(vids[k]):
+            for i,(vid,title,dur,date,vv,_lg) in enumerate(vids[k]):
                 if vv!=vis: continue
                 ds=date.replace("-",". ")+"."
                 rows.append(f'''<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/{vid}" target="_blank" rel="noopener"><span class="b" style="background: {c}">{e(n)} {i+1}</span><span class="t">{e(title)}</span><span class="d">{ds}</span></a></li>''')
@@ -97,6 +103,36 @@ for vis, note in VIS_INFO:
 </ul>
 </div>''')
 vis_html = chr(10).join(vis_panels)
+
+# 언어 버전 요약
+ALLV = [v for fv in (V, EV) for lst in fv.values() for v in lst]
+def lcount(k, st): return sum(1 for v in ALLV if v[5].get(k, "") == st)
+lang_boxes=[]
+for k, n in LANGS:
+    parts=[]
+    for st, lab in (("원본", "원본"), ("더빙", "직접 더빙"), ("자동", "자동 더빙"), ("", "준비 중")):
+        c=lcount(k, st)
+        if c: parts.append(f'<span class="lg {LCLASS[st]}">{lab} {c}</span>')
+    lang_boxes.append(f'''<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">{n}</p>
+<div class="lgrow">{"".join(parts)}</div>
+</div>''')
+lang_html = f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
+<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">언어 버전</h2>
+<span style="font-size: 14px; color: #5A6478">한국어 · 영어 · 일본어 · 스페인어 — 영상 수</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+{chr(10).join(lang_boxes)}
+</div>
+<div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
+<span><span class="lg lg-o">원본</span> 원본 음성</span>
+<span><span class="lg lg-d">직접 더빙</span> 직접 만든 더빙·자막</span>
+<span><span class="lg lg-a">자동 더빙</span> 유튜브 자동 더빙</span>
+<span><span class="lg lg-n">준비 중</span> 제작 예정</span>
+<span>음성 언어 바꾸기: 유튜브 ⚙ 설정 → 오디오 트랙</span>
+</div>
+</div>'''
 ex_sections = section_list(EXF, EV)
 
 desc_meta = f"김영석 교수(경북대학교)와 함께하는 「AI 에이전트 유한요소 해석」 강의 영상 {total}편 바로 가기 — 스타웍스"
@@ -128,6 +164,12 @@ html{{scroll-behavior:smooth}}
 .vcard{{transition:box-shadow .15s,transform .15s}}
 .vcard:hover{{box-shadow:0 6px 18px rgba(30,50,82,.14);transform:translateY(-2px);color:inherit}}
 .vcard:focus-visible{{outline:3px solid #0070C0;outline-offset:2px}}
+.lgrow{{display:flex;flex-wrap:wrap;gap:4px}}
+.lg{{padding:2px 8px;font-size:12px;font-weight:700;border-radius:4px;line-height:1.5;border:1px solid transparent}}
+.lg-o{{background:#1E3252;color:#FFFFFF;border-color:#1E3252}}
+.lg-d{{background:#0070C0;color:#FFFFFF;border-color:#0070C0}}
+.lg-a{{background:#FFFFFF;color:#0070C0;border-color:#0070C0}}
+.lg-n{{background:#FFFFFF;color:#A0AEC0;border:1px dashed #CBD5E0}}
 .vrow{{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}}
 .vrow .b{{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}}
 .vrow .t{{color:#1E3252}}
@@ -162,6 +204,9 @@ html{{scroll-behavior:smooth}}
 <section id="visibility" aria-label="공개 범위" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; align-items: start">
 {vis_html}
+</div>
+<div style="margin-top: 20px">
+{lang_html}
 </div>
 </section>
 
