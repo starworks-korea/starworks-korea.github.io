@@ -1,0 +1,29 @@
+{
+  "checked": "2026-11-15 14:05",
+  "fields": [
+    {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분"},
+    {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력"},
+    {"key": "rubber",     "name": "고무역학",   "color": "#2f855a", "desc": "초탄성 · 뮬린스 효과"},
+    {"key": "math",       "name": "공업수학",   "color": "#d9730d", "desc": "진동 · 열전도 · 포아송 · 확산"},
+    {"key": "md",         "name": "분자동역학", "color": "#0e7c86", "desc": "나노 인덴테이션 · LAMMPS → 포트란"},
+    {"key": "dem",        "name": "이산요소법", "color": "#7b4a1e", "desc": "전기차 배터리 전극 압연"}
+  ],
+  "videos": [
+    {"field": "fracture",   "num": 1, "id": "0QXhANZQQEI", "date": "2026-11-08", "dur": "8:43",  "title": "피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)"},
+    {"field": "fracture",   "num": 2, "id": "wbEDfxQmUjg", "date": "2026-11-08", "dur": "9:51",  "title": "CT 시편 균열 끝 잔류응력 — 2024-T3 알루미늄"},
+    {"field": "fracture",   "num": 3, "id": "Q2sy-o0cyQg", "date": "2026-11-10", "dur": "7:41",  "title": "CT 시편 VCCT·컴플라이언스 — 규격·이론부터 다시 (연구 진행 중)"},
+    {"field": "fracture",   "num": 4, "id": "HGGTSTMd9A8", "date": "2026-11-14", "dur": "6:02",  "title": "그림 3.16 식 정정 · J-적분 (검토용)"},
+    {"field": "plasticity", "num": 1, "id": "ciChJzgvNv4", "date": "2026-11-08", "dur": "10:30", "title": "열박음 복합원관과 반도체 배선 열응력 (예제 6-8·6-9)"},
+    {"field": "plasticity", "num": 2, "id": "3cfDfa7IRRY", "date": "2026-11-15", "dur": "6:28",  "title": "반도체 회로 열변형에 의한 단락 문제 — 예제 6-9 다시 풀기"},
+    {"field": "rubber",     "num": 1, "id": "RgkMhYia7k0", "date": "2026-11-08", "dur": "7:42",  "title": "고무 변형의 기초 — 세 가지 시험과 초탄성"},
+    {"field": "rubber",     "num": 2, "id": "quWufgmxWtU", "date": "2026-11-08", "dur": "5:41",  "title": "고무 뮬린스 효과 — Ogden–Roxburgh 모델"},
+    {"field": "math",       "num": 1, "id": "0Fy96KIkfAA", "date": "2026-11-14", "dur": "2:23",  "title": "스프링-질량 강제진동 (예제 1-40)"},
+    {"field": "math",       "num": 2, "id": "hznzu9yaNRE", "date": "2026-11-14", "dur": "5:09",  "title": "사각형 막의 진동 (문제 1)"},
+    {"field": "math",       "num": 3, "id": "-9DGrv6BE5E", "date": "2026-11-14", "dur": "3:37",  "title": "정사각 평판 열전도 (문제 3)"},
+    {"field": "math",       "num": 4, "id": "au0dfKm9ieM", "date": "2026-11-14", "dur": "3:35",  "title": "정전기 포아송 방정식 (문제 4)"},
+    {"field": "math",       "num": 5, "id": "3W3CjQu6VDk", "date": "2026-11-14", "dur": "4:26",  "title": "확산 방정식과 기어 질화 (문제 5·6)"},
+    {"field": "md",         "num": 1, "id": "DlCktoc-Ysk", "date": "2026-11-14", "dur": "2:59",  "title": "나노 인덴테이션 논문 다시 읽기 — 조사·검산"},
+    {"field": "md",         "num": 2, "id": "uYC5zyBtPHI", "date": "2026-11-15", "dur": "9:32",  "title": "LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구"},
+    {"field": "dem",        "num": 1, "id": "fEElZ00C2Rs", "date": "2026-11-14", "dur": "3:10",  "title": "전기차 배터리 전극 압연 — 문제 정의·조사"}
+  ]
+}
