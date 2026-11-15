@@ -1,12 +1,12 @@
 {
-  "updated": "2026-11-15 18:03",
+  "updated": "2026-11-15 18:15",
   "fields": [
     {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분"},
     {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력"},
     {"key": "rubber",     "name": "고무역학",   "color": "#2f855a", "desc": "초탄성 · 뮬린스 효과"},
     {"key": "math",       "name": "공업수학",   "color": "#d9730d", "desc": "진동 · 열전도 · 포아송 · 확산"},
-    {"key": "md",         "name": "분자동역학", "color": "#0e7c86", "desc": "나노 인덴테이션 · LAMMPS → 포트란"},
-    {"key": "dem",        "name": "이산요소법", "color": "#7b4a1e", "desc": "전기차 배터리 전극 압연"}
+    {"key": "md",         "name": "분자동역학", "color": "#0e7c86", "desc": "나노 인덴테이션 · LAMMPS · 포트란 · 전위 · EAM"},
+    {"key": "dem",        "name": "이산요소법", "color": "#7b4a1e", "desc": "전기차 배터리 전극 압착 · 3D 이산요소법"}
   ],
   "videos": [
     {"field": "fracture",   "num": 1, "id": "0QXhANZQQEI", "vis": "공개", "date": "2026-11-08", "dur": "8:43", "lang": {"ko": "원본", "en": "더빙", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "피로균열 성장 — Newman 균열닫힘 모델 (예제 6-4)"},
@@ -22,8 +22,7 @@
     {"field": "math",       "num": 3, "id": "-9DGrv6BE5E", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:37", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "정사각 평판 열전도 (문제 3)"},
     {"field": "math",       "num": 4, "id": "au0dfKm9ieM", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:35", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "정전기 포아송 방정식 (문제 4)"},
     {"field": "math",       "num": 5, "id": "3W3CjQu6VDk", "vis": "일부 공개", "date": "2026-11-14", "dur": "4:26", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "확산 방정식과 기어 질화 (문제 5·6)"},
-    {"field": "md",         "num": 1, "id": "DlCktoc-Ysk", "vis": "일부 공개", "date": "2026-11-14", "dur": "2:59", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "나노 인덴테이션 논문 다시 읽기 — 조사·검산"},
-    {"field": "md",         "num": 2, "id": "uYC5zyBtPHI", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:32", "lang": {"ko": "원본", "en": "", "ja": "", "es": "", "etc": {}},  "title": "LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구"},
+    {"field": "md",         "num": 1, "id": "w4MPJeswcgQ", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:06", "lang": {"ko": "원본", "en": "", "ja": "", "es": "", "etc": {}},  "title": "나노 인덴테이션 분자동역학 — 2003 논문 검산부터 LAMMPS · 포트란, 전위 · EAM 비교까지"},
     {"field": "dem",        "num": 1, "id": "wX1IDBqFKXg", "vis": "일부 공개", "date": "2026-11-15", "dur": "12:39", "lang": {"ko": "원본", "en": "", "ja": "", "es": "", "etc": {}},  "title": "전기차 배터리 전극 압착 — LFP 계열 양극을 눌러 공극률 줄이기 (3D 이산요소법)"}
   ],
   "examples": {
