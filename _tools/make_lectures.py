@@ -36,18 +36,35 @@ chips_ex = "\n".join(
  for k,n,c,_ in EXF if EV[k])
 
 VISC = {"공개": "#22C55E", "일부 공개": "#F59E0B"}
+VISLABEL = {"공개": "공개", "일부 공개": "회원 공개"}
 LANGS = [("ko", "한국어"), ("en", "영어"), ("ja", "일본어"), ("es", "스페인어")]
 LSTATE = {"원본": "원본 음성", "더빙": "직접 만든 더빙·자막", "자동": "유튜브 자동 더빙", "": "준비 중"}
 LCLASS = {"원본": "lg-o", "더빙": "lg-d", "자동": "lg-a", "": "lg-n"}
+ETC_ORDER = ["원본", "더빙", "자동"]
+def etc_state(lg):
+    etc = lg.get("etc") or {}
+    for st in ETC_ORDER:
+        if etc.get(st): return st
+    return ""
+def etc_names(lg):
+    etc = lg.get("etc") or {}
+    return [n for st in ETC_ORDER for n in etc.get(st, [])]
 def lang_chips(lg):
-    return "".join(f'<span class="lg {LCLASS.get(lg.get(k, ""), "lg-n")}" title="{n}: {LSTATE.get(lg.get(k, ""), "준비 중")}">{n}</span>' for k, n in LANGS)
+    out = "".join(f'<span class="lg {LCLASS.get(lg.get(k, ""), "lg-n")}" title="{n}: {LSTATE.get(lg.get(k, ""), "준비 중")}">{n}</span>' for k, n in LANGS)
+    names = etc_names(lg); st = etc_state(lg)
+    if names:
+        label = f"기타 {len(names)}개" if len(names) > 1 else f"기타 · {names[0]}"
+        out += f'<span class="lg {LCLASS[st]}" title="기타 {LSTATE[st]}: {" · ".join(names)}">{label}</span>'
+    else:
+        out += '<span class="lg lg-n" title="기타: 준비 중">기타</span>'
+    return out
 def card(name,color,num,vid,title,dur,date,vis,lg):
     ds=date.replace("-",". ")+"."
     url=f"https://youtu.be/{vid}"
     return f'''<a href="{url}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="{e(name)} {num} 썸네일" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
-<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; {F}; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {VISC.get(vis, '#9CA3AF')}; display: inline-block"></span>{vis}</span>
+<span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; {F}; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {VISC.get(vis, '#9CA3AF')}; display: inline-block"></span>{VISLABEL.get(vis, vis)}</span>
 <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">{dur}</span>
 </div>
 <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1">
@@ -86,7 +103,7 @@ def vis_rows(vis):
                 ds=date.replace("-",". ")+"."
                 rows.append(f'''<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/{vid}" target="_blank" rel="noopener"><span class="b" style="background: {c}">{e(n)} {i+1}</span><span class="t">{e(title)}</span><span class="d">{ds}</span></a></li>''')
     return rows
-VIS_INFO = [("공개", "누구나 검색해서 볼 수 있는 영상"), ("일부 공개", "링크가 있는 사람만 볼 수 있는 영상")]
+VIS_INFO = [("공개", "누구나 검색해서 볼 수 있는 영상"), ("일부 공개", "링크를 받은 분께만 공개하는 영상")]
 vis_panels=[]
 for vis, note in VIS_INFO:
     rows=vis_rows(vis)
@@ -94,7 +111,7 @@ for vis, note in VIS_INFO:
     vis_panels.append(f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
 <span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: {VISC[vis]}; display: inline-block"></span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{vis} 영상</h2>
+<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{VISLABEL.get(vis, vis)} 영상</h2>
 <span style="font-size: 15px; font-weight: 700; color: #0070C0">{len(rows)}편</span>
 <span style="font-size: 14px; color: #5A6478">{note}</span>
 </div>
@@ -117,12 +134,30 @@ for k, n in LANGS:
 <p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">{n}</p>
 <div class="lgrow">{"".join(parts)}</div>
 </div>''')
+# 기타 언어 상자
+from collections import Counter
+etc_cnt = Counter(n for v in ALLV for n in etc_names(v[5]))
+etc_parts=[]
+for st, lab in (("원본", "원본"), ("더빙", "직접 더빙"), ("자동", "자동 더빙"), ("", "준비 중")):
+    c=sum(1 for v in ALLV if etc_state(v[5]) == st)
+    if c: etc_parts.append(f'<span class="lg {LCLASS[st]}">{lab} {c}</span>')
+top = etc_cnt.most_common()
+main = [f"{n} {c}편" for n, c in top if c > 1]
+rest = [n for n, c in top if c == 1]
+etc_note = " · ".join(main)
+etc_note = e(etc_note)
+if rest: etc_note += (" · " if etc_note else "") + f'<span title="{e(" · ".join(rest))}" style="text-decoration: underline dotted">그 밖의 {len(rest)}개 언어 1편</span>'
+lang_boxes.append(f'''<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
+<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">기타 언어</p>
+<div class="lgrow">{"".join(etc_parts)}</div>
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">{etc_note}</p>
+</div>''')
 lang_html = f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
 <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
 <h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">언어 버전</h2>
-<span style="font-size: 14px; color: #5A6478">한국어 · 영어 · 일본어 · 스페인어 — 영상 수</span>
+<span style="font-size: 14px; color: #5A6478">한국어 · 영어 · 일본어 · 스페인어 · 기타 — 영상 수</span>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
 {chr(10).join(lang_boxes)}
 </div>
 <div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
