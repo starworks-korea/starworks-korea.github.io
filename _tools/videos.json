@@ -1,0 +1,394 @@
+{
+ "updated": "2026-11-15 19:00",
+ "pages": [
+  {
+   "key": "tech",
+   "file": "tech.html",
+   "nav": "기술 영상",
+   "eyebrow": "TECH & PRODUCTS",
+   "title": "기술·제품 영상",
+   "sub": "AI 가공 · 제품 개발 · 오픈소스 해석 — 스타웍스가 직접 만들고 시험한 기록",
+   "fields": [
+    {
+     "key": "machining",
+     "name": "가공",
+     "color": "#c05621",
+     "desc": "AI 가공(라우터 CNC · 머시닝센터) · 조각기 MCT G코드"
+    },
+    {
+     "key": "product",
+     "name": "제품 개발",
+     "color": "#1f5fa8",
+     "desc": "휴머노이드 구동기 · 복합재 판스프링 · 면도기 · CFRP 소재분리기"
+    },
+    {
+     "key": "fem",
+     "name": "오픈소스 해석",
+     "color": "#2f855a",
+     "desc": "FreeCAD FEM · 복합재 · 2재료"
+    }
+   ],
+   "videos": [
+    {
+     "field": "machining",
+     "id": "ZrwNF96zG4w",
+     "vis": "공개",
+     "date": "2026-11-15",
+     "dur": "8:22",
+     "lang": {
+      "ko": "원본",
+      "en": "더빙",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT (재업로드)"
+    },
+    {
+     "field": "machining",
+     "id": "WcqvuOA6mDE",
+     "vis": "공개",
+     "date": "2026-11-14",
+     "dur": "15:58",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "캠 프로그램 없이 말로만 시편을 깎다가 공구가 부러졌습니다 | AI 가공 1탄 라우터 CNC"
+    },
+    {
+     "field": "machining",
+     "id": "XSZwKJXIovQ",
+     "vis": "공개",
+     "date": "2023-05-05",
+     "dur": "13:44",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "복합소재 가공 조각기 MCT Gcode만들기 가공하기 나무 및 복합소재 시편 가공 및 모델링 포함"
+    },
+    {
+     "field": "product",
+     "id": "Od0tFvWVEow",
+     "vis": "공개",
+     "date": "2026-11-14",
+     "dur": "3:11",
+     "lang": {
+      "ko": "원본",
+      "en": "자동",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "산업용 휴머노이드 관절·손 구동기 — 우리가 만들 제품 (개념 설명)"
+    },
+    {
+     "field": "product",
+     "id": "FDYSjNgwiGo",
+     "vis": "공개",
+     "date": "2024-04-12",
+     "dur": "0:21",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "[Composite Spring] Rear spring for 22-ton cargo truck"
+    },
+    {
+     "field": "product",
+     "id": "nBZLER8RvKU",
+     "vis": "공개",
+     "date": "2024-04-12",
+     "dur": "0:21",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "[Composite Spring] Front spring for 22-ton cargo trucks"
+    },
+    {
+     "field": "product",
+     "id": "Ar0iEC38IOk",
+     "vis": "공개",
+     "date": "2023-02-16",
+     "dur": "0:21",
+     "lang": {
+      "none": true
+     },
+     "title": "카트리지 방식 면도기(친환경 플라스틱, 저자극 면도기)"
+    },
+    {
+     "field": "product",
+     "id": "Ha7QEgqXmUw",
+     "vis": "공개",
+     "date": "2023-02-16",
+     "dur": "0:20",
+     "lang": {
+      "none": true
+     },
+     "title": "CFRP 적용 고밀도 소재분리기"
+    },
+    {
+     "field": "fem",
+     "id": "qWyqWehcS6s",
+     "vis": "공개",
+     "date": "2022-10-30",
+     "dur": "8:09",
+     "lang": {
+      "none": true
+     },
+     "title": "FreeCAD FEM Composite"
+    },
+    {
+     "field": "fem",
+     "id": "i0-i3Qh_EyI",
+     "vis": "공개",
+     "date": "2022-10-30",
+     "dur": "15:43",
+     "lang": {
+      "none": true
+     },
+     "title": "FREECAD-FEM-2MAT"
+    },
+    {
+     "field": "fem",
+     "id": "dYS3LN8XMxQ",
+     "vis": "공개",
+     "date": "2022-10-29",
+     "dur": "12:01",
+     "lang": {
+      "none": true
+     },
+     "title": "FreeCAD-FEM-Composite 오픈소스 프로그램으로 설계해석하기"
+    }
+   ]
+  },
+  {
+   "key": "promo",
+   "file": "promo.html",
+   "nav": "홍보 영상",
+   "eyebrow": "PROMOTION",
+   "title": "홍보 영상",
+   "sub": "이랑산업 기업 소개 · 자동화 조립 라인 · 스타웍스 제품",
+   "fields": [
+    {
+     "key": "irang",
+     "name": "이랑산업",
+     "color": "#1f5fa8",
+     "desc": "기업 소개 · SP3(셀토스) 가니쉬 로봇 조립 라인"
+    },
+    {
+     "key": "starworks",
+     "name": "스타웍스",
+     "color": "#0e7c86",
+     "desc": "플라스틱 골판지"
+    }
+   ],
+   "videos": [
+    {
+     "field": "irang",
+     "id": "XtEmQjq3is4",
+     "vis": "공개",
+     "date": "2026-11-06",
+     "dur": "2:59",
+     "lang": {
+      "ko": "자동",
+      "en": "원본",
+      "ja": "자동",
+      "es": "자동",
+      "etc": {
+       "자동": [
+        "아랍어",
+        "벵골어",
+        "독일어",
+        "프랑스어",
+        "힌디어",
+        "인도네시아어",
+        "이탈리아어",
+        "히브리어",
+        "말라얄람어",
+        "네덜란드어",
+        "펀자브어",
+        "폴란드어",
+        "포르투갈어",
+        "러시아어",
+        "타밀어",
+        "텔루구어",
+        "우크라이나어"
+       ]
+      }
+     },
+     "title": "이랑산업 | 자동차 인테리어에서 항공우주 및 AI 로봇까지 — 2026년 기업 소개"
+    },
+    {
+     "field": "irang",
+     "id": "s2J1DxCzdpw",
+     "vis": "공개",
+     "date": "2026-11-05",
+     "dur": "2:59",
+     "lang": {
+      "ko": "원본",
+      "en": "자동",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "이랑산업 | 자동차 실내부품에서 항공, AI 로봇까지 — 회사 소개 2026"
+    },
+    {
+     "field": "irang",
+     "id": "ipcxv87NiCk",
+     "vis": "공개",
+     "date": "2026-11-05",
+     "dur": "3:00",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "SP3(셀토스) 가니쉬 로봇 자동화 조립 라인 | 협동로봇·Fool-proof 공정 | 이랑산업·대한기계·스타웍스"
+    },
+    {
+     "field": "starworks",
+     "id": "PHfK3sleamU",
+     "vis": "공개",
+     "date": "2020-12-15",
+     "dur": "1:16",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "체험학습용 플라스틱 골판지"
+    }
+   ]
+  },
+  {
+   "key": "stories",
+   "file": "stories.html",
+   "nav": "이야기",
+   "eyebrow": "STORIES",
+   "title": "이야기 영상",
+   "sub": "신동우 대표가 혼자 만드는 옛날이야기 · 에세이",
+   "fields": [
+    {
+     "key": "old",
+     "name": "옛날이야기",
+     "color": "#b7791f",
+     "desc": "1950 대전 상공 · 마릴린 먼로 · 그 시절 컴퓨터 · 1991년 컴퓨터 학원"
+    }
+   ],
+   "videos": [
+    {
+     "field": "old",
+     "id": "p3HuN39kYUw",
+     "vis": "공개",
+     "date": "2026-11-10",
+     "dur": "10:29",
+     "lang": {
+      "ko": "원본",
+      "en": "더빙",
+      "ja": "더빙",
+      "es": "더빙",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "떨어지는 비행기를 본 소년 | 1950 한국 대전 상공의 F-80 vs Yak-9 · 옛날이야기 6편"
+    },
+    {
+     "field": "old",
+     "id": "xkE8rvKfRRc",
+     "vis": "공개",
+     "date": "2026-11-09",
+     "dur": "3:18",
+     "lang": {
+      "ko": "원본",
+      "en": "더빙",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "마릴린 먼로는 백치미가 아니다 | 재미는 재능을 이긴다 · 옛날이야기 4편"
+    },
+    {
+     "field": "old",
+     "id": "vPsCqnecOp0",
+     "vis": "공개",
+     "date": "2026-11-09",
+     "dur": "4:56",
+     "lang": {
+      "ko": "원본",
+      "en": "자동",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "그 시절 컴퓨터 3종 | MSX·애플Ⅱ·IBM PC, 옛날이야기 후속"
+    },
+    {
+     "field": "old",
+     "id": "pOyaPOXNgHM",
+     "vis": "공개",
+     "date": "2026-11-08",
+     "dur": "3:42",
+     "lang": {
+      "ko": "원본",
+      "en": "자동",
+      "ja": "",
+      "es": "",
+      "etc": {
+       "자동": [
+        "인도네시아어"
+       ]
+      }
+     },
+     "title": "1991년, 토요일의 컴퓨터 학원 | MSX·코딩 용지·로고에서 멈춘 컴퓨터"
+    }
+   ]
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15 18:15",
+  "updated": "2026-11-15 19:00",
   "fields": [
     {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분"},
     {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력"},
@@ -22,7 +22,7 @@
     {"field": "math",       "num": 3, "id": "-9DGrv6BE5E", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:37", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "정사각 평판 열전도 (문제 3)"},
     {"field": "math",       "num": 4, "id": "au0dfKm9ieM", "vis": "일부 공개", "date": "2026-11-14", "dur": "3:35", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "정전기 포아송 방정식 (문제 4)"},
     {"field": "math",       "num": 5, "id": "3W3CjQu6VDk", "vis": "일부 공개", "date": "2026-11-14", "dur": "4:26", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}},  "title": "확산 방정식과 기어 질화 (문제 5·6)"},
-    {"field": "md",         "num": 1, "id": "w4MPJeswcgQ", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:06", "lang": {"ko": "원본", "en": "", "ja": "", "es": "", "etc": {}},  "title": "나노 인덴테이션 분자동역학 — 2003 논문 검산부터 LAMMPS · 포트란, 전위 · EAM 비교까지"},
+    {"field": "md",         "num": 1, "id": "w4MPJeswcgQ", "vis": "일부 공개", "date": "2026-11-15", "dur": "9:06", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}}, "title": "나노 인덴테이션 분자동역학 — 2003 논문 검산부터 LAMMPS · 포트란, 전위 · EAM 비교까지"},
     {"field": "dem",        "num": 1, "id": "wX1IDBqFKXg", "vis": "일부 공개", "date": "2026-11-15", "dur": "12:39", "lang": {"ko": "원본", "en": "", "ja": "", "es": "", "etc": {}},  "title": "전기차 배터리 전극 압착 — LFP 계열 양극을 눌러 공극률 줄이기 (3D 이산요소법)"}
   ],
   "examples": {
@@ -36,7 +36,7 @@
       {"field": "ex-boot", "num": 1, "id": "uCJZ7hxlCqU", "vis": "공개", "date": "2026-11-06", "dur": "5:14", "lang": {"ko": "자동", "en": "원본", "ja": "자동", "es": "자동", "etc": {"자동": ["아랍어", "벵골어", "독일어", "프랑스어", "힌디어", "인도네시아어", "이탈리아어", "히브리어", "말라얄람어", "네덜란드어", "펀자브어", "폴란드어", "포르투갈어", "러시아어", "타밀어", "텔루구어", "우크라이나어"]}}, "title": "AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 & ANSYS (CVJ 부트)"},
       {"field": "ex-boot", "num": 2, "id": "cP24a6nVUZA", "vis": "공개", "date": "2026-11-06", "dur": "4:10", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}}, "title": "AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주"},
       {"field": "ex-cfd",  "num": 1, "id": "y8Lb9_IyAY8", "vis": "공개", "date": "2026-11-06", "dur": "4:48", "lang": {"ko": "원본", "en": "자동", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}}, "title": "해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다"},
-      {"field": "ex-cfd",  "num": 2, "id": "bHiXW7Af56Q", "vis": "공개", "date": "2026-11-06", "dur": "4:38", "lang": {"ko": "", "en": "원본", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}}, "title": "(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model"}
+      {"field": "ex-cfd",  "num": 2, "id": "bHiXW7Af56Q", "vis": "공개", "date": "2026-11-06", "dur": "4:38", "lang": {"ko": "", "en": "원본", "ja": "", "es": "", "etc": {"자동": ["인도네시아어"]}}, "lang_lock": "영어 원본 (대표 확인 2026-11-15)", "title": "(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model"}
     ]
   }
 }

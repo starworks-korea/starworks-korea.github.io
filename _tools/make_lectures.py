@@ -17,7 +17,7 @@ F = "font-family: 'Noto Sans KR', sans-serif"
 e = html.escape
 total = sum(len(v) for v in V.values())
 extotal = sum(len(v) for v in EV.values())
-nav_items = [("index.html","회사소개"),("projects.html","프로젝트"),("lectures.html","강의 영상"),("contact.html","연락처")]
+nav_items = [("index.html","회사소개"),("projects.html","프로젝트"),("lectures.html","강의 영상"),("tech.html","기술 영상"),("promo.html","홍보 영상"),("stories.html","이야기"),("contact.html","연락처")]
 def nav(active):
     s=[]
     for href,label in nav_items:
