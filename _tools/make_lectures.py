@@ -7,9 +7,16 @@ FIELDS = [(f["key"], f["name"], f["color"], f["desc"]) for f in D["fields"]]
 V = {k: [] for k, *_ in FIELDS}
 for v in sorted(D["videos"], key=lambda x: x["num"]):
     V[v["field"]].append((v["id"], v["title"], v["dur"], v["date"]))
+# 해석 기초 예제 (강의 시리즈 밖 — 예약 작업이 videos를 바꿔도 그대로 둠)
+EX = D.get("examples", {"title": "", "desc": "", "fields": [], "videos": []})
+EXF = [(f["key"], f["name"], f["color"], f["desc"]) for f in EX["fields"]]
+EV = {k: [] for k, *_ in EXF}
+for v in sorted(EX["videos"], key=lambda x: x["num"]):
+    EV[v["field"]].append((v["id"], v["title"], v["dur"], v["date"]))
 F = "font-family: 'Noto Sans KR', sans-serif"
 e = html.escape
 total = sum(len(v) for v in V.values())
+extotal = sum(len(v) for v in EV.values())
 nav_items = [("index.html","회사소개"),("projects.html","프로젝트"),("lectures.html","강의 영상"),("contact.html","연락처")]
 def nav(active):
     s=[]
@@ -24,6 +31,9 @@ def nav(active):
 chips = "\n".join(
  f'<a href="#{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{n} <span style="font-weight: 500; color: #5A6478">{len(V[k])}</span></a>'
  for k,n,c,_ in FIELDS if V[k])
+chips_ex = "\n".join(
+ f'<a href="#{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px dashed #8A96A8"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{n} <span style="font-weight: 500; color: #5A6478">{len(EV[k])}</span></a>'
+ for k,n,c,_ in EXF if EV[k])
 
 def card(name,color,num,vid,title,dur,date):
     ds=date.replace("-",". ")+"."
@@ -40,20 +50,24 @@ def card(name,color,num,vid,title,dur,date):
 </div>
 </a>'''
 
-sections=[]
-for k,n,c,desc in FIELDS:
-    if not V[k]: continue
-    cards="\n".join(card(n,c,i+1,*v) for i,v in enumerate(V[k]))
-    sections.append(f'''<section id="{k}" style="scroll-margin-top: 16px; margin-bottom: 48px">
+def section_list(fields, vids):
+  out=[]
+  for k,n,c,desc in fields:
+    if not vids[k]: continue
+    cards="\n".join(card(n,c,i+1,*v) for i,v in enumerate(vids[k]))
+    out.append(f'''<section id="{k}" style="scroll-margin-top: 16px; margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid {c}">
 <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">{n}</h2>
-<span style="font-size: 14px; font-weight: 700; color: #0070C0">{len(V[k])}편</span>
+<span style="font-size: 14px; font-weight: 700; color: #0070C0">{len(vids[k])}편</span>
 <span style="font-size: 14px; color: #5A6478">{desc}</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
 {cards}
 </div>
 </section>''')
+  return out
+sections = section_list(FIELDS, V)
+ex_sections = section_list(EXF, EV)
 
 desc_meta = f"김영석 교수(경북대학교)와 함께하는 「AI 에이전트 유한요소 해석」 강의 영상 {total}편 바로 가기 — 스타웍스"
 page=f'''<!doctype html>
@@ -104,7 +118,7 @@ html{{scroll-behavior:smooth}}
 <div style="max-width: 1200px; margin: 0 auto; padding: 64px 24px 56px; display: flex; flex-direction: column; gap: 14px">
 <p style="margin: 0; {F}; font-size: 14px; letter-spacing: 2px; color: #9CC3E8">LECTURES</p>
 <h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">AI 에이전트 유한요소 해석</h1>
-<p style="margin: 0; font-size: 18px; color: #C9D3E0">경북대학교 김영석 교수 · 스타웍스 신동우 · 강의 영상 {total}편</p>
+<p style="margin: 0; font-size: 18px; color: #C9D3E0">경북대학교 김영석 교수 · 스타웍스 신동우 · 강의 영상 {total}편 · 해석 기초 예제 {extotal}편</p>
 <p style="margin: 0; font-size: 14px; color: #9CC3E8">최근 갱신 {D["updated"]}</p>
 </div>
 </section>
@@ -112,11 +126,21 @@ html{{scroll-behavior:smooth}}
 <section style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 24px">
 <nav aria-label="분야 바로 가기" style="display: flex; flex-wrap: wrap; gap: 8px">
 {chips}
+{chips_ex}
 </nav>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 16px 24px 32px">
 {chr(10).join(sections)}
+</section>
+
+<section id="examples" style="max-width: 1200px; margin: 0 auto; padding: 0 24px 32px">
+<div style="border-top: 1px solid #C9D3E0; padding-top: 32px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px">
+<p style="margin: 0; {F}; font-size: 13px; letter-spacing: 2px; color: #5A6478">EXAMPLES</p>
+<h2 style="margin: 0; font-size: 30px; font-weight: 900; color: #1E3252">{e(EX["title"])}</h2>
+<p style="margin: 0; font-size: 15px; color: #4A5568">{e(EX["desc"])}</p>
+</div>
+{chr(10).join(ex_sections)}
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 72px">
@@ -154,4 +178,4 @@ html{{scroll-behavior:smooth}}
 </html>
 '''
 open(OUT,"w",encoding="utf-8").write(page)
-print("cards", total)
+print("cards", total, "examples", extotal)

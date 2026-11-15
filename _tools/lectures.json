@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15 14:05",
+  "updated": "2026-11-15 15:40",
   "fields": [
     {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분"},
     {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력"},
@@ -25,5 +25,19 @@
     {"field": "md",         "num": 1, "id": "DlCktoc-Ysk", "date": "2026-11-14", "dur": "2:59",  "title": "나노 인덴테이션 논문 다시 읽기 — 조사·검산"},
     {"field": "md",         "num": 2, "id": "uYC5zyBtPHI", "date": "2026-11-15", "dur": "9:32",  "title": "LAMMPS를 포트란으로 — 분자동역학·이산요소법, LMFP 압착 기초 연구"},
     {"field": "dem",        "num": 1, "id": "fEElZ00C2Rs", "date": "2026-11-14", "dur": "3:10",  "title": "전기차 배터리 전극 압연 — 문제 정의·조사"}
-  ]
+  ],
+  "examples": {
+    "title": "해석 기초 예제",
+    "desc": "스타웍스 · 상용 해석 프로그램 없이 AI 에이전트와 대화로 푼 기초 예제",
+    "fields": [
+      {"key": "ex-boot", "name": "부트 구조해석",        "color": "#4a5568", "desc": "CVJ 고무 부트 비선형 해석 · CCX · 자체 포트란 솔버 · ANSYS 비교"},
+      {"key": "ex-cfd",  "name": "유동해석",             "color": "#0b84c6", "desc": "대화로 푸는 유동해석 · 모델은 사람이 정함 · 한국어판·영어판"}
+    ],
+    "videos": [
+      {"field": "ex-boot", "num": 1, "id": "uCJZ7hxlCqU", "date": "2026-11-06", "dur": "5:14", "title": "AI 에이전트 vs 고무 부트 FEA — CCX, 자체 Fortran 솔버 & ANSYS (CVJ 부트)"},
+      {"field": "ex-boot", "num": 2, "id": "cP24a6nVUZA", "date": "2026-11-06", "dur": "4:10", "title": "AI 에이전트로 고무 부트 비선형 해석 — 상용 S/W 없이 자체 포트란 솔버로 52° 완주"},
+      {"field": "ex-cfd",  "num": 1, "id": "y8Lb9_IyAY8", "date": "2026-11-06", "dur": "4:48", "title": "해석 프로그램 없이, 대화로 유동해석 — AI는 도구일 뿐, 모델은 사람이 정한다"},
+      {"field": "ex-cfd",  "num": 2, "id": "bHiXW7Af56Q", "date": "2026-11-06", "dur": "4:38", "title": "(영어판) CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model"}
+    ]
+  }
 }
