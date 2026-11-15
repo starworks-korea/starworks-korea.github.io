@@ -104,26 +104,7 @@ def build(P):
 {cards}
 </div>
 </section>''')
-    # 공개 범위 목록
-    panels=[]
-    for vis, note in (("공개", "누구나 검색해서 볼 수 있는 영상"), ("일부 공개", "링크를 받은 분께만 공개하는 영상")):
-        rows=[]
-        for k,n,c,_ in FIELDS:
-            for v in V[k]:
-                if v.get("vis","공개")!=vis: continue
-                ds=v["date"].replace("-",". ")+"."
-                rows.append(f'<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/{v["id"]}" target="_blank" rel="noopener"><span class="b" style="background: {c}">{e(n)}</span><span class="t">{e(v["title"])}</span><span class="d">{ds}</span></a></li>')
-        panels.append(f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
-<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
-<span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: {VISC[vis]}; display: inline-block"></span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{VISLABEL[vis]} 영상</h2>
-<span style="font-size: 15px; font-weight: 700; color: #0070C0">{len(rows)}편</span>
-<span style="font-size: 14px; color: #5A6478">{note}</span>
-</div>
-<ul style="margin: 0; padding: 0; list-style: none">
-{chr(10).join(rows) if rows else '<li style="border-top: 1px solid #DCE1E8; padding: 10px 2px; font-size: 14px; color: #8A96A8">지금은 없습니다</li>'}
-</ul>
-</div>''')
+    # 공개·회원 공개 목록은 강의 페이지에만 둠 (대표 지시 2026-11-15)
     # 언어 버전 요약
     LV = [v.get("lang", {}) for v in ALLV]
     SP = [lg for lg in LV if not lg.get("none")]
@@ -204,13 +185,8 @@ def build(P):
 </div>
 </section>
 
-<section aria-label="공개 범위" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 20px; align-items: start">
-{chr(10).join(panels)}
-</div>
-<div style="margin-top: 20px">
+<section aria-label="언어 버전" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
 {lang_html}
-</div>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
