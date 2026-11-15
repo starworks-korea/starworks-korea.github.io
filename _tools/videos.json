@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15 19:00",
+ "updated": "2026-11-16 00:11",
  "pages": [
   {
    "key": "tech",
@@ -37,13 +37,29 @@
    "videos": [
     {
      "field": "machining",
-     "id": "ZrwNF96zG4w",
+     "id": "dklue8DwiCI",
      "vis": "공개",
      "date": "2026-11-15",
      "dur": "8:22",
      "lang": {
+      "ko": "더빙",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT",
+     "title_en": "From One Drawing Photo to Machining-Center NC Code | AI Machining Ep.2 (MCT)"
+    },
+    {
+     "field": "machining",
+     "id": "xTrJ7snnq2Q",
+     "vis": "공개",
+     "date": "2026-11-15",
+     "dur": "6:41",
+     "lang": {
       "ko": "원본",
-      "en": "더빙",
+      "en": "",
       "ja": "",
       "es": "",
       "etc": {
@@ -52,8 +68,8 @@
        ]
       }
      },
-     "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT (재업로드)",
-     "title_en": "From One Drawing Photo to Machining-Center NC Code | AI Machining Part 2: MCT (Re-upload)"
+     "title": "캠 없이 말로만 만든 시편 가공 프로그램 | AI 가공 1탄 라우터 ①",
+     "title_en": "No CAM, Just Talking: AI-Built Specimen CAM | AI Machining Ep.1 Router, Part 1"
     },
     {
      "field": "machining",
