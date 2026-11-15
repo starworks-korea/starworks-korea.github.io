@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16 00:11",
+ "updated": "2026-11-16 00:40",
  "pages": [
   {
    "key": "tech",
@@ -37,6 +37,38 @@
    "videos": [
     {
      "field": "machining",
+     "id": "EHBN6_ejKiU",
+     "vis": "공개",
+     "date": "2026-11-16",
+     "dur": "6:48",
+     "lang": {
+      "ko": "더빙",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "캠 없이 말로만 만든 시편 가공 프로그램 | AI 가공 1탄 라우터 ①",
+     "title_en": "No CAM, Just Talking: AI-Built Specimen CAM | AI Machining Ep.1 Router, Part 1"
+    },
+    {
+     "field": "machining",
+     "id": "dBBej0ivFvk",
+     "vis": "공개",
+     "date": "2026-11-16",
+     "dur": "9:50",
+     "lang": {
+      "ko": "더빙",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "공구는 왜 부러졌나 — 원인과 대응 방법 | AI 가공 1탄 라우터 ②",
+     "title_en": "Why Did the Router Bit Break? Cause and Fix | AI Machining Ep.1 Router, Part 2"
+    },
+    {
+     "field": "machining",
      "id": "dklue8DwiCI",
      "vis": "공개",
      "date": "2026-11-15",
@@ -50,46 +82,6 @@
      },
      "title": "도면 사진 한 장으로 머시닝센터 NC까지 만들었습니다 | AI 가공 2탄 MCT",
      "title_en": "From One Drawing Photo to Machining-Center NC Code | AI Machining Ep.2 (MCT)"
-    },
-    {
-     "field": "machining",
-     "id": "xTrJ7snnq2Q",
-     "vis": "공개",
-     "date": "2026-11-15",
-     "dur": "6:41",
-     "lang": {
-      "ko": "원본",
-      "en": "",
-      "ja": "",
-      "es": "",
-      "etc": {
-       "자동": [
-        "인도네시아어"
-       ]
-      }
-     },
-     "title": "캠 없이 말로만 만든 시편 가공 프로그램 | AI 가공 1탄 라우터 ①",
-     "title_en": "No CAM, Just Talking: AI-Built Specimen CAM | AI Machining Ep.1 Router, Part 1"
-    },
-    {
-     "field": "machining",
-     "id": "WcqvuOA6mDE",
-     "vis": "공개",
-     "date": "2026-11-14",
-     "dur": "15:58",
-     "lang": {
-      "ko": "원본",
-      "en": "",
-      "ja": "",
-      "es": "",
-      "etc": {
-       "자동": [
-        "인도네시아어"
-       ]
-      }
-     },
-     "title": "캠 프로그램 없이 말로만 시편을 깎다가 공구가 부러졌습니다 | AI 가공 1탄 라우터 CNC",
-     "title_en": "We Cut Test Specimens by Voice, No CAM — and Broke a Tool | AI Machining Part 1: Router CNC"
     },
     {
      "field": "machining",
