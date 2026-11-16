@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16 00:40",
+ "updated": "2026-11-16 21:14",
  "pages": [
   {
    "key": "tech",
@@ -29,12 +29,28 @@
      "key": "fem",
      "name": "오픈소스 해석",
      "color": "#2f855a",
-     "desc": "FreeCAD FEM · 복합재 · 2재료",
+     "desc": "FreeCAD FEM · 복합재 · 2재료 · OpenFOAM 코팅 유동",
      "name_en": "Open-Source Analysis",
-     "desc_en": "FreeCAD FEM · composites · two materials"
+     "desc_en": "FreeCAD FEM · composites · two materials · OpenFOAM coating flow"
     }
    ],
    "videos": [
+    {
+     "field": "fem",
+     "id": "jAxgmTHf_5E",
+     "vis": "공개",
+     "date": "2026-11-16",
+     "dur": "2:50",
+     "lang": {
+      "ko": "더빙",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "T바 슬롯다이 개발 컨셉 — 기공 없는 배터리 전극 코팅 조건 | AI 에이전트 해석",
+     "title_en": "T-Bar Slot Die Concept: Void-Free Battery Electrode Coating | AI-Agent CFD"
+    },
     {
      "field": "machining",
      "id": "EHBN6_ejKiU",
