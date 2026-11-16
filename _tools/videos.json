@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17 04:45",
+ "updated": "2026-11-17 04:52",
  "pages": [
   {
    "key": "tech",
@@ -35,6 +35,22 @@
     }
    ],
    "videos": [
+    {
+     "field": "fem",
+     "id": "zmmx1sqxW6M",
+     "vis": "일부 공개",
+     "date": "2026-11-17",
+     "dur": "3:49",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "T바 슬롯다이 — 전체 구조와 개발 유의점 | 형상·흐름·해석·정밀도·가공 (한국어판)",
+     "title_en": "T-Bar Slot Die — Overall Structure and Development Notes | Geometry · Flow · Analysis · Precision · Machining (Korean version)"
+    },
     {
      "field": "machining",
      "id": "EHBN6_ejKiU",
