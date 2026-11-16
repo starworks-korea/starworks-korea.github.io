@@ -1,5 +1,6 @@
 {
   "updated": "2026-11-16 00:45",
+  "review_api": "",
   "fields": [
     {"key": "fracture",   "name": "파괴역학",   "color": "#c0392b", "desc": "피로균열 · CT 시편 · VCCT · J-적분", "name_en": "Fracture Mechanics", "desc_en": "Fatigue cracks · CT specimens · VCCT · J-integral"},
     {"key": "plasticity", "name": "소성역학",   "color": "#1f5fa8", "desc": "열박음 복합원관 · 반도체 회로 열응력", "name_en": "Plasticity", "desc_en": "Shrink-fit compound cylinders · thermal stress in semiconductor circuits"},

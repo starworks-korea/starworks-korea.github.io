@@ -5,7 +5,7 @@ from collections import Counter
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
-import i18n
+import i18n, reviews_ui
 from i18n import t, tr
 
 D = json.load(open(os.path.join(HERE, "lectures.json"), encoding="utf-8"))
@@ -15,6 +15,7 @@ VISC = {"공개": "#22C55E", "일부 공개": "#F59E0B"}
 LCLASS = {"원본": "lg-o", "더빙": "lg-d", "자동": "lg-a", "": "lg-n"}
 ETC_ORDER = ["원본", "더빙", "자동"]
 SERIES_KO, SERIES_EN = "AI 에이전트 유한요소 해석", "Finite Element Analysis with AI Agents"
+REV = D.get("review_api", "").strip()   # 리뷰 저장소(앱스 스크립트 웹 앱) 주소 — 비면 리뷰 UI 없음
 
 def etc_state(lg):
     etc = lg.get("etc") or {}
@@ -60,7 +61,7 @@ def build(L):
         return out
 
     def card(name, color, num, vid, title, dur, date, vis, lg):
-        return f'''<a href="https://youtu.be/{vid}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
+        a = f'''<a href="https://youtu.be/{vid}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="{e(name)} {num} {t(L, "썸네일", "thumbnail")}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
 <span style="position: absolute; left: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; {F}; font-size: 12px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {VISC.get(vis, '#9CA3AF')}; display: inline-block"></span>{VL.get(vis, vis)}</span>
@@ -73,6 +74,12 @@ def build(L):
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">{t(L, "유튜브에서 보기", "Watch on YouTube")} ↗</span>
 </div>
 </a>'''
+        if not REV: return a
+        # 리뷰 버튼 (카드 아래) — 누르면 아래 rvdlg 창이 열림
+        return f'''<div class="vitem">
+{a}
+<button type="button" class="rvbtn" data-vid="{vid}" data-title="{e(name)} {num} · {e(title)}" aria-haspopup="dialog"><span aria-hidden="true">💬</span> {t(L, "리뷰", "Reviews")} <span class="rvn"></span><span class="rvgo">{t(L, "쓰기", "Write")} ›</span></button>
+</div>'''
 
     def section_list(fields, vids):
         out = []
@@ -162,6 +169,7 @@ def build(L):
                   f"{total} lecture videos of “{SERIES_EN}” with Prof. Young-Suk Kim (Kyungpook National University) — STAR Works")
     title = t(L, f"스타웍스 강의 영상 — {SERIES_KO}", f"STAR Works Lectures — {SERIES_EN}")
     foot = "\n".join(f'<p style="margin: 0">{x}</p>' for x in i18n.footer_lines(L))
+    rv_css, rv_html = ("\n" + x if x else "" for x in reviews_ui.ui(L, REV))
     return f'''<!doctype html>
 <html lang="{L}">
 <head>
@@ -202,7 +210,7 @@ html{{scroll-behavior:smooth}}
 .vrow .t{{color:#1E3252}}
 .vrow .d{{font-size:13px;color:#5A6478;white-space:nowrap}}
 .vrow:hover .t{{color:#0070C0}}
-@media (max-width:600px){{.vrow{{grid-template-columns:auto 1fr}}.vrow .d{{justify-self:end}}.vrow .t{{grid-column:1 / -1;grid-row:2}}h1{{font-size:34px !important}}}}
+@media (max-width:600px){{.vrow{{grid-template-columns:auto 1fr}}.vrow .d{{justify-self:end}}.vrow .t{{grid-column:1 / -1;grid-row:2}}h1{{font-size:34px !important}}}}{rv_css}
 </style>
 </head>
 <body>
@@ -285,7 +293,7 @@ html{{scroll-behavior:smooth}}
 </div>
 </footer>
 
-</div>
+</div>{rv_html}
 </body>
 </html>
 ''', total, extotal
