@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17 04:52",
+ "updated": "2026-11-17 04:56",
  "pages": [
   {
    "key": "tech",
@@ -29,12 +29,28 @@
      "key": "fem",
      "name": "오픈소스 해석",
      "color": "#2f855a",
-     "desc": "FreeCAD FEM · 복합재 · 2재료 · OpenFOAM 코팅 유동",
+     "desc": "FreeCAD FEM · 복합재 · 2재료 · OpenFOAM 코팅 유동 · 용접 변형",
      "name_en": "Open-Source Analysis",
-     "desc_en": "FreeCAD FEM · composites · two materials · OpenFOAM coating flow"
+     "desc_en": "FreeCAD FEM · composites · two materials · OpenFOAM coating flow · welding distortion"
     }
    ],
    "videos": [
+    {
+     "field": "fem",
+     "id": "bWfDLImP_fc",
+     "vis": "일부 공개",
+     "date": "2026-11-17",
+     "dur": "3:36",
+     "lang": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "용접 순서를 바꾸면 변형이 줄어들까? 시트 프레임 용접 변형 해석 | AI 자동 해석 (한국어판)",
+     "title_en": "Can Changing the Weld Sequence Reduce Distortion? Seat Frame Welding Distortion Analysis | AI-Automated Analysis (Korean version)"
+    },
     {
      "field": "fem",
      "id": "zmmx1sqxW6M",
