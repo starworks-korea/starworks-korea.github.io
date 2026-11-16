@@ -41,6 +41,46 @@ html{scroll-behavior:smooth}
 .vrow .d{font-size:13px;color:#5A6478;white-space:nowrap}
 .vrow:hover .t{color:#0070C0}
 @media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}h1{font-size:34px !important}}
+.vitem{display:flex;flex-direction:column;gap:8px}
+.vitem .vcard{flex:1}
+.rvbtn{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:8px 14px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;color:#1E3252;background:#FFFFFF;border:1px solid #DCE1E8;border-radius:8px;cursor:pointer;text-align:left}
+.rvbtn:hover{border-color:#0070C0;color:#0070C0}
+.rvbtn:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
+.rvn{color:#0070C0}
+.rvgo{margin-left:auto;font-size:14px;color:#0070C0}
+#rvdlg{width:min(640px,calc(100% - 24px));max-width:none;max-height:calc(100% - 24px);padding:0;border:0;border-radius:12px;background:#FFFFFF;box-shadow:0 20px 60px rgba(30,50,82,.35);font-family:'Noto Sans KR',sans-serif;color:#1E3252}
+#rvdlg::backdrop{background:rgba(22,38,63,.62)}
+.rvbox{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto}
+.rvhead{position:sticky;top:0;z-index:1;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:18px 20px 16px;background:#1E3252;color:#FFFFFF}
+.rvk{margin:0;font-size:12px;letter-spacing:2px;color:#9CC3E8}
+#rvh{margin:4px 0 0;font-size:18px;font-weight:900;line-height:1.4}
+.rvx{flex:none;width:44px;height:44px;margin:-8px -10px 0 0;font-size:28px;line-height:1;color:#FFFFFF;background:transparent;border:0;border-radius:8px;cursor:pointer}
+.rvx:hover{background:rgba(255,255,255,.14)}
+.rvx:focus-visible{outline:3px solid #9CC3E8;outline-offset:-3px}
+.rvlist{padding:6px 20px;background:#F8FAFC;border-bottom:1px solid #DCE1E8}
+.rvitem{padding:12px 0;border-bottom:1px solid #DCE1E8}
+.rvitem:last-child{border-bottom:0}
+.rvmeta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:15px}
+.rvmeta b{font-weight:700;color:#1E3252}
+.rvmeta time{font-size:13px;color:#5A6478}
+.rvtext{margin:4px 0 0;font-size:15px;line-height:1.65;color:#2D3748;white-space:pre-wrap}
+.rvempty{margin:14px 0;font-size:15px;color:#5A6478}
+#rvform{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px 20px 18px}
+#rvform label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700;color:#1E3252}
+#rvform input,#rvform textarea{font-family:inherit;font-size:16px;font-weight:400;padding:10px 12px;border:1px solid #C9D3E0;border-radius:6px;color:#1E3252;background:#FFFFFF}
+#rvform textarea{resize:vertical;min-height:110px;line-height:1.6}
+#rvform input:focus,#rvform textarea:focus{outline:2px solid #0070C0;outline-offset:0;border-color:#0070C0}
+.rvhp{position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
+.rvfoot{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rvcnt{font-size:13px;color:#5A6478}
+.rvsend{min-height:44px;padding:10px 22px;font-family:inherit;font-size:15px;font-weight:700;color:#FFFFFF;background:#0070C0;border:0;border-radius:6px;cursor:pointer}
+.rvsend:hover{background:#005A9C}
+.rvsend:disabled{opacity:.6;cursor:default}
+.rvmsg{margin:0;font-size:14px;min-height:1.4em}
+.rvmsg.ok{color:#2F855A}
+.rvmsg.err{color:#C53030}
+.rvnote{margin:0;font-size:12px;line-height:1.5;color:#5A6478}
+@media (max-width:600px){#rvdlg{width:100%;height:100%;max-height:none;margin:0;border-radius:0}.rvbox{height:100%;max-height:none}}
 </style>
 </head>
 <body>
@@ -177,6 +217,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Fatigue cracks · CT specimens · VCCT · J-integral</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/0QXhANZQQEI" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/0QXhANZQQEI/hqdefault.jpg" alt="Fracture Mechanics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -190,6 +231,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="0QXhANZQQEI" data-title="Fracture Mechanics 1 · Fatigue Crack Growth — Newman Crack-Closure Model (Example 6-4)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/wbEDfxQmUjg" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/wbEDfxQmUjg/hqdefault.jpg" alt="Fracture Mechanics 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -203,6 +247,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="wbEDfxQmUjg" data-title="Fracture Mechanics 2 · Residual Stress at the Crack Tip of a CT Specimen — 2024-T3 Aluminum" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/Q2sy-o0cyQg" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/Q2sy-o0cyQg/hqdefault.jpg" alt="Fracture Mechanics 3 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -216,6 +263,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="Q2sy-o0cyQg" data-title="Fracture Mechanics 3 · CT Specimen VCCT &amp; Compliance — Back to Standards and Theory (Research in Progress)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/HGGTSTMd9A8" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/HGGTSTMd9A8/hqdefault.jpg" alt="Fracture Mechanics 4 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -229,6 +279,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="HGGTSTMd9A8" data-title="Fracture Mechanics 4 · Correcting the Equation in Fig. 3.16 · J-Integral (Under Review)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="plasticity" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -238,6 +290,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Shrink-fit compound cylinders · thermal stress in semiconductor circuits</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/ciChJzgvNv4" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/ciChJzgvNv4/hqdefault.jpg" alt="Plasticity 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -251,6 +304,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="ciChJzgvNv4" data-title="Plasticity 1 · Shrink-Fit Compound Cylinder and Thermal Stress in Semiconductor Interconnects (Examples 6-8 · 6-9)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/3cfDfa7IRRY" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/3cfDfa7IRRY/hqdefault.jpg" alt="Plasticity 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -264,6 +320,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="3cfDfa7IRRY" data-title="Plasticity 2 · Short-Circuit Risk from Thermal Deformation in Semiconductor Circuits — Example 6-9 Revisited" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="rubber" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -273,6 +331,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Hyperelasticity · Mullins effect</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/RgkMhYia7k0" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/RgkMhYia7k0/hqdefault.jpg" alt="Rubber Mechanics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -286,6 +345,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="RgkMhYia7k0" data-title="Rubber Mechanics 1 · Rubber Deformation Basics — Three Tests and Hyperelasticity" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/quWufgmxWtU" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/quWufgmxWtU/hqdefault.jpg" alt="Rubber Mechanics 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -299,6 +361,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="quWufgmxWtU" data-title="Rubber Mechanics 2 · The Mullins Effect in Rubber — Ogden–Roxburgh Model" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="math" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -308,6 +372,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Vibration · heat conduction · Poisson · diffusion</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/0Fy96KIkfAA" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/0Fy96KIkfAA/hqdefault.jpg" alt="Engineering Math 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -321,6 +386,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="0Fy96KIkfAA" data-title="Engineering Math 1 · Forced Vibration of a Spring–Mass System (Example 1-40)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/hznzu9yaNRE" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/hznzu9yaNRE/hqdefault.jpg" alt="Engineering Math 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -334,6 +402,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="hznzu9yaNRE" data-title="Engineering Math 2 · Vibration of a Rectangular Membrane (Problem 1)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/-9DGrv6BE5E" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/-9DGrv6BE5E/hqdefault.jpg" alt="Engineering Math 3 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -347,6 +418,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="-9DGrv6BE5E" data-title="Engineering Math 3 · Heat Conduction in a Square Plate (Problem 3)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/au0dfKm9ieM" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/au0dfKm9ieM/hqdefault.jpg" alt="Engineering Math 4 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -360,6 +434,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="au0dfKm9ieM" data-title="Engineering Math 4 · Electrostatic Poisson Equation (Problem 4)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/3W3CjQu6VDk" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/3W3CjQu6VDk/hqdefault.jpg" alt="Engineering Math 5 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -373,6 +450,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="3W3CjQu6VDk" data-title="Engineering Math 5 · Diffusion Equation and Gear Nitriding (Problems 5 · 6)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="md" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -382,6 +461,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Nanoindentation · LAMMPS · Fortran · dislocations · EAM</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/w4MPJeswcgQ" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/w4MPJeswcgQ/hqdefault.jpg" alt="Molecular Dynamics 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -395,6 +475,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="w4MPJeswcgQ" data-title="Molecular Dynamics 1 · Nanoindentation Molecular Dynamics — From Re-checking a 2003 Paper to LAMMPS · Fortran, Dislocations and EAM" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="dem" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -404,6 +486,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">EV battery electrode compaction · 3D DEM</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/6rugk-caong" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/6rugk-caong/hqdefault.jpg" alt="Discrete Element Method 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -417,6 +500,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="6rugk-caong" data-title="Discrete Element Method 1 · LFP vs NMC Cathode Calendering at the Same Pressure" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 </section>
@@ -434,6 +519,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">Nonlinear CVJ rubber boot analysis · CCX · in-house Fortran solver · ANSYS comparison</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/uCJZ7hxlCqU" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/uCJZ7hxlCqU/hqdefault.jpg" alt="Boot Structural Analysis 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -447,6 +533,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="uCJZ7hxlCqU" data-title="Boot Structural Analysis 1 · AI Agent vs. Rubber Boot FEA — CCX, In-House Fortran Solver &amp; ANSYS (CVJ Boot)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/cP24a6nVUZA" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/cP24a6nVUZA/hqdefault.jpg" alt="Boot Structural Analysis 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -460,6 +549,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="cP24a6nVUZA" data-title="Boot Structural Analysis 2 · Nonlinear Rubber Boot Analysis with an AI Agent — No Commercial Software, In-House Fortran Solver to 52°" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 <section id="ex-cfd" style="scroll-margin-top: 16px; margin-bottom: 48px">
@@ -469,6 +560,7 @@ html{scroll-behavior:smooth}
 <span style="font-size: 14px; color: #5A6478">CFD by chat · people choose the model · Korean &amp; English versions</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px">
+<div class="vitem">
 <a href="https://youtu.be/y8Lb9_IyAY8" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/y8Lb9_IyAY8/hqdefault.jpg" alt="CFD 1 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -482,6 +574,9 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="y8Lb9_IyAY8" data-title="CFD 1 · CFD by Chat, No Analysis Software — AI Is Just the Tool, People Choose the Model" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
+<div class="vitem">
 <a href="https://youtu.be/bHiXW7Af56Q" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/bHiXW7Af56Q/hqdefault.jpg" alt="CFD 2 thumbnail" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -495,6 +590,8 @@ html{scroll-behavior:smooth}
 <span style="margin-top: auto; padding-top: 4px; font-size: 14px; font-weight: 700; color: #0070C0">Watch on YouTube ↗</span>
 </div>
 </a>
+<button type="button" class="rvbtn" data-vid="bHiXW7Af56Q" data-title="CFD 2 · CFD by Chat, No CAE Software — AI Provides the Tools, You Choose the Model (English Version)" aria-haspopup="dialog"><span aria-hidden="true">💬</span> Reviews <span class="rvn"></span><span class="rvgo">Write ›</span></button>
+</div>
 </div>
 </section>
 </section>
@@ -530,5 +627,84 @@ html{scroll-behavior:smooth}
 </footer>
 
 </div>
+<dialog id="rvdlg" aria-labelledby="rvh">
+<div class="rvbox">
+<div class="rvhead"><div><p class="rvk">REVIEWS</p><h2 id="rvh"></h2></div><button type="button" class="rvx" aria-label="Close">×</button></div>
+<div class="rvlist" id="rvlist" aria-live="polite"></div>
+<form id="rvform" novalidate>
+<label>Name<input name="name" maxlength="30" autocomplete="nickname" placeholder="Your name or nickname" required></label>
+<label>Review<textarea name="text" maxlength="1000" rows="4" placeholder="What did you think? What part helped you?" required></textarea></label>
+<div class="rvhp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+<div class="rvfoot"><span class="rvcnt">0 / 1000</span><button type="submit" class="rvsend">Post review</button></div>
+<p class="rvmsg" role="status"></p>
+<p class="rvnote">Your name and review are shown publicly on this page. Please don&#x27;t include contact details.</p>
+</form>
+</div>
+</dialog>
+<script>
+(function(){
+var API="https://script.google.com/macros/s/AKfycbzCLM2-DaxFv-udxm7yl5npSLAaoggLug3eQswX435XAaIrCLvM4Y468EFb4Dg3QA/exec", T={"kicker": "REVIEWS", "close": "Close", "name": "Name", "name_ph": "Your name or nickname", "text": "Review", "text_ph": "What did you think? What part helped you?", "send": "Post review", "sending": "Sending…", "ok": "Thank you! Your review has been posted.", "empty": "No reviews yet. Be the first to write one.", "loading": "Loading reviews…", "loaderr": "Couldn't load reviews. Please open this again in a moment.", "needname": "Please enter your name.", "needtext": "Please write at least 2 characters.", "dup": "This review has already been posted.", "rate": "Too many reviews right now. Please try again in a minute.", "fail": "Couldn't post your review. Please try again in a moment.", "note": "Your name and review are shown publicly on this page. Please don't include contact details."}, LANG="en";
+var dlg=document.getElementById('rvdlg'); if(!dlg||!API||!window.fetch) return;
+var list=document.getElementById('rvlist'), head=document.getElementById('rvh'), form=document.getElementById('rvform');
+var fn=form.elements.name, ft=form.elements.text, fh=form.elements.website;
+var cnt=form.querySelector('.rvcnt'), msg=form.querySelector('.rvmsg'), send=form.querySelector('.rvsend');
+var data={}, state='loading', cur=null, lastBtn=null;
+function getName(){try{return localStorage.getItem('rv_name')||''}catch(x){return ''}}
+function putName(v){try{localStorage.setItem('rv_name',v)}catch(x){}}
+function el(tag,cls,txt){var x=document.createElement(tag); if(cls) x.className=cls; if(txt!=null) x.textContent=txt; return x}
+function day(t){var d=new Date(t); if(isNaN(d.getTime())) return null; return d}
+function fmt(d){return LANG==='ko' ? d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+'.' : d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}
+function paint(){
+  var bs=document.querySelectorAll('.rvbtn');
+  for(var i=0;i<bs.length;i++){var n=(data[bs[i].getAttribute('data-vid')]||[]).length; bs[i].querySelector('.rvn').textContent=(state==='ok'||n)?String(n):''}
+}
+function render(){
+  list.textContent='';
+  var arr=(data[cur]||[]).slice().sort(function(a,b){return (b.t||0)-(a.t||0)});
+  if(!arr.length){list.appendChild(el('p','rvempty',state==='loading'?T.loading:state==='err'?T.loaderr:T.empty)); return}
+  arr.forEach(function(r){
+    var it=el('div','rvitem'), m=el('div','rvmeta'), d=day(r.t);
+    m.appendChild(el('b',null,r.name));
+    if(d){var tm=el('time',null,fmt(d)); tm.setAttribute('datetime',d.toISOString()); m.appendChild(tm)}
+    it.appendChild(m); it.appendChild(el('p','rvtext',r.text)); list.appendChild(it);
+  });
+}
+function load(){
+  state='loading';
+  fetch(API+'?action=list',{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
+    if(!j||!j.ok) throw new Error('bad');
+    var nd={}; (j.reviews||[]).forEach(function(r){(nd[r.vid]=nd[r.vid]||[]).push(r)}); data=nd; state='ok';
+  }).catch(function(){state='err'}).then(function(){paint(); if(cur) render()});
+}
+function setMsg(s,c){msg.textContent=s; msg.className='rvmsg'+(c?' '+c:'')}
+function upd(){cnt.textContent=ft.value.length+' / 1000'}
+function close(){if(dlg.close) dlg.close(); else {dlg.removeAttribute('open'); if(lastBtn) lastBtn.focus()}}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest?ev.target.closest('.rvbtn'):null; if(!b) return;
+  cur=b.getAttribute('data-vid'); lastBtn=b; head.textContent=b.getAttribute('data-title');
+  setMsg('',''); render(); if(!fn.value) fn.value=getName(); upd();
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
+  if(window.matchMedia&&matchMedia('(pointer:fine)').matches) (fn.value?ft:fn).focus();  // no auto keyboard on phones
+  if(state==='err') load();
+});
+dlg.querySelector('.rvx').addEventListener('click',close);
+dlg.addEventListener('click',function(ev){if(ev.target===dlg) close()});
+dlg.addEventListener('close',function(){if(lastBtn) lastBtn.focus()});
+ft.addEventListener('input',upd);
+form.addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var name=fn.value.trim(), text=ft.value.trim(), vid=cur;
+  if(!name){setMsg(T.needname,'err'); fn.focus(); return}
+  if(text.length<2){setMsg(T.needtext,'err'); ft.focus(); return}
+  send.disabled=true; setMsg(T.sending,'');
+  fetch(API,{method:'POST',body:JSON.stringify({vid:vid,lang:LANG,name:name,text:text,website:fh.value})}).then(function(r){return r.json()}).then(function(j){
+    if(j&&j.ok&&j.review){
+      (data[vid]=data[vid]||[]).push(j.review); putName(name); ft.value=''; upd(); paint(); if(cur===vid) render(); setMsg(T.ok,'ok');
+    } else setMsg(T[j&&j.error]||T.fail,'err');
+  }).catch(function(){setMsg(T.fail,'err')}).then(function(){send.disabled=false});
+});
+load();
+})();
+</script>
 </body>
 </html>

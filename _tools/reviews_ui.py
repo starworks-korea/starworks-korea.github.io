@@ -138,7 +138,7 @@ document.addEventListener('click',function(ev){
   cur=b.getAttribute('data-vid'); lastBtn=b; head.textContent=b.getAttribute('data-title');
   setMsg('',''); render(); if(!fn.value) fn.value=getName(); upd();
   if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
-  if(window.matchMedia&&matchMedia('(pointer:fine)').matches) (fn.value?ft:fn).focus();  // 휴대폰은 키보드가 바로 뜨지 않게
+  if(window.matchMedia&&matchMedia('(pointer:fine)').matches) (fn.value?ft:fn).focus();  // no auto keyboard on phones
   if(state==='err') load();
 });
 dlg.querySelector('.rvx').addEventListener('click',close);
