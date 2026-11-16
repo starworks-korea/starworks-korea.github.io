@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16 21:14",
+ "updated": "2026-11-17 04:45",
  "pages": [
   {
    "key": "tech",
@@ -35,22 +35,6 @@
     }
    ],
    "videos": [
-    {
-     "field": "fem",
-     "id": "jAxgmTHf_5E",
-     "vis": "공개",
-     "date": "2026-11-16",
-     "dur": "2:50",
-     "lang": {
-      "ko": "더빙",
-      "en": "원본",
-      "ja": "",
-      "es": "",
-      "etc": {}
-     },
-     "title": "T바 슬롯다이 개발 컨셉 — 기공 없는 배터리 전극 코팅 조건 | AI 에이전트 해석",
-     "title_en": "T-Bar Slot Die Concept: Void-Free Battery Electrode Coating | AI-Agent CFD"
-    },
     {
      "field": "machining",
      "id": "EHBN6_ejKiU",
