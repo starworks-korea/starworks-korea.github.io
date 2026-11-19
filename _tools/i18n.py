@@ -9,6 +9,7 @@ NAV = [
     ("tech.html", "기술 영상", "Tech"),
     ("promo.html", "홍보 영상", "Promo"),
     ("stories.html", "이야기", "Stories"),
+    ("coupon-tool.html", "통합 툴", "Tool"),
     ("contact.html", "연락처", "Contact"),
 ]
 CTA = {"ko": "제작 문의", "en": "Request a Quote"}

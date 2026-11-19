@@ -36,4 +36,16 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/contact.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/contact.html"/>
   </url>
+  <url>
+    <loc>https://starworks-korea.github.io/coupon-tool.html</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://starworks-korea.github.io/coupon-tool.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/coupon-tool.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/coupon-tool.html"/>
+  </url>
+  <url>
+    <loc>https://starworks-korea.github.io/ko/coupon-tool.html</loc><lastmod>2026-11-19</lastmod><priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://starworks-korea.github.io/coupon-tool.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/coupon-tool.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/coupon-tool.html"/>
+  </url>
 </urlset>

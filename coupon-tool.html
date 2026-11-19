@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STAR Works — Coupon Design & Fabrication</title>
+<meta name="description" content="Composite simulation and machining tool: predict coupon properties from material, thickness and layup, then cut the coupons.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="STAR Works STARWORKS">
+<meta property="og:title" content="STAR Works — Coupon Design & Fabrication">
+<meta property="og:description" content="Composite simulation and machining tool: predict coupon properties from material, thickness and layup, then cut the coupons.">
+<meta property="og:url" content="https://starworks-korea.github.io/coupon-tool.html">
+<meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
+<link rel="icon" href="images/logo.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="https://starworks-korea.github.io/coupon-tool.html">
+<link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/coupon-tool.html">
+<link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/coupon-tool.html">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap">
+<link rel="stylesheet" href="coupon-tool/app.css">
+</head>
+<body data-site="en">
+<header style="background: #1E3252; border-bottom: 1px solid rgba(255,255,255,0.15)">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<a href="index.html" style="display: flex; align-items: center; gap: 10px; color: #FFFFFF">
+<img src="images/logo.svg" alt="STAR Works" style="height: 40px; width: auto; display: block">
+</a>
+<nav aria-label="Main menu" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+<a href="index.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">About</a>
+<a href="projects.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Projects</a>
+<a href="lectures.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Lectures</a>
+<a href="tech.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Tech</a>
+<a href="promo.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Promo</a>
+<a href="stories.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Stories</a>
+<a href="coupon-tool.html" aria-current="page" style="padding: 12px 14px; font-size: 15px; font-weight: 700; color: #FFFFFF; border-bottom: 2px solid #FFFFFF">Tool</a>
+<a href="contact.html" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">Contact</a>
+<a href="contact.html" style="margin-left: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">Request a Quote</a>
+<a href="ko/coupon-tool.html" hreflang="ko" lang="ko" title="Korean version" style="margin-left: 4px; padding: 8px 12px; font-size: 13px; font-weight: 700; color: #FFFFFF; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px">🌐 한국어</a>
+</nav>
+</div>
+</header>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="logo"></span>
+      <h1 data-i="title">물성시편 설계 및 제작</h1>
+      <span class="tag" data-i="siteName">복합소재 통합 시뮬레이션-가공 툴</span>
+    </div>
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" role="tab" data-tab="sheet" data-i="tabSheet" aria-selected="true">물성 시트</button>
+      <button type="button" class="tab" role="tab" data-tab="motion" data-i="tabMotion" aria-selected="false">시험 모션</button>
+      <button type="button" class="tab" role="tab" data-tab="beam" data-i="tabBeam" aria-selected="false">시뮬레이션</button>
+      <button type="button" class="tab" role="tab" data-tab="fab" data-i="tabFab" aria-selected="false">시편 가공</button>
+    </div>
+    <div class="tools">
+      <button type="button" class="btn" id="btnTour" data-i="btnTour">둘러보기</button>
+      <button type="button" class="btn" id="btnPreset" data-i="btnPreset" data-i-title="btnPresetTip">검산 조건</button>
+      <button type="button" class="btn" id="btnCsv" data-i="btnCsv">CSV 내보내기</button>
+      <button type="button" class="btn pill" id="btnLang" data-i="btnLang">🌐 English</button>
+      <button type="button" class="btn" id="btnTheme">밝은 바탕</button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-live="off">
+    <div class="kpi"><div class="k-l"><span id="k0l" data-i="kTip"></span><span class="chip" id="k0c"></span></div><div class="k-v"><span id="k0v">–</span><small>mm</small></div><div class="k-s" id="k0s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k1l"></span></div><div class="k-v"><span id="k1v">–</span><small>MPa</small></div><div class="k-s" id="k1s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k2l" data-i="kSF"></span><span class="chip" id="k2c"></span></div><div class="k-v"><span id="k2v">–</span></div><div class="k-s" id="k2s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k3l" data-i="kTau"></span></div><div class="k-v"><span id="k3v">–</span><small>MPa</small></div><div class="k-s" id="k3s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k4l" data-i="kReact"></span></div><div class="k-v"><span id="k4v">–</span><small>N</small></div><div class="k-s" id="k4s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k5l" data-i="kFreq"></span></div><div class="k-v"><span id="k5v">–</span><small>Hz</small></div><div class="k-s" id="k5s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k6l" data-i="kMass"></span></div><div class="k-v"><span id="k6v">–</span><small>kg</small></div><div class="k-s" id="k6s"></div></div>
+    <div class="kpi"><div class="k-l"><span id="k7l" data-i="kBuck"></span><span class="chip" id="k7c"></span></div><div class="k-v"><span id="k7v">–</span><small>%</small></div><div class="k-s" id="k7s"></div></div>
+  </section>
+  <div class="alerts" id="alerts" role="status" hidden></div>
+
+  <main class="work">
+    <div class="vps" id="vps">
+      <div class="vp" id="vp0">
+        <div class="vp-h"><span class="vp-t" data-i="vStress">응력</span><span class="vp-s" id="vs0"></span><span class="vp-s" id="ex0"></span>
+          <div class="vp-tools">
+            <select data-k="colorBy" id="vp_colorBy" aria-label="colour"><option value="vm" data-i="cVm"></option><option value="sigma" data-i="cSigma"></option><option value="tau" data-i="cTau"></option><option value="util" data-i="cUtil"></option></select>
+            <button type="button" class="btn sm vp-max" data-i="vMax">확대</button>
+          </div></div>
+        <div class="vp-body"><canvas class="gl" id="cv0"></canvas><div class="ov" id="ov0"></div>
+          <div class="legend" id="leg0"><div class="leg-t"></div><div class="leg-bar"></div><div class="leg-r"><span class="leg-a"></span><span class="leg-b"></span></div></div>
+          <div class="hint" data-i="vHint"></div><p class="nogl-msg" data-i="noGL"></p></div>
+      </div>
+      <div class="vp" id="vp1">
+        <div class="vp-h"><span class="vp-t" data-i="vDiag">선도</span>
+          <div class="vp-tools"><button type="button" class="btn sm vp-max" data-i="vMax">확대</button></div></div>
+        <div class="vp-body"><canvas class="gl" id="cv1"></canvas><div class="ov" id="ov1"></div><div class="dtab" id="dtab"></div><p class="nogl-msg" data-i="noGL"></p></div>
+      </div>
+      <div class="vp" id="vp2">
+        <div class="vp-h"><span class="vp-t" data-i="vSect">단면</span><span class="vp-s" id="vs2"></span>
+          <div class="vp-tools">
+            <input type="range" data-k="xSec" id="vp_xSec" min="0" max="1000" step="1" aria-label="x">
+            <select data-k="secMode" id="vp_secMode" aria-label="mode"><option value="sigma" data-i="secSigma"></option><option value="tau" data-i="secTau"></option><option value="vm" data-i="secVm"></option></select>
+            <button type="button" class="btn sm vp-max" data-i="vMax">확대</button>
+          </div></div>
+        <div class="vp-body"><canvas class="gl" id="cv2"></canvas><div class="ov" id="ov2"></div>
+          <div class="legend" id="leg2"><div class="leg-t"></div><div class="leg-bar"></div><div class="leg-r"><span class="leg-a"></span><span class="leg-b"></span></div></div>
+          <p class="nogl-msg" data-i="noGL"></p></div>
+      </div>
+      <div class="vp" id="vp3">
+        <div class="vp-h"><span class="vp-t" data-i="vSurf">설계 곡면</span>
+          <div class="vp-tools">
+            <select data-k="surfMetric" id="vp_surfMetric" aria-label="metric"><option value="defl" data-i="mDefl"></option><option value="stress" data-i="mStress"></option><option value="mass" data-i="mMass"></option></select>
+            <button type="button" class="btn sm vp-max" data-i="vMax">확대</button>
+          </div></div>
+        <div class="vp-body"><canvas class="gl" id="cv3"></canvas><div class="ov" id="ov3"></div>
+          <div class="legend" id="leg3"><div class="leg-t" data-i="legUtil"></div><div class="leg-bar"></div><div class="leg-r"><span>0</span><span>1.0</span></div><div class="leg-x" id="leg3x"></div></div>
+          <p class="nogl-msg" data-i="noGL"></p></div>
+      </div>
+      <div class="tour" id="tour" hidden>
+        <div class="tour-n" id="tourN"></div>
+        <h3 id="tourT"></h3>
+        <p id="tourB"></p>
+        <div class="tour-btns">
+          <button type="button" class="btn sm" id="tourPrev" data-i="tourPrev"></button>
+          <button type="button" class="btn sm" id="tourDemo"></button>
+          <span class="sp"></span>
+          <button type="button" class="btn sm" id="tourClose" data-i="tourClose"></button>
+          <button type="button" class="btn sm solid" id="tourNext"></button>
+        </div>
+      </div>
+    </div>
+    <aside class="panel" id="panel"></aside>
+  </main>
+
+  <section class="sheet" id="sheet" hidden>
+    <aside class="sh-left" id="shLeft"></aside>
+    <div class="sh-main" id="shMain"></div>
+  </section>
+
+  <section class="motion" id="motion" hidden>
+    <div class="mo-bar">
+      <label class="lab" for="mo_mat" data-i="shMat">재질</label><select id="mo_mat" data-k="mat"></select>
+      <span class="mo-sum" id="moSum"></span>
+      <button type="button" class="btn solid" id="moPlay"></button>
+      <button type="button" class="btn" id="moReset" data-i="moReset"></button>
+      <label><span data-i="moSpeed"></span> <select id="moSpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+      <label class="mo-pl"><span data-i="moProg"></span> <input type="range" id="moProg" min="0" max="1150" step="1" value="800"></label>
+    </div>
+    <p class="note mo-note" data-i="moNote"></p>
+    <div class="mo-grid" id="moGrid"></div>
+  </section>
+
+  <section class="fab" id="fab" hidden>
+    <div id="fabTop"></div>
+    <section class="card cam-card">
+      <h2><span data-i="fbCam">루타 가공·시뮬레이션</span> <span class="sub" id="camVer"></span></h2>
+      <p class="note" data-i="fbCamNote"></p>
+      <div class="bigrow cam-bar">
+        <button type="button" class="btn big solid" id="camSend" data-i="fbSend"></button>
+        <button type="button" class="btn big" id="camPop" data-i="fbPop"></button>
+        <span class="cam-msg" id="fabMsg" role="status"></span>
+      </div>
+      <div class="cam-wrap" id="camWrap"></div>
+    </section>
+  </section>
+
+  <section class="notes" id="notes">
+    <div class="notes-bar">
+      <button type="button" class="btn sm" id="btnNotes" data-i="btnNotes" aria-expanded="false" aria-controls="notesBody">식과 가정</button>
+      <span class="foot" data-i="foot"></span>
+    </div>
+    <div class="notes-body" id="notesBody"></div>
+  </section>
+</div>
+
+<div class="modal" id="csvModal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="csvH">
+    <h2 id="csvH" data-i="csvTitle"></h2>
+    <textarea id="csvText" readonly spellcheck="false" aria-labelledby="csvH"></textarea>
+    <div class="dlg-btns">
+      <button type="button" class="btn solid" id="csvSave" data-i="csvSave"></button>
+      <button type="button" class="btn" id="csvCopy" data-i="csvCopy"></button>
+      <button type="button" class="btn" id="csvClose" data-i="csvClose"></button>
+      <span class="dlg-msg" id="csvMsg" role="status"></span>
+    </div>
+  </div>
+</div>
+<script>window.SITE = { lang: "en", cam: "coupon-tool/cam.html" };</script>
+<script src="coupon-tool/app.js"></script>
+</body>
+</html>
