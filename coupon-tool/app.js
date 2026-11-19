@@ -1888,8 +1888,11 @@ Object.assign(I18N, {
   odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'], odPcsU: ['판', 'panel'],
   odPanelLam: ['판 맞춤 성형 (400 × 400 mm, 3T)', 'Custom panel moulding (400 × 400 mm, 3 mm)'], odPanelSheet: ['판재 제작 (400 × 400 mm 기준)', 'Sheet stock (400 × 400 mm basis)'],
   odOnePanel: ['시편이 1개여도 판 1장을 만들어야 해서 판 값은 판 단위로 들어갑니다. 판은 400 × 400 mm 기준이고 시편 간격은 4 mm로 셉니다.', 'Even one coupon needs a whole panel, so the panel is charged per panel. Panels are 400 × 400 mm and coupons are counted at a 4 mm spacing.'],
-  odMachOnly: ['가공', 'machining'], odAsk: ['별도 견적', 'quoted separately'], odFrom: ['부터', 'and up'], odTotalEx: ['예상 금액 (판 값 제외, 부가세 포함)', 'Estimated total (panel excluded, VAT included)'],
-  odPeek: ['PEEK는 확실히 더 비쌉니다. 소재 값이 ABS·PC의 약 50~60배이고, 사출 뒤 어닐링과 사출기 세척 공정이 더 들어갑니다. 판 값은 세팅 비용을 포함해 50만원부터 시작하며, 확정 금액은 회신드립니다.', 'PEEK costs considerably more. The resin is roughly 50 to 60 times the price of ABS or PC, and moulding needs an annealing step and a machine purge afterwards. The sheet price starts at KRW 500,000 including set-up, and the confirmed price follows by reply.'],
+  odMachOnly: ['가공', 'machining'], odAsk: ['별도 견적', 'quoted separately'], odFrom: ['부터', 'and up'], odRush: ['사출 일정', 'Moulding schedule'], odRushN: ['모아서 진행 (일정 협의)', 'Batched run (date by arrangement)'], odRushY: ['급행 (세팅 비용 60만원부터)', 'Rush (set-up fee from KRW 600,000)'],
+  odSetup: ['사출 세팅 비용', 'Moulding set-up fee'],
+  odPlasNote: ['플라스틱은 사급(판재·사출품을 보내 주시는 것)을 기본으로 합니다. 사출도 해 드릴 수 있지만 날을 잡아 모아서 진행하므로 연락드린 뒤 일정을 정합니다. 급하게 필요하시면 세팅 비용이 60만원부터 들어갑니다.', 'Plastics are customer-supplied by default (send us the sheet or mouldings). We can mould them, but runs are batched on set dates, so we contact you to agree the schedule. For urgent work a set-up fee from KRW 600,000 applies.'],
+  odRubNote: ['고무는 사급(판재를 보내 주시는 것)을 기본으로 합니다. 판재 공급이 필요하면 별도 견적으로 회신드립니다.', 'Rubber is customer-supplied by default (send us the sheet). If you need us to supply the sheet, it is quoted separately by reply.'], odTotalEx: ['예상 금액 (판 값 제외, 부가세 포함)', 'Estimated total (panel excluded, VAT included)'],
+  odPeek: ['PEEK는 확실히 더 비쌉니다. 소재 값이 ABS·PC의 약 50~60배이고, 사출 뒤 어닐링과 사출기 세척 공정이 더 들어갑니다. PEEK 사출은 세팅 비용 60만원부터 시작하고, 판 값은 별도 견적으로 회신드립니다.', 'PEEK costs considerably more. The resin is roughly 50 to 60 times the price of ABS or PC, and moulding needs an annealing step and a machine purge afterwards. PEEK moulding starts with a set-up fee of KRW 600,000 and up, and the sheet price is quoted separately by reply.'],
   odNotice: ['확정 금액이 아닙니다. 상세 요구사항에 따라 가격은 내려갈 수도, 올라갈 수도 있습니다. 확정 금액과 납기는 회신으로 알려 드립니다.', 'This is not a confirmed price. It may go down or up depending on the detailed requirements. The confirmed price and lead time follow by reply.'],
   odSame: ['복합소재는 탄소섬유·유리섬유 모두 같은 단가입니다. 특수 소재나 다른 조건이 있으면 아래에 표시해 주세요. 따로 연락드립니다.', 'Carbon and glass fibre composites share the same rates. If you have a special material or other conditions, tick the box below and we will contact you.'],
   odThick: ['단가는 3T 기준입니다. 지금 두께는 3T와 달라 금액을 회신으로 확정합니다.', 'Rates are for 3 mm. This thickness differs, so the price will be confirmed by reply.'],
@@ -1914,16 +1917,17 @@ var Order = (function () {
     mach: 25000,   // 가공: 인장 시편 1개 (대표 지시 11-19 23:11)
     tab: 50000,    // 탭 부착: 탭이 붙는 시편 1개 (20만 - 15만)
     // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 220만원에서 역산 (BEAM_22, 11-19 23:2x 대표 선택)
-    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000, rubber: 50000, peek: 500000 },   // peek: 세팅 비용 포함, 이 값부터 시작 (대표 11-19 23:22)
+    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000 },
+    setup: 600000,   // 사출 세팅 비용 '부터': 급행일 때, PEEK는 항상 (대표 11-19 23:24)
     engPlastic: { PL_custom: 1 },        // 판 값 10만원: 등급을 모르는 직접 입력만 (가정). PA6·PA6-GF30은 ABS·PC와 같음 (대표 11-19 23:21)
-    fromPanel: { PL_PEEK: 1 },           // 판 값이 '부터'인 재질: PEEK (소재 50~60배, 어닐링, 사출기 세척)
-    askPanel: {},                        // 판 값을 자동 계산하지 않고 별도 견적으로 둘 재질
+    setupAlways: { PL_PEEK: 1 },         // 세팅 비용을 항상 받는 재질: PEEK (소재 50~60배, 어닐링, 사출기 세척)
+    askPanel: { PL_PEEK: 1 },            // 판 값을 자동 계산하지 않고 별도 견적으로 둘 재질 (고무는 종류 전체)
     panel: { L: 400, W: 400, margin: 10, gap: 4 },   // 기본 판, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
     k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
       ptension: 1.0, pcomp: 0.8, pflex: 0.6, izod: 0.6,
       rtension: 0.5, rtear: 0.5, rcset: 0.2, rhard: 0.2, rplanar: 0.6, rucomp: 0.2 }
   };
-  var opt = { supply: 'sw', tab: true }, cur = null, lastQ = null, sending = false;
+  var opt = { supply: 'sw', tab: true, rush: false, kind: null }, cur = null, lastQ = null, sending = false;
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function won(v) { return Math.round(v).toLocaleString('en-US'); }
@@ -1947,13 +1951,15 @@ var Order = (function () {
   }
   // 견적: o = 물성 시트 계산 결과, op = {supply:'sw'|'own', tab:true|false}
   function quote(o, op) {
-    var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0, panelN: 0, panelUnit: 0, panelSum: 0, panelOver: false };
+    var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0, panelN: 0, panelUnit: 0, panelSum: 0, panelOver: false, setup: 0 };
     if (op.supply === 'sw' && !q.consultAll && o.rows.length) {
       var pn = panels(o.rows), pc = PRICE.panelCost;
       q.panelN = pn.n; q.panelOver = pn.over;
-      q.panelUnit = o.kind === 'lam' ? pc.lam : o.kind === 'rubber' ? pc.rubber : (PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic);
-      if (PRICE.fromPanel[o.mat]) { q.panelUnit = pc.peek; q.from = true; q.consultMat = true; q.peek = o.mat === 'PL_PEEK'; }
-      if (PRICE.askPanel[o.mat]) { q.panelUnit = null; q.consultMat = true; }
+      q.panelUnit = o.kind === 'lam' ? pc.lam : (PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic);
+      if (o.kind !== 'lam') q.consultMat = true;                                   // 플라스틱·고무 공급은 연락해서 일정·값을 정함
+      if (o.kind === 'rubber' || PRICE.askPanel[o.mat]) q.panelUnit = null;        // 별도 견적
+      if (o.kind === 'plastic' && (op.rush || PRICE.setupAlways[o.mat])) { q.setup = PRICE.setup; q.sum += q.setup; }
+      q.peek = o.mat === 'PL_PEEK';
       q.panelSum = q.panelUnit === null ? 0 : q.panelN * q.panelUnit; q.sum += q.panelSum;
     }
     o.rows.forEach(function (r) {
@@ -1969,7 +1975,9 @@ var Order = (function () {
   function matName(o) { return (o.lam ? o.L.label : o.m.name) + ', ' + U.fix(o.h, 2) + ' mm'; }
   function render(o) {
     cur = o; var host = $('ordQuote'); if (!host) return;
-    var q = lastQ = quote(o, opt), s = '';
+    if (opt.kind !== o.kind) { opt.kind = o.kind; opt.supply = o.kind === 'lam' ? 'sw' : 'own'; opt.rush = false; }   // 복합소재만 공급이 기본, 나머지는 사급이 기본
+    var q = lastQ = quote(o, opt), s = '', always = !!PRICE.setupAlways[o.mat];
+    $('odRushL').hidden = !(o.kind === 'plastic' && opt.supply === 'sw'); $('odRush').value = opt.rush || always ? '1' : '0'; $('odRush').disabled = always;
     $('odSupply').value = opt.supply; $('odTab').value = opt.tab ? '1' : '0';
     $('odTab').disabled = !q.hasTab;
     if (!q.items.length) { host.innerHTML = '<p class="note">' + T('odNone') + '</p>'; return; }
@@ -1978,10 +1986,12 @@ var Order = (function () {
       s += '<tr><th scope="row"><i class="sw pc-' + it.key + '"></i>' + esc(it.name) + (it.tab ? ' <span class="chip">' + T('odTabIn') + '</span>' : '') + '</th><td class="nv">' + it.n + '</td><td class="nv">' + (it.unit === null ? '–' : won(it.unit)) + '</td><td class="nv">' + (it.sub === null ? '–' : won(it.sub)) + '</td></tr>';
     });
     if (q.panelN) s += '<tr><th scope="row">' + T(o.kind === 'lam' ? 'odPanelLam' : 'odPanelSheet') + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelUnit) + (q.from ? ' ' + T('odFrom') : '')) + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) + '</td></tr>';
+    if (q.setup) s += '<tr><th scope="row">' + T('odSetup') + '</th><td class="nv">1</td><td class="nv">' + won(q.setup) + ' ' + T('odFrom') + '</td><td class="nv">' + won(q.setup) + ' ' + T('odFrom') + '</td></tr>';
     s += '</tbody>';
     if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T(q.consultMat && q.panelUnit === null ? 'odTotalEx' : 'odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
     s += '</table></div>';
     if (q.consultAll) s += '<p class="note warn notice">' + T('odConsultAll') + '</p>';
+    if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'odPlasNote' : 'odRubNote') + '</p>';
     if (q.peek) s += '<p class="note warn notice">' + T('odPeek') + '</p>';
     if (q.panelN) s += '<p class="note">' + T('odOnePanel') + '</p>';
     if (q.thick && !q.consultAll) s += '<p class="note warn notice">' + T('odThick') + '</p>';
@@ -1997,7 +2007,7 @@ var Order = (function () {
       lang: U.getLang(), page: location.href.slice(0, 200),
       name: val('odName'), org: val('odOrg'), phone: val('odPhone'), email: val('odMail'), due: val('odDue'), memo: val('odMemo'),
       special: $('odSpecial').checked, supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
-      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
+      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum)) : '') + (q.setup ? ', ' + T('odSetup') + ' ' + won(q.setup) + ' ' + T('odFrom') : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
       sum: q.sum, vat: q.vat, total: q.total, count: q.n,
       items: q.items.map(function (it) { return { name: it.name, std: it.std, size: String(it.size).replace(/×/g, 'x'), n: it.n, unit: it.unit, sub: it.sub, tab: it.tab }; }),
       website: val('odWeb')
@@ -2046,6 +2056,7 @@ var Order = (function () {
       ev.stopPropagation(); var e = ev.target;
       if (e.id === 'odSupply') { opt.supply = e.value === 'own' ? 'own' : 'sw'; if (cur) render(cur); }
       else if (e.id === 'odTab') { opt.tab = e.value === '1'; if (cur) render(cur); }
+      else if (e.id === 'odRush') { opt.rush = e.value === '1'; if (cur) render(cur); }
     });
     c.addEventListener('click', function (ev) { ev.stopPropagation(); });
     $('ordForm').addEventListener('submit', function (ev) { ev.preventDefault(); send(); });
@@ -2056,6 +2067,7 @@ var Order = (function () {
 
 /* sheet.js: 물성 시트 탭 (적층 편집기, 목표 대비 예상, 변위-하중·응력 곡선, 시편 치수와 판 크기) */
 Object.assign(I18N, {
+  cat_lam: ['복합소재', 'Composite'], cat_plastic: ['사출 플라스틱', 'Injection plastic'], cat_rubber: ['고무', 'Rubber'], cat_metal: ['금속', 'Metal'], shKind: ['종류', 'Grade'],
   tabBeam: ['시뮬레이션', 'Simulation'], tabSheet: ['물성 시트', 'Material sheet'],
   mat_LAM: ['적층 복합재 (에폭시)', 'Laminate (epoxy)'],
   matNoteLam: ['층 물성은 문헌 참고값입니다. 안전율은 첫 층 파손 기준입니다.', 'Ply data are literature reference values. Safety factor is at first-ply failure.'],
@@ -2132,6 +2144,9 @@ var Sheet = (function () {
   function hue(t) { t = Math.max(0, Math.min(1, t)); return 'hsl(' + (240 * (1 - t)).toFixed(0) + ',85%,48%)'; }
   function clampN(v, a, b, d) { v = parseFloat(v); if (!isFinite(v)) return d; return Math.max(a, Math.min(b, v)); }
 
+  // 재질 4분류: 복합소재, 사출 플라스틱, 고무, 금속
+  var CATS = { lam: ['LAM'], plastic: Object.keys(Spec.PLAS), rubber: Object.keys(Spec.RUB), metal: ['SS400', 'S235', 'STS304', 'AL6061', 'custom'] }, CATK = ['lam', 'plastic', 'rubber', 'metal'], lastIn = {};
+  function catOf(m) { return m === 'LAM' ? 'lam' : Spec.PLAS[m] ? 'plastic' : Spec.RUB[m] ? 'rubber' : 'metal'; }
   // ---------- 계산 ----------
   function compute() {
     var mat = api.st.mat, o = { mat: mat, kind: mat === 'LAM' ? 'lam' : (Spec.PLAS[mat] ? 'plastic' : (Spec.RUB[mat] ? 'rubber' : 'metal')) };
@@ -2277,8 +2292,11 @@ var Sheet = (function () {
   function numIn(attr, v, step, min, max, cls) { return '<input class="num ' + (cls || 'sm') + '" type="number" ' + attr + ' value="' + v + '" step="' + step + '" min="' + min + '" max="' + max + '">'; }
   function buildLeft() {
     var cfg = api.cfg(), lam = api.st.mat === 'LAM', s = '', i;
-    s += '<section class="grp"><h2 class="grp-h">' + T('shMat') + '</h2><div class="row row-select"><label class="lab" for="sh_mat">' + T('shMat') + '</label><select id="sh_mat" data-k="mat">';
-    MATK.forEach(function (k) { s += '<option value="' + k + '"' + (api.st.mat === k ? ' selected' : '') + '>' + esc(T('mat_' + k)) + '</option>'; });
+    var cat = catOf(api.st.mat); lastIn[cat] = api.st.mat;
+    s += '<section class="grp"><h2 class="grp-h">' + T('shMat') + '</h2><div class="seg" role="group" aria-label="' + esc(T('shMat')) + '">';
+    CATK.forEach(function (c) { s += '<button type="button" class="btn" data-cat="' + c + '" aria-pressed="' + (c === cat ? 'true' : 'false') + '">' + T('cat_' + c) + '</button>'; });
+    s += '</div><div class="row row-select"' + (CATS[cat].length < 2 ? ' hidden' : '') + '><label class="lab" for="sh_mat">' + T('shKind') + '</label><select id="sh_mat" data-k="mat">';
+    CATS[cat].forEach(function (k) { s += '<option value="' + k + '"' + (api.st.mat === k ? ' selected' : '') + '>' + esc(T('mat_' + k)) + '</option>'; });
     s += '</select></div><p class="note" id="shMatNote"></p>';
     if (Spec.RUB[api.st.mat]) {
       var rb = api.rub(api.st.mat); s += '<div class="pgrid pl">';
@@ -2417,7 +2435,7 @@ var Sheet = (function () {
   function buildMain(o) {
     var s = '<div class="sh-grid' + (o.lam ? '' : ' metal') + '">', rows = dataRows(o), tens = sh.test === 'tension' || sh.test === 'e8' || sh.test === 'ptension' || sh.test === 'rtension';
     s += '<section class="card c-data"><h2>' + T('shData') + ' <span class="sub">' + esc(o.lam ? o.L.label + ', ' + f(o.h, 2) + ' mm, ' + o.L.n + ' ' + T('lmPlies') : o.m.name + ', ' + f(o.h, 2) + ' mm') + '</span></h2>';
-    if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'plNotice' : 'rbNotice') + (o.mat === 'PL_PEEK' ? ' ' + T('odPeek') : '') + '</p>';
+    if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'plNotice' : 'rbNotice') + ' ' + T(o.kind === 'plastic' ? 'odPlasNote' : 'odRubNote') + (o.mat === 'PL_PEEK' ? ' ' + T('odPeek') : '') + '</p>';
     s += '<div class="tw"><table class="ds"><thead><tr><th>' + T('shItem') + '</th><th>' + T('shUnit') + '</th><th>' + T('shTarget') + '</th><th>' + T(o.kind === 'plastic' || o.kind === 'rubber' ? 'vIn' : 'shPred') + '</th><th>' + T('shVerdict') + '</th><th>' + T('shStd') + '</th><th>' + T('shRemark') + '</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       var tg = sh.tg[r[0]] || 0, v = r[2], pass = v !== null && v >= tg * (1 - 1e-9), chip;
@@ -2631,6 +2649,7 @@ var Sheet = (function () {
   function onLeftClick(ev) {
     var e = ev.target.closest ? ev.target.closest('button') : null, cfg = api.cfg(), a, i, p;
     if (!e) return;
+    if ((a = e.getAttribute('data-cat'))) { if (a !== catOf(api.st.mat)) { api.setMat(lastIn[a] || CATS[a][0]); var nb = document.querySelector('[data-cat="' + a + '"]'); if (nb) nb.focus(); } return; }
     p = cfg.lam.plies;
     if ((a = e.getAttribute('data-open'))) { sh.open[a] = !sh.open[a]; $('lmd_' + a).hidden = !sh.open[a]; e.setAttribute('aria-expanded', sh.open[a] ? 'true' : 'false'); return; }
     if ((a = e.getAttribute('data-up')) !== null) { i = +a; p.splice(i - 1, 0, p.splice(i, 1)[0]); changed(true); focusBtn('data-up', Math.max(0, i - 1)); return; }
@@ -3549,7 +3568,7 @@ var Motion = (function () {
     var tbs = document.querySelectorAll('.tab');
     for (i = 0; i < tbs.length; i++) tbs[i].addEventListener('click', function (ev) { setTab(ev.currentTarget.getAttribute('data-tab')); });
     Sheet.init({ st: st, cfg: function () { return LamCfg; }, setCfg: function (c) { LamCfg = c; }, changed: lamChanged, matInfo: matInfo, MATS: MATS, el: el, $: $,
-      params: params, goTab: function (t) { setTab(t); }, plas: function (k) { return PlasCfg[k]; }, setPlas: setPlas, rub: function (k) { return RubCfg[k]; }, setRub: setRub,
+      params: params, goTab: function (t) { setTab(t); }, plas: function (k) { return PlasCfg[k]; }, setPlas: setPlas, rub: function (k) { return RubCfg[k]; }, setRub: setRub, setMat: function (m) { setState('mat', m, true); },
       saveFile: function (name, txt, mime, title) { csvName = name; csvMime = mime; $('csvH').textContent = title; $('csvText').value = txt; $('csvMsg').textContent = ''; $('csvSave').hidden = !(dl.local || dl.ns); $('csvModal').hidden = false; $('csvText').focus(); } });
     Order.init();
     var mm = $('mo_mat'); mm.innerHTML = '';

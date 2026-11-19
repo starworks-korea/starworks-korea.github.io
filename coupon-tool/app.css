@@ -359,3 +359,9 @@ a.btn { text-decoration: none; display: inline-flex; align-items: center; color:
 .ord-msg { font-weight: 500; flex: 1 1 220px; } .ord-msg.ok { color: var(--ok); } .ord-msg.bad { color: var(--bad); }
 @media (max-width: 1100px) { .ord-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 520px) { .ord-form { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- 재질 4분류 ---------- */
+.seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0 0 8px; }
+.seg .btn { min-height: 40px; font-weight: 500; }
+.seg .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+:root[data-theme="dark"] .seg .btn[aria-pressed="true"] { color: #0F1B2F; }
