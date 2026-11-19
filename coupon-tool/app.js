@@ -1218,6 +1218,8 @@ Object.assign(I18N, {
   rb_m100: ['100 % 신장 응력 (환산)', '100 % modulus (converted)'], rb_G: ['전단 탄성률 (환산)', 'Shear modulus (converted)'], rb_E: ['탄성률 (환산)', 'Young modulus (converted)'],
   t_rtension: ['인장', 'Tension'], t_rtear: ['인열', 'Tear'], t_rcset: ['압축 영구줄음', 'Compression set'], t_rhard: ['경도', 'Hardness'], t_rplanar: ['순수 전단 (평면 인장)', 'Pure shear (planar tension)'], t_rucomp: ['단축 압축', 'Uniaxial compression'],
   spRstd: ['고무 규격', 'Rubber standard'], spPly: ['장 겹침', 'plies stacked'], spNonStd: ['해석용 시편 (규격 아님, 가정 치수)', 'specimen for material modelling (not a standard, assumed size)'],
+  spForm: ['시편 형태', 'Specimen form'], spFlat: ['판형 (판재)', 'Flat (sheet)'], spRound: ['원형 (봉재)', 'Round (bar)'], spRdSel: ['원형 규격', 'Round specimen'], spBar: ['봉재', 'bar'],
+  spRoundNote: ['원형 시편은 봉재를 선반으로 가공합니다. 판 재단 배치와 CAM 넘기기는 없습니다. 물림부 지름·길이는 가정 치수입니다.', 'Round coupons are turned from bar stock on a lathe, so there is no panel layout or CAM hand-off. Grip diameter and length are assumed sizes.'],
   spTooLong: ['판 길이가 가장 긴 시편보다 짧습니다.', 'The panel is shorter than the longest specimen.']
 });
 
@@ -1339,7 +1341,24 @@ var Spec = (function () {
       rem: T('spEnergy') + ' ' + f(e, 2) + ' J (' + T('spPend') + ' ' + pend + ' J †), 45° †, R 0.25' + (d.izOut ? '. ' + T('spOut') : '') });
     return rows;
   }
-  function metalRows(h, su) {
+  // 금속 원형 인장 시편 (봉재, 선반 가공). D 평행부 지름, G 표점, A 평행부 길이, R 어깨 반지름, C·B 물림부 지름·길이(가정)
+  // ASTM E8 원형은 표점 4D. 12.5 외의 소형 치수와 KS 4호는 원문 대조 필요 †
+  var ROUND = {
+    E8_12: { std: 'ASTM E8', name: 'Ø12.5', D: 12.5, G: 50, A: 56, R: 10, C: 20, B: 35 },
+    E8_9: { std: 'ASTM E8', name: 'Ø9 †', D: 9, G: 36, A: 45, R: 8, C: 14, B: 30 },
+    E8_6: { std: 'ASTM E8', name: 'Ø6 †', D: 6, G: 24, A: 30, R: 6, C: 10, B: 25 },
+    E8_4: { std: 'ASTM E8', name: 'Ø4 †', D: 4, G: 16, A: 20, R: 4, C: 8, B: 20 },
+    E8_2: { std: 'ASTM E8', name: 'Ø2.5 †', D: 2.5, G: 10, A: 16, R: 2, C: 6, B: 15 },
+    KS4: { std: 'KS B 0801', name: '4호 Ø14 †', D: 14, G: 50, A: 60, R: 15, C: 20, B: 40 },
+    KS10: { std: 'KS B 0801', name: '10호 Ø12.5', D: 12.5, G: 50, A: 60, R: 15, C: 20, B: 40 }
+  };
+  function roundRow(key, su) {
+    var q = ROUND[key] || ROUND.E8_12, d = (q.C - q.D) / 2, ax = Math.sqrt(Math.max(0, q.R * q.R - (q.R - d) * (q.R - d))), L = Math.ceil((q.A + 2 * ax + 2 * q.B) / 5) * 5, sp = dog(L, q.C, q.D, q.A, q.R);
+    return { key: 'e8', code: 'ROUND', std: q.std, shape: sp, view: 'plan', gauge: q.G, round: q, size: 'Ø' + q.D + ' (Ø' + q.C + ') × ' + L, span: T('shLg') + ' ' + q.G, rate: '–', P: su * Math.PI * q.D * q.D / 4,
+      rem: T('shParallel') + ' ' + q.A + ', R ' + q.R + ', ' + T('spBar') + ' Ø' + q.C + ' †', n0: 3 };
+  }
+  function metalRows(h, su, sh) {
+    if (sh && sh.mform === 'round') return [roundRow(sh.mround, su)];
     return [{ key: 'e8', std: 'ASTM E8', shape: dog(200, 20, 12.5, 57, 12.5), view: 'plan', gauge: 50, size: '12.5 (20) × 200 × ' + f(h, 2), span: T('shLg') + ' 50', rate: '–', P: su * 12.5 * h, rem: T('shParallel') + ' 57, R 12.5' }];
   }
 
@@ -1453,7 +1472,7 @@ var Spec = (function () {
     return s + '</svg>\n';
   }
 
-  return { RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, cutSvg: cutSvg };
+  return { ROUND: ROUND, RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, cutSvg: cutSvg };
 })();
 
 /* views.js: 3D 창 4개의 장면 구성 */
@@ -1898,6 +1917,8 @@ Object.assign(I18N, {
   odThick: ['단가는 3T 기준입니다. 지금 두께는 3T와 달라 금액을 회신으로 확정합니다.', 'Rates are for 3 mm. This thickness differs, so the price will be confirmed by reply.'],
   odConsultMat: ['이 재질의 소재 공급은 별도 협의입니다. 표의 금액은 가공비만입니다.', 'Material supply for this material is quoted separately. The table shows machining only.'],
   odConsultAll: ['금속 시편은 장비가 달라 별도 협의입니다. 주문을 보내 주시면 견적을 회신합니다.', 'Metal coupons use a different machine and are quoted separately. Send the order and we will reply with a quote.'],
+  odMetalNote: ['금속 시편은 주문 제작이며 사급을 기본으로 합니다. 소재가 필요하시면 판매처에서 직접 구매해 저희 쪽으로 보내 주시면 됩니다. 일본 판매처는 배송대행(예: 몰테일)을 거쳐 받을 수 있습니다. 보내실 곳: 경북 경산시 남매공원로2길 10, 1층 스타웍스. 금액은 주문을 보내 주시면 회신합니다.', 'Metal coupons are made to order and customer-supplied by default. If you need material, buy it from a supplier and have it shipped to us. Japanese suppliers can be reached through a forwarding service such as Malltail. Ship to: STAR Works, 1F, 10 Nammaegongwon-ro 2-gil, Gyeongsan-si, Gyeongsangbuk-do, Korea. Send the order and we will reply with the price.'],
+  odMetalShop: ['소재 판매처 예: 非鉄金属.com (일본)', 'Example supplier: 非鉄金属.com (Japan)'],
   odNone: ['수량이 있는 시편이 없습니다.', 'No coupons with a quantity.'],
   odName: ['이름', 'Name'], odOrg: ['회사·기관', 'Company'], odPhone: ['전화번호', 'Phone'], odMail: ['메일', 'Email'], odDue: ['납기 희망일', 'Requested date'], odMemo: ['요청 사항', 'Notes'],
   odReq: ['필수', 'required'], odSpecial: ['특수 소재이거나 다른 조건이 있습니다 (별도 연락 요청)', 'Special material or other conditions (please contact me)'],
@@ -1990,7 +2011,7 @@ var Order = (function () {
     s += '</tbody>';
     if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T(q.consultMat && q.panelUnit === null ? 'odTotalEx' : 'odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
     s += '</table></div>';
-    if (q.consultAll) s += '<p class="note warn notice">' + T('odConsultAll') + '</p>';
+    if (q.consultAll) s += '<p class="note warn notice">' + T('odMetalNote') + ' <a href="https://hitetsukinzoku.com" target="_blank" rel="noopener noreferrer">' + T('odMetalShop') + '</a></p>';
     if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'odPlasNote' : 'odRubNote') + '</p>';
     if (q.peek) s += '<p class="note warn notice">' + T('odPeek') + '</p>';
     if (q.panelN) s += '<p class="note">' + T('odOnePanel') + '</p>';
@@ -2133,7 +2154,7 @@ var Sheet = (function () {
   var T = U.T, api, $, lastMode = null, R = null;
   var MK = ['cf_ud', 'gf_ud', 'cf_fab', 'gf_fab'], MATK = ['LAM'].concat(Object.keys(Spec.RUB), Object.keys(Spec.PLAS), ['SS400', 'S235', 'STS304', 'AL6061', 'custom']);
   var PROPS = [['E1', 'GPa'], ['E2', 'GPa'], ['G12', 'GPa'], ['nu12', ''], ['G13', 'GPa'], ['G23', 'GPa'], ['Xt', 'MPa'], ['Xc', 'MPa'], ['Yt', 'MPa'], ['Yc', 'MPa'], ['S12', 'MPa'], ['S13', 'MPa'], ['vf0', ''], ['rhof', 'g/cm³']];
-  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 4, margin: 10, plen: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', q: {}, cam: 'RichAuto_시편CAM.html',
+  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 4, margin: 10, plen: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', mform: 'flat', mround: 'E8_12', q: {}, cam: 'RichAuto_시편CAM.html',
     inc: {}, open: {},
     tg: { ts: 900, te: 45, cs: 0, fs: 800, fe: 40, ilss: 70, vn: 70, wf: 34 } };
   var STD = { q_hs: 'ASTM D2240', q_su: 'ASTM D412', q_el: 'ASTM D412', q_m100: 'ASTM D412', q_tear: 'ASTM D624', q_cs: 'ASTM D395', q_rho: 'ASTM D297', cs: 'ASTM D6641 / D3410 / D695', p_su: 'ASTM D638', p_E: 'ASTM D638', p_el: 'ASTM D638', p_sf: 'ASTM D790', p_Ef: 'ASTM D790', p_sc: 'ASTM D695', p_iz: 'ASTM D256', p_rho: 'ASTM D792', ts: 'ASTM D3039', te: 'ASTM D3039', fs: 'ASTM D790', fe: 'ASTM D790', ilss: 'ASTM D2344', vn: 'ASTM D5379', wf: 'ASTM D3171' };
@@ -2163,11 +2184,12 @@ var Sheet = (function () {
     } else {
       var m = api.matInfo(); o.m = m; o.h = sh.mt;
       o.sy = m.crit.type === 'vm' ? m.crit.sy : m.crit.xt; o.su = m.su || o.sy; o.el = m.el || 0;
-      o.all = Spec.metalRows(o.h, o.su); o.tests = ['e8'];
+      o.all = Spec.metalRows(o.h, o.su, sh); o.tests = ['e8'];
+      if (o.all[0].round) { o.round = o.all[0]; o.h = o.round.round.D; o.area = Math.PI * o.h * o.h / 4; }
     }
     o.all.forEach(function (r) { var q = sh.q[r.key]; r.n = sh.inc[r.key] === false ? 0 : (q === undefined ? (r.n0 || 7) : q); });
     o.rows = o.all.filter(function (r) { return r.n > 0; });
-    o.lay = Spec.layout(o.rows, { kerf: sh.kerf, margin: sh.margin, plen: sh.plen });
+    o.lay = Spec.layout(o.rows.filter(function (r) { return !r.round; }), { kerf: sh.kerf, margin: sh.margin, plen: sh.plen });
     if (o.tests.indexOf(sh.test) < 0) sh.test = o.tests[0];
     return o;
   }
@@ -2186,7 +2208,7 @@ var Sheet = (function () {
   function curve(o, test) {
     var c = { pts: [], marks: [], xl: T('shDisp') + ' (mm)', sl: T('shStress') + ' (MPa)', cmp: null, note: '', test: test }, i, q, h = o.h;
     if (test === 'e8') {
-      var A = 12.5 * h, Lx = sh.xmode === 'gauge' ? sh.Lg : 100, mp = metalPts(o.m.E, o.sy, o.su, o.el);
+      var A = o.area || 12.5 * h, Lx = o.round ? (sh.xmode === 'gauge' ? o.round.gauge : o.round.round.A) : (sh.xmode === 'gauge' ? sh.Lg : 100), mp = metalPts(o.m.E, o.sy, o.su, o.el);
       c.pts = mp.map(function (p) { return [p[0] * Lx, p[1] * A, p[1], p[0]]; });
       c.marks.push({ i: 1, t: T('shYield') }); if (mp.length > 2) c.marks.push({ i: 2, t: T('r_ts') });
       c.note = T('shMetalCurve'); c.best = c.pts.length - 1; return c;
@@ -2427,7 +2449,7 @@ var Sheet = (function () {
     }
     if (sh2.type === 'vn') s += '<path class="gm" d="M' + gc + ' ' + (y0 + sh2.d * k) + 'V' + (y0 + w - sh2.d * k) + '"/><text class="tk" x="' + (gc + 8) + '" y="' + (y0 + w / 2 + 4) + '">' + T('shNotchW') + ' ' + (sh2.w - 2 * sh2.d) + '</text>';
     if (sh2.type === 'izod') s += '<text class="tk" x="' + (gc + 10) + '" y="' + (y0 + w / 2 + 4) + '">' + T('spNotch') + ' ' + f(sh2.w - sh2.d, 2) + '</text>';
-    s += hd(x0, x0 + len, y0 + w + 14, T('shLen') + ' ' + sh2.len) + '<text class="tk" x="' + (x0 + len + 6) + '" y="' + (y0 + w / 2 + 4) + '">' + sh2.w + (sh2.type === 'dog' ? ' / ' + sh2.W : '') + '</text>';
+    s += hd(x0, x0 + len, y0 + w + 14, T('shLen') + ' ' + sh2.len) + '<text class="tk" x="' + (x0 + len + 6) + '" y="' + (y0 + w / 2 + 4) + '">' + (r.round ? 'Ø' : '') + sh2.w + (sh2.type === 'dog' ? ' / ' + (r.round ? 'Ø' : '') + sh2.W : '') + '</text>';
     return svgWrap(s, x0 + len + 80, y0 + w + 36);
   }
   function svgWrap(s, w, h) { return '<svg class="spec-svg" viewBox="0 0 ' + w + ' ' + h + '" style="max-width:' + w + 'px" role="img">' + s + '</svg>'; }
@@ -2475,6 +2497,10 @@ var Sheet = (function () {
       s += '<label>' + T('shRatio') + ' <select data-sh="ratio">'; [16, 20, 32, 40, 60].forEach(function (k) { s += '<option value="' + k + '"' + (sh.ratio === k ? ' selected' : '') + '>' + k + ':1</option>'; }); s += '</select></label>';
       s += '<label>' + T('spCstd') + ' <select data-sh="cstd">'; ['D6641', 'D3410', 'D695'].forEach(function (k) { s += '<option value="' + k + '"' + (sh.cstd === k ? ' selected' : '') + '>ASTM ' + k + '</option>'; }); s += '</select></label>';
     }
+    if (o.kind === 'metal') {
+      s += '<label>' + T('spForm') + ' <select data-sh="mform"><option value="flat"' + (sh.mform === 'flat' ? ' selected' : '') + '>' + T('spFlat') + '</option><option value="round"' + (sh.mform === 'round' ? ' selected' : '') + '>' + T('spRound') + '</option></select></label>';
+      if (sh.mform === 'round') { s += '<label>' + T('spRdSel') + ' <select data-sh="mround">'; Object.keys(Spec.ROUND).forEach(function (k) { var q = Spec.ROUND[k]; s += '<option value="' + k + '"' + (sh.mround === k ? ' selected' : '') + '>' + q.std + ' ' + q.name + '</option>'; }); s += '</select></label>'; }
+    }
     if (o.kind === 'rubber') { s += '<label>' + T('spRstd') + ' <select data-sh="rstd"><option value="ASTM"' + (sh.rstd === 'ASTM' ? ' selected' : '') + '>ASTM</option><option value="KS"' + (sh.rstd === 'KS' ? ' selected' : '') + '>KS·ISO †</option></select></label>'; }
     if (o.kind === 'plastic') { s += '<label>D638 ' + T('spType') + ' <select data-sh="d638">'; ['auto', 'I', 'II', 'III', 'IV', 'V'].forEach(function (k) { s += '<option value="' + k + '"' + (sh.d638 === k ? ' selected' : '') + '>' + (k === 'auto' ? T('spAuto') : k) + '</option>'; }); s += '</select></label>'; }
     s += '</div><div class="tw"><table class="ds spec"><thead><tr><th>' + T('shTest') + '</th><th>' + T('shSize') + '</th><th>' + T('shSpan') + '</th><th>' + T('shRate') + '</th><th>' + T('shPf') + '</th><th>' + T('shQty') + '</th><th>' + T('shRemark') + '</th></tr></thead><tbody>';
@@ -2498,11 +2524,14 @@ var Sheet = (function () {
       s += '<tr' + (r.n > 0 ? '' : ' class="off"') + '><th scope="row"><label><input type="checkbox" data-inc="' + r.key + '"' + (r.n > 0 ? ' checked' : '') + '> <i class="sw pc-' + r.key + '"></i>' + nm + '</label></th><td>' + r.size + '</td><td>' + numIn('data-q="' + r.key + '" aria-label="' + esc(nm + ' ' + T('shQty')) + '"', r.n > 0 ? r.n : (sh.q[r.key] === undefined ? (r.n0 || 7) : sh.q[r.key]), 1, 0, 50) + '</td></tr>';
     });
     s += '</tbody></table></div>';
-    if (o.rows.length) s += '<h3>' + T('shPanel') + ' <b>' + f(Math.ceil(o.lay.L), 0) + ' × ' + f(Math.ceil(o.lay.W), 0) + ' × ' + f(o.h, 2) + ' mm</b></h3>' + panelSvg(o.lay) + '<p class="note' + (o.lay.short ? ' warn' : '') + '">' + T(o.lay.short ? 'spTooLong' : 'shPanelNote') + '</p>';
+    if (o.rows.length && !o.lay.rects.length) s += '<p class="note warn notice">' + T('spRoundNote') + '</p>';
+    else if (o.rows.length) s += '<h3>' + T('shPanel') + ' <b>' + f(Math.ceil(o.lay.L), 0) + ' × ' + f(Math.ceil(o.lay.W), 0) + ' × ' + f(o.h, 2) + ' mm</b></h3>' + panelSvg(o.lay) + '<p class="note' + (o.lay.short ? ' warn' : '') + '">' + T(o.lay.short ? 'spTooLong' : 'shPanelNote') + '</p>';
     s += '</section><div class="fab-side"><section class="card"><h2>' + T('fbDraw') + '</h2><p class="note">' + T('fbDrawNote') + '</p><div class="bigrow">';
-    [['cut.svg', 'fbCutSvg'], ['cut.dxf', 'fbCutDxf'], ['draw.svg', 'fbDrSvg'], ['draw.dxf', 'fbDrDxf']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
+    [['cut.svg', 'fbCutSvg'], ['cut.dxf', 'fbCutDxf'], ['draw.svg', 'fbDrSvg'], ['draw.dxf', 'fbDrDxf']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length && (o.lay.rects.length || b[0].indexOf('draw') === 0) ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
     s += '</div></section><section class="card"><h2>' + T('fbMach') + '</h2><ul class="mach"><li><b>' + T('fbM1') + '</b> <span class="chip ok">' + T('fbSim') + '</span></li><li>' + T('fbM2') + ' <span class="chip">' + T('fbFmt') + '</span></li><li>' + T('fbM3') + ' <span class="chip">' + T('fbFmt') + '</span></li></ul><p class="note">' + T('fbMachNote') + '</p></section></div></div>';
     $('fabTop').innerHTML = s; Order.render(o); ensureCam();
+    if (o.rows.length && !o.lay.rects.length) { sent = null; noLay = true; $('fabMsg').textContent = T('spRoundNote'); }
+    else if (noLay) { noLay = false; $('fabMsg').textContent = ''; sendCam(true); }
   }
   function onFabClick(ev) {
     var b = ev.target.closest ? ev.target.closest('[data-ex]') : null; if (!b || !R) return;
@@ -2527,15 +2556,17 @@ var Sheet = (function () {
       try { var w = window.open(window.SITE && window.SITE.cam ? window.SITE.cam : URL.createObjectURL(new Blob([CAM_HTML], { type: 'text/html' })), '_blank'); $('fabMsg').textContent = T(w ? 'fbPopOk' : 'fbPopNo'); } catch (e) { $('fabMsg').textContent = T('fbPopNo'); }
     });
   }
-  var sent = null;
+  var sent = null, noLay = false;
   function sentMsg() { if (sent) $('fabMsg').textContent = (sent.key ? '' : T('fbNoMat') + ' ') + T('fbSent') + ' ' + sent.n + ' ' + T('shPcs') + ', ' + sent.L + ' × ' + sent.W + ' × ' + f(sent.h, 2) + ' mm'; }
   function camLang(l) {
     if (!camFrame || !camReady) return;
-    sentMsg();
+    if (noLay) $('fabMsg').textContent = T('spRoundNote'); else sentMsg();
     try { var w = camFrame.contentWindow, m = l === 'ko' ? 'ko' : 'en', s = w.document.getElementById('langSel'); if (s) s.value = m; if (w.camLang) w.camLang(m); } catch (e) { /* 다른 출처 */ }
   }
   function sendCam(auto) {
     var msg = $('fabMsg');
+    if (R && R.rows.length && !R.lay.rects.length) { sent = null; noLay = true; msg.textContent = T('spRoundNote'); return; }
+    noLay = false;
     if (!camReady || !R || !R.rows.length) { if (!auto) msg.textContent = T('fbSendFail'); return; }
     try {
       var w = camFrame.contentWindow, d = w.document, fire = function (e, t) { e.dispatchEvent(new w.Event(t, { bubbles: true })); }; // eslint-disable-line
@@ -2671,7 +2702,7 @@ var Sheet = (function () {
     else if ((a = e.getAttribute('data-inc'))) { sh.inc[a] = e.checked; render(false); }
     else if ((a = e.getAttribute('data-q'))) { sh.q[a] = Math.round(clampN(e.value, 0, 50, 7)); if (sh.q[a] > 0) sh.inc[a] = true; render(false); }
     else if ((a = e.getAttribute('data-sh'))) {
-      if (a === 'test' || a === 'xmode' || a === 'cmp' || a === 'cstd' || a === 'd638' || a === 'rstd') { sh[a] = e.value; if (a === 'test') sh.cur = 1; }
+      if (a === 'test' || a === 'xmode' || a === 'cmp' || a === 'cstd' || a === 'd638' || a === 'rstd' || a === 'mform' || a === 'mround') { sh[a] = e.value; if (a === 'test') sh.cur = 1; }
       else if (a === 'ratio') sh.ratio = +e.value;
       else { var lim = { Lg: [10, 200], kerf: [0, 20], margin: [0, 50], plen: [0, 3000] }[a]; sh[a] = clampN(e.value, lim[0], lim[1], sh[a]); }
       render(false);
