@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="ko" href="https://starworks-korea.github.io/ko/coupon-tool.html">
 <link rel="alternate" hreflang="x-default" href="https://starworks-korea.github.io/coupon-tool.html">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap">
-<link rel="stylesheet" href="../coupon-tool/app.css">
+<link rel="stylesheet" href="../coupon-tool/app.css?v=59c20308">
 </head>
 <body data-site="ko">
 <header style="background: #1E3252; border-bottom: 1px solid rgba(255,255,255,0.15)">
@@ -146,6 +146,35 @@
 
   <section class="fab" id="fab" hidden>
     <div id="fabTop"></div>
+    <section class="card ord-card" id="ordCard">
+      <h2><span data-i="odT">예상 견적과 주문</span> <span class="sub" data-i="odSub"></span> <span class="sub" id="ordMat"></span></h2>
+      <div class="cbar">
+        <label><span data-i="odSupply"></span> <select id="odSupply"><option value="sw" data-i="odSw"></option><option value="own" data-i="odOwn"></option></select></label>
+        <label><span data-i="odTab"></span> <select id="odTab"><option value="1" data-i="odTabY"></option><option value="0" data-i="odTabN"></option></select></label>
+      </div>
+      <div class="ord-grid">
+        <div>
+          <div id="ordQuote"></div>
+          <p class="note warn notice" data-i="odNotice"></p>
+        </div>
+        <form id="ordForm" class="ord-form" novalidate>
+          <label><span><span data-i="odName"></span> <em data-i="odReq"></em></span><input id="odName" name="name" type="text" maxlength="40" autocomplete="name" required></label>
+          <label><span data-i="odOrg"></span><input id="odOrg" name="org" type="text" maxlength="60" autocomplete="organization"></label>
+          <label><span><span data-i="odPhone"></span> <em data-i="odReq"></em></span><input id="odPhone" name="phone" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" required></label>
+          <label><span><span data-i="odMail"></span> <em data-i="odReq"></em></span><input id="odMail" name="email" type="email" maxlength="80" autocomplete="email" required></label>
+          <label><span data-i="odDue"></span><input id="odDue" name="due" type="date"></label>
+          <label class="wide"><span data-i="odMemo"></span><textarea id="odMemo" name="memo" rows="3" maxlength="1000"></textarea></label>
+          <label class="hp" aria-hidden="true">Website<input id="odWeb" name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          <label class="chk wide"><input id="odSpecial" type="checkbox"> <span data-i="odSpecial"></span></label>
+          <label class="chk wide"><input id="odAgree" type="checkbox" required> <span data-i="odAgree"></span></label>
+          <div class="wide ord-act">
+            <button type="submit" class="btn big solid" id="odSend" data-i="odSend"></button>
+            <a class="btn big" id="odFallback" data-i="odMailto" hidden></a>
+            <span class="ord-msg" id="ordMsg" role="status"></span>
+          </div>
+        </form>
+      </div>
+    </section>
     <section class="card cam-card">
       <h2><span data-i="fbCam">루타 가공·시뮬레이션</span> <span class="sub" id="camVer"></span></h2>
       <p class="note" data-i="fbCamNote"></p>
@@ -179,7 +208,7 @@
     </div>
   </div>
 </div>
-<script>window.SITE = { lang: "ko", cam: "../coupon-tool/cam.html" };</script>
-<script src="../coupon-tool/app.js"></script>
+<script>window.SITE = { lang: "ko", cam: "../coupon-tool/cam.html", order: "" };</script>
+<script src="../coupon-tool/app.js?v=59c20308"></script>
 </body>
 </html>

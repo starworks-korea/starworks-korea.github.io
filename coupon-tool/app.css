@@ -340,3 +340,22 @@ body[data-site] .top :focus-visible { outline-color: var(--accent); }
 @media (max-width: 900px) { body[data-site] { display: block; } body[data-site] .app { height: auto; } }
 .pc-rtension { fill: var(--pc-1); background: var(--pc-1); } .pc-rtear { fill: var(--pc-4); background: var(--pc-4); } .pc-rcset { fill: var(--pc-2); background: var(--pc-2); }
 .pc-rhard { fill: var(--pc-5); background: var(--pc-5); } .pc-rplanar { fill: var(--pc-3); background: var(--pc-3); } .pc-rucomp { fill: var(--ser-V); background: var(--ser-V); }
+
+/* ---------- 예상 견적과 주문 ---------- */
+.ord-card { margin-top: 12px; }
+.ord-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 12px 24px; align-items: start; }
+.ds.ord tfoot th { text-align: right; font-weight: 500; color: var(--ink-2); } .ds.ord tfoot .tot th { color: var(--ink); font-weight: 700; }
+.ds.ord tfoot .tot td b { font-size: 18px; } .ds.ord td.nv { text-align: right; font-size: 14px; }
+.ord-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; font-size: 13px; }
+.ord-form label { display: flex; flex-direction: column; gap: 3px; color: var(--ink-2); min-width: 0; }
+.ord-form em { font-style: normal; color: var(--bad); font-size: 12px; }
+.ord-form input[type="text"], .ord-form input[type="tel"], .ord-form input[type="email"], .ord-form input[type="date"], .ord-form textarea { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; color: var(--ink); min-height: 40px; width: 100%; }
+.ord-form textarea { resize: vertical; }
+.ord-form .wide { grid-column: 1 / -1; }
+.ord-form .chk { flex-direction: row; align-items: flex-start; gap: 8px; color: var(--ink); line-height: 1.45; } .ord-form .chk input { margin-top: 3px; accent-color: var(--accent); flex: none; }
+.ord-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.ord-act { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+a.btn { text-decoration: none; display: inline-flex; align-items: center; color: inherit; }
+.ord-msg { font-weight: 500; flex: 1 1 220px; } .ord-msg.ok { color: var(--ok); } .ord-msg.bad { color: var(--bad); }
+@media (max-width: 1100px) { .ord-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .ord-form { grid-template-columns: minmax(0, 1fr); } }

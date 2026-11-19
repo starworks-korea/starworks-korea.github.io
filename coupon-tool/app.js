@@ -1877,6 +1877,148 @@ var Scenes = (function () {
     autoExag: autoExag, SURF_RNG: SURF_RNG, SER: SER, fieldRange: fieldRange };
 })();
 
+/* order.js: 예상 견적과 주문. 근거: BEAM_20
+   단가는 3T 시편 1개 기준(부가세 전, 원). 고칠 곳은 아래 PRICE 한 곳입니다. */
+Object.assign(I18N, {
+  odT: ['예상 견적과 주문', 'Estimate and order'], odSub: ['3T 시편 기준, 부가세 포함', 'based on 3 mm coupons, VAT included'],
+  odSupply: ['소재', 'Material'], odSw: ['스타웍스가 공급 (성형 포함)', 'Supplied by STAR Works (laminate included)'], odOwn: ['사급 (가공만)', 'Customer-supplied (machining only)'],
+  odTab: ['탭', 'Tabs'], odTabY: ['적용', 'Bonded'], odTabN: ['미적용', 'None'],
+  odItem: ['시편', 'Coupon'], odQty: ['수량', 'Qty'], odUnit: ['개당', 'Each'], odSubt: ['소계', 'Subtotal'], odSum: ['합계', 'Total'], odVat: ['부가세 10 %', 'VAT 10 %'], odTotal: ['예상 금액 (부가세 포함)', 'Estimated total (VAT included)'],
+  odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'],
+  odNotice: ['확정 금액이 아닙니다. 상세 요구사항에 따라 가격은 내려갈 수도, 올라갈 수도 있습니다. 확정 금액과 납기는 회신으로 알려 드립니다.', 'This is not a confirmed price. It may go down or up depending on the detailed requirements. The confirmed price and lead time follow by reply.'],
+  odSame: ['복합소재는 탄소섬유·유리섬유 모두 같은 단가입니다. 특수 소재나 다른 조건이 있으면 아래에 표시해 주세요. 따로 연락드립니다.', 'Carbon and glass fibre composites share the same rates. If you have a special material or other conditions, tick the box below and we will contact you.'],
+  odThick: ['단가는 3T 기준입니다. 지금 두께는 3T와 달라 금액을 회신으로 확정합니다.', 'Rates are for 3 mm. This thickness differs, so the price will be confirmed by reply.'],
+  odConsultMat: ['이 재질의 소재 공급은 별도 협의입니다. 표의 금액은 가공비만입니다.', 'Material supply for this material is quoted separately. The table shows machining only.'],
+  odConsultAll: ['금속 시편은 장비가 달라 별도 협의입니다. 주문을 보내 주시면 견적을 회신합니다.', 'Metal coupons use a different machine and are quoted separately. Send the order and we will reply with a quote.'],
+  odNone: ['수량이 있는 시편이 없습니다.', 'No coupons with a quantity.'],
+  odName: ['이름', 'Name'], odOrg: ['회사·기관', 'Company'], odPhone: ['전화번호', 'Phone'], odMail: ['메일', 'Email'], odDue: ['납기 희망일', 'Requested date'], odMemo: ['요청 사항', 'Notes'],
+  odReq: ['필수', 'required'], odSpecial: ['특수 소재이거나 다른 조건이 있습니다 (별도 연락 요청)', 'Special material or other conditions (please contact me)'],
+  odAgree: ['개인정보 수집·이용에 동의합니다. 항목: 이름, 회사, 전화번호, 메일. 목적: 견적과 주문 상담. 보관: 상담 종료 뒤 1년.', 'I agree to the collection and use of my personal data. Items: name, company, phone, email. Purpose: quotation and order handling. Retention: one year after the enquiry closes.'],
+  odSend: ['주문하기', 'Place order'], odSending: ['보내는 중입니다', 'Sending'], odDone: ['주문을 보냈습니다. 확인 뒤 연락드리겠습니다.', 'Order sent. We will contact you after review.'],
+  odFail: ['전송에 실패했습니다. 아래 버튼으로 메일을 보내 주세요.', 'Sending failed. Please use the button below to send it by email.'], odMailto: ['메일 프로그램으로 보내기', 'Send with your mail app'],
+  odMailOpen: ['메일 프로그램을 열었습니다. 열린 메일을 그대로 보내 주세요. 열리지 않으면 shindongwoo@gmail.com 으로 보내 주세요.', 'Your mail app was opened. Send the prepared message as it is. If nothing opened, write to shindongwoo@gmail.com.'],
+  odErrName: ['이름을 넣어 주세요.', 'Enter your name.'], odErrPhone: ['전화번호를 넣어 주세요 (숫자 9자리 이상).', 'Enter a phone number (at least 9 digits).'], odErrMail: ['메일 주소를 확인해 주세요.', 'Check the email address.'], odErrAgree: ['개인정보 동의가 필요합니다.', 'Consent is required.'], odErrNone: ['수량이 있는 시편이 없습니다.', 'There are no coupons to order.'],
+  odSubj: ['시편 주문', 'Coupon order'], odSpecialTag: ['별도 협의', 'needs contact'], odPcs: ['개', 'pcs'], odPanel: ['판 크기', 'Panel'], odLayup: ['재질', 'Material'], odCond: ['조건', 'Terms']
+});
+var Order = (function () {
+  'use strict';
+  var T = U.T;
+  // ---- 단가 표 (원, 부가세 전, 3T 시편 1개) ----
+  var PRICE = {
+    to: 'shindongwoo@gmail.com', vat: 0.10, baseT: 3.0, tolT: 0.3,
+    mach: 40000,   // 가공
+    mat: 110000,   // 소재·성형 (스타웍스 공급일 때)
+    tab: 50000,    // 탭 부착 (탭이 붙는 시편만)
+    k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
+      ptension: 1.0, pcomp: 0.8, pflex: 0.6, izod: 0.6,
+      rtension: 0.5, rtear: 0.5, rcset: 0.2, rhard: 0.2, rplanar: 0.6, rucomp: 0.2 }
+  };
+  var opt = { supply: 'sw', tab: true }, cur = null, lastQ = null, sending = false;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function won(v) { return Math.round(v).toLocaleString('en-US'); }
+  function r1000(v) { return Math.round(v / 1000) * 1000; }
+  // 견적: o = 물성 시트 계산 결과, op = {supply:'sw'|'own', tab:true|false}
+  function quote(o, op) {
+    var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0 };
+    var withMat = op.supply === 'sw' && o.kind === 'lam';
+    q.consultMat = op.supply === 'sw' && o.kind !== 'lam' && o.kind !== 'metal';
+    o.rows.forEach(function (r) {
+      var k = PRICE.k[r.key], tabbed = !!r.tab && o.kind === 'lam', unit = null;
+      if (tabbed) q.hasTab = true;
+      if (!q.consultAll && k) unit = PRICE.mach * k + (withMat ? PRICE.mat * k : 0) + (op.tab && tabbed ? PRICE.tab : 0);
+      q.items.push({ key: r.key, name: r.name || T('t_' + r.key), std: r.std, size: r.size, n: r.n, unit: unit, sub: unit === null ? null : unit * r.n, tab: op.tab && tabbed });
+      q.n += r.n; if (unit !== null) q.sum += unit * r.n;
+    });
+    q.sum = r1000(q.sum); q.vat = r1000(q.sum * PRICE.vat); q.total = q.sum + q.vat;
+    return q;
+  }
+  function matName(o) { return (o.lam ? o.L.label : o.m.name) + ', ' + U.fix(o.h, 2) + ' mm'; }
+  function render(o) {
+    cur = o; var host = $('ordQuote'); if (!host) return;
+    var q = lastQ = quote(o, opt), s = '';
+    $('odSupply').value = opt.supply; $('odTab').value = opt.tab ? '1' : '0';
+    $('odTab').disabled = !q.hasTab;
+    if (!q.items.length) { host.innerHTML = '<p class="note">' + T('odNone') + '</p>'; return; }
+    s += '<div class="tw"><table class="ds ord"><thead><tr><th>' + T('odItem') + '</th><th>' + T('odQty') + '</th><th>' + T('odUnit') + '</th><th>' + T('odSubt') + '</th></tr></thead><tbody>';
+    q.items.forEach(function (it) {
+      s += '<tr><th scope="row"><i class="sw pc-' + it.key + '"></i>' + esc(it.name) + (it.tab ? ' <span class="chip">' + T('odTabIn') + '</span>' : '') + '</th><td class="nv">' + it.n + '</td><td class="nv">' + (it.unit === null ? '–' : won(it.unit)) + '</td><td class="nv">' + (it.sub === null ? '–' : won(it.sub)) + '</td></tr>';
+    });
+    s += '</tbody>';
+    if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T('odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
+    s += '</table></div>';
+    if (q.consultAll) s += '<p class="note warn notice">' + T('odConsultAll') + '</p>';
+    if (q.consultMat) s += '<p class="note warn notice">' + T('odConsultMat') + '</p>';
+    if (q.thick && !q.consultAll) s += '<p class="note warn notice">' + T('odThick') + '</p>';
+    if (o.kind === 'lam') s += '<p class="note">' + T('odSame') + '</p>';
+    host.innerHTML = s;
+    $('ordMat').textContent = matName(o);
+  }
+  // ---- 주문 내용 ----
+  function val(id) { var e = $(id); return e ? String(e.value || '').trim() : ''; }
+  function payload() {
+    var o = cur, q = lastQ;
+    return {
+      lang: U.getLang(), page: location.href.slice(0, 200),
+      name: val('odName'), org: val('odOrg'), phone: val('odPhone'), email: val('odMail'), due: val('odDue'), memo: val('odMemo'),
+      special: $('odSpecial').checked, supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
+      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm', thick: q.thick, consult: q.consultAll || q.consultMat,
+      sum: q.sum, vat: q.vat, total: q.total, count: q.n,
+      items: q.items.map(function (it) { return { name: it.name, std: it.std, size: String(it.size).replace(/×/g, 'x'), n: it.n, unit: it.unit, sub: it.sub, tab: it.tab }; }),
+      website: val('odWeb')
+    };
+  }
+  function check(p) {
+    if (!cur || !lastQ || !lastQ.items.length) return ['odErrNone', null];
+    if (p.name.length < 1) return ['odErrName', 'odName'];
+    if (p.phone.replace(/\D/g, '').length < 9) return ['odErrPhone', 'odPhone'];
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(p.email)) return ['odErrMail', 'odMail'];
+    if (!$('odAgree').checked) return ['odErrAgree', 'odAgree'];
+    return null;
+  }
+  function subject(p) {
+    return '[' + T('odSubj') + (p.special || p.thick || p.consult ? ', ' + T('odSpecialTag') : '') + '] ' + p.material + ', ' + p.count + ' ' + T('odPcs') + (p.total ? ', ' + won(p.total) + ' ' + T('odWon') : '');
+  }
+  function bodyText(p) {
+    var L = [];
+    L.push(T('odName') + ': ' + p.name + (p.org ? ' / ' + p.org : '')); L.push(T('odPhone') + ': ' + p.phone); L.push(T('odMail') + ': ' + p.email);
+    if (p.due) L.push(T('odDue') + ': ' + p.due);
+    L.push(''); L.push(T('odLayup') + ': ' + p.material); L.push(T('odPanel') + ': ' + p.panel);
+    L.push(T('odCond') + ': ' + T(p.supply === 'sw' ? 'odSw' : 'odOwn') + ', ' + T('odTab') + ' ' + T(p.tab ? 'odTabY' : 'odTabN') + (p.special ? ', ' + T('odSpecial') : ''));
+    L.push('');
+    p.items.forEach(function (it) { L.push('- ' + it.name + ' ' + it.size + ' : ' + it.n + ' ' + T('odPcs') + (it.sub === null ? '' : ' = ' + won(it.sub))); });
+    if (p.total) L.push(T('odTotal') + ': ' + won(p.total) + ' ' + T('odWon'));
+    if (p.memo) { L.push(''); L.push(T('odMemo') + ': ' + p.memo); }
+    return L.join('\n');
+  }
+  function mailto(p) { return 'mailto:' + PRICE.to + '?subject=' + encodeURIComponent(subject(p)) + '&body=' + encodeURIComponent(bodyText(p).slice(0, 1500)); }
+  function msg(key, cls) { var m = $('ordMsg'); m.textContent = key ? T(key) : ''; m.className = 'ord-msg' + (cls ? ' ' + cls : ''); m.setAttribute('data-k', key || ''); }
+  function send() {
+    if (sending) return;
+    var p = payload(), er = check(p), url = window.SITE && window.SITE.order, fb = $('odFallback');
+    fb.hidden = true;
+    if (er) { msg(er[0], 'bad'); if (er[1]) { var e = $(er[1]); e.focus(); } return; }
+    if (!url) { fb.href = mailto(p); msg('odMailOpen', 'ok'); fb.hidden = false; try { location.href = fb.href; } catch (x) { /* 막힌 환경 */ } return; }
+    sending = true; $('odSend').disabled = true; msg('odSending', '');
+    fetch(url, { method: 'POST', body: JSON.stringify(p), redirect: 'follow' }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.ok) throw new Error('fail');
+      msg('odDone', 'ok');
+    }).catch(function () { fb.href = mailto(p); fb.hidden = false; msg('odFail', 'bad'); }).then(function () { sending = false; $('odSend').disabled = false; });
+  }
+  function init() {
+    var c = $('ordCard'); if (!c) return;
+    c.addEventListener('change', function (ev) {
+      ev.stopPropagation(); var e = ev.target;
+      if (e.id === 'odSupply') { opt.supply = e.value === 'own' ? 'own' : 'sw'; if (cur) render(cur); }
+      else if (e.id === 'odTab') { opt.tab = e.value === '1'; if (cur) render(cur); }
+    });
+    c.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    $('ordForm').addEventListener('submit', function (ev) { ev.preventDefault(); send(); });
+  }
+  function relang() { if (cur) render(cur); var m = $('ordMsg'); if (m && m.getAttribute('data-k')) m.textContent = T(m.getAttribute('data-k')); }
+  return { PRICE: PRICE, quote: quote, render: render, init: init, relang: relang, opt: opt, payload: payload, subject: subject, bodyText: bodyText, check: check };
+})();
+
 /* sheet.js: 물성 시트 탭 (적층 편집기, 목표 대비 예상, 변위-하중·응력 곡선, 시편 치수와 판 크기) */
 Object.assign(I18N, {
   tabBeam: ['시뮬레이션', 'Simulation'], tabSheet: ['물성 시트', 'Material sheet'],
@@ -2307,7 +2449,7 @@ var Sheet = (function () {
     s += '</section><div class="fab-side"><section class="card"><h2>' + T('fbDraw') + '</h2><p class="note">' + T('fbDrawNote') + '</p><div class="bigrow">';
     [['cut.svg', 'fbCutSvg'], ['cut.dxf', 'fbCutDxf'], ['draw.svg', 'fbDrSvg'], ['draw.dxf', 'fbDrDxf']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
     s += '</div></section><section class="card"><h2>' + T('fbMach') + '</h2><ul class="mach"><li><b>' + T('fbM1') + '</b> <span class="chip ok">' + T('fbSim') + '</span></li><li>' + T('fbM2') + ' <span class="chip">' + T('fbFmt') + '</span></li><li>' + T('fbM3') + ' <span class="chip">' + T('fbFmt') + '</span></li></ul><p class="note">' + T('fbMachNote') + '</p></section></div></div>';
-    $('fabTop').innerHTML = s; ensureCam();
+    $('fabTop').innerHTML = s; Order.render(o); ensureCam();
   }
   function onFabClick(ev) {
     var b = ev.target.closest ? ev.target.closest('[data-ex]') : null; if (!b || !R) return;
@@ -3093,7 +3235,7 @@ var Motion = (function () {
     $('btnTheme').textContent = T(st.theme === 'dark' ? 'themeToLight' : 'themeToDark');
     document.title = (SITE ? 'STAR Works — ' : '') + T('title');
     if (!SITE) { try { localStorage.setItem('bb_lang', st.lang); } catch (e) { /* 저장소 없음 */ } }
-    Sheet.camLang(st.lang);
+    Sheet.camLang(st.lang); Order.relang();
     var tb = document.querySelectorAll('.tab'); for (i = 0; i < tb.length; i++) tb[i].textContent = T(tb[i].getAttribute('data-i'));
     syncInputs(); tourRender(); if (st.tab === 'sheet' || st.tab === 'fab') Sheet.render(true); if (st.tab === 'motion') Motion.render(true); update();
   }
@@ -3374,6 +3516,7 @@ var Motion = (function () {
     Sheet.init({ st: st, cfg: function () { return LamCfg; }, setCfg: function (c) { LamCfg = c; }, changed: lamChanged, matInfo: matInfo, MATS: MATS, el: el, $: $,
       params: params, goTab: function (t) { setTab(t); }, plas: function (k) { return PlasCfg[k]; }, setPlas: setPlas, rub: function (k) { return RubCfg[k]; }, setRub: setRub,
       saveFile: function (name, txt, mime, title) { csvName = name; csvMime = mime; $('csvH').textContent = title; $('csvText').value = txt; $('csvMsg').textContent = ''; $('csvSave').hidden = !(dl.local || dl.ns); $('csvModal').hidden = false; $('csvText').focus(); } });
+    Order.init();
     var mm = $('mo_mat'); mm.innerHTML = '';
     ['LAM'].concat(Object.keys(Spec.RUB), Object.keys(Spec.PLAS), ['SS400', 'S235', 'STS304', 'AL6061', 'custom']).forEach(function (k) { var op = el('option'); op.value = k; op.setAttribute('data-i', 'mat_' + k); mm.appendChild(op); });
     Motion.init({ st: st, $: $ });
