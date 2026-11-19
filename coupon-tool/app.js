@@ -1912,8 +1912,8 @@ var Order = (function () {
     to: 'shindongwoo@gmail.com', vat: 0.10, baseT: 3.0, tolT: 0.3,
     mach: 25000,   // 가공: 인장 시편 1개 (대표 지시 11-19 23:11)
     tab: 50000,    // 탭 부착: 탭이 붙는 시편 1개 (20만 - 15만)
-    // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 250만원에서 역산 (BEAM_22)
-    panelCost: { lam: 1775000, plastic: 50000, plasticEng: 100000, rubber: 50000 },
+    // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 220만원에서 역산 (BEAM_22, 11-19 23:2x 대표 선택)
+    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000, rubber: 50000 },
     engPlastic: { PL_PEEK: 1, PL_PA6GF30: 1, PL_custom: 1 },
     panel: { L: 400, W: 400, margin: 10, gap: 4 },   // 기본 판, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
     k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
