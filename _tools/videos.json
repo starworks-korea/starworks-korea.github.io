@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17 04:56",
+ "updated": "2026-11-20 00:35",
  "pages": [
   {
    "key": "tech",
@@ -13,9 +13,9 @@
      "key": "machining",
      "name": "가공",
      "color": "#c05621",
-     "desc": "AI 가공(라우터 CNC · 머시닝센터) · 조각기 MCT G코드",
+     "desc": "AI 가공(라우터 CNC · 머시닝센터) · 조각기 MCT G코드 · 시편 설계·견적 툴",
      "name_en": "Machining",
-     "desc_en": "AI machining (router CNC · machining center) · engraver MCT G-code"
+     "desc_en": "AI machining (router CNC · machining center) · engraver MCT G-code · coupon design & quote tool"
     },
     {
      "key": "product",
@@ -35,6 +35,23 @@
     }
    ],
    "videos": [
+    {
+     "field": "machining",
+     "id": "JBcxke35OiI",
+     "ko_id": "2sT8iMfjTcI",
+     "vis": "공개",
+     "date": "2026-11-20",
+     "dur": "2:23",
+     "lang": {
+      "ko": "더빙",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "AI로 만든 복합소재 시편 설계·견적 툴 | 적층 물성 → 시험 → 가공 → 주문",
+     "title_en": "I Built a Composite Coupon Design & Quote Tool with AI | STAR Works"
+    },
     {
      "field": "fem",
      "id": "bWfDLImP_fc",
