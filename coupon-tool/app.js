@@ -1888,7 +1888,8 @@ Object.assign(I18N, {
   odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'], odPcsU: ['판', 'panel'],
   odPanelLam: ['판 맞춤 성형 (400 × 400 mm, 3T)', 'Custom panel moulding (400 × 400 mm, 3 mm)'], odPanelSheet: ['판재 제작 (400 × 400 mm 기준)', 'Sheet stock (400 × 400 mm basis)'],
   odOnePanel: ['시편이 1개여도 판 1장을 만들어야 해서 판 값은 판 단위로 들어갑니다. 판은 400 × 400 mm 기준이고 시편 간격은 4 mm로 셉니다.', 'Even one coupon needs a whole panel, so the panel is charged per panel. Panels are 400 × 400 mm and coupons are counted at a 4 mm spacing.'],
-  odMachOnly: ['가공', 'machining'],
+  odMachOnly: ['가공', 'machining'], odAsk: ['별도 견적', 'quoted separately'], odFrom: ['부터', 'and up'], odTotalEx: ['예상 금액 (판 값 제외, 부가세 포함)', 'Estimated total (panel excluded, VAT included)'],
+  odPeek: ['PEEK는 확실히 더 비쌉니다. 소재 값이 ABS·PC의 약 50~60배이고, 사출 뒤 어닐링과 사출기 세척 공정이 더 들어갑니다. 판 값은 세팅 비용을 포함해 50만원부터 시작하며, 확정 금액은 회신드립니다.', 'PEEK costs considerably more. The resin is roughly 50 to 60 times the price of ABS or PC, and moulding needs an annealing step and a machine purge afterwards. The sheet price starts at KRW 500,000 including set-up, and the confirmed price follows by reply.'],
   odNotice: ['확정 금액이 아닙니다. 상세 요구사항에 따라 가격은 내려갈 수도, 올라갈 수도 있습니다. 확정 금액과 납기는 회신으로 알려 드립니다.', 'This is not a confirmed price. It may go down or up depending on the detailed requirements. The confirmed price and lead time follow by reply.'],
   odSame: ['복합소재는 탄소섬유·유리섬유 모두 같은 단가입니다. 특수 소재나 다른 조건이 있으면 아래에 표시해 주세요. 따로 연락드립니다.', 'Carbon and glass fibre composites share the same rates. If you have a special material or other conditions, tick the box below and we will contact you.'],
   odThick: ['단가는 3T 기준입니다. 지금 두께는 3T와 달라 금액을 회신으로 확정합니다.', 'Rates are for 3 mm. This thickness differs, so the price will be confirmed by reply.'],
@@ -1913,8 +1914,10 @@ var Order = (function () {
     mach: 25000,   // 가공: 인장 시편 1개 (대표 지시 11-19 23:11)
     tab: 50000,    // 탭 부착: 탭이 붙는 시편 1개 (20만 - 15만)
     // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 220만원에서 역산 (BEAM_22, 11-19 23:2x 대표 선택)
-    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000, rubber: 50000 },
-    engPlastic: { PL_PEEK: 1, PL_PA6GF30: 1, PL_custom: 1 },
+    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000, rubber: 50000, peek: 500000 },   // peek: 세팅 비용 포함, 이 값부터 시작 (대표 11-19 23:22)
+    engPlastic: { PL_custom: 1 },        // 판 값 10만원: 등급을 모르는 직접 입력만 (가정). PA6·PA6-GF30은 ABS·PC와 같음 (대표 11-19 23:21)
+    fromPanel: { PL_PEEK: 1 },           // 판 값이 '부터'인 재질: PEEK (소재 50~60배, 어닐링, 사출기 세척)
+    askPanel: {},                        // 판 값을 자동 계산하지 않고 별도 견적으로 둘 재질
     panel: { L: 400, W: 400, margin: 10, gap: 4 },   // 기본 판, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
     k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
       ptension: 1.0, pcomp: 0.8, pflex: 0.6, izod: 0.6,
@@ -1949,7 +1952,9 @@ var Order = (function () {
       var pn = panels(o.rows), pc = PRICE.panelCost;
       q.panelN = pn.n; q.panelOver = pn.over;
       q.panelUnit = o.kind === 'lam' ? pc.lam : o.kind === 'rubber' ? pc.rubber : (PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic);
-      q.panelSum = q.panelN * q.panelUnit; q.sum += q.panelSum;
+      if (PRICE.fromPanel[o.mat]) { q.panelUnit = pc.peek; q.from = true; q.consultMat = true; q.peek = o.mat === 'PL_PEEK'; }
+      if (PRICE.askPanel[o.mat]) { q.panelUnit = null; q.consultMat = true; }
+      q.panelSum = q.panelUnit === null ? 0 : q.panelN * q.panelUnit; q.sum += q.panelSum;
     }
     o.rows.forEach(function (r) {
       var k = PRICE.k[r.key], tabbed = !!r.tab && o.kind === 'lam', unit = null;
@@ -1972,11 +1977,12 @@ var Order = (function () {
     q.items.forEach(function (it) {
       s += '<tr><th scope="row"><i class="sw pc-' + it.key + '"></i>' + esc(it.name) + (it.tab ? ' <span class="chip">' + T('odTabIn') + '</span>' : '') + '</th><td class="nv">' + it.n + '</td><td class="nv">' + (it.unit === null ? '–' : won(it.unit)) + '</td><td class="nv">' + (it.sub === null ? '–' : won(it.sub)) + '</td></tr>';
     });
-    if (q.panelN) s += '<tr><th scope="row">' + T(o.kind === 'lam' ? 'odPanelLam' : 'odPanelSheet') + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + won(q.panelUnit) + '</td><td class="nv">' + won(q.panelSum) + '</td></tr>';
+    if (q.panelN) s += '<tr><th scope="row">' + T(o.kind === 'lam' ? 'odPanelLam' : 'odPanelSheet') + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelUnit) + (q.from ? ' ' + T('odFrom') : '')) + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) + '</td></tr>';
     s += '</tbody>';
-    if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T('odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
+    if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T(q.consultMat && q.panelUnit === null ? 'odTotalEx' : 'odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
     s += '</table></div>';
     if (q.consultAll) s += '<p class="note warn notice">' + T('odConsultAll') + '</p>';
+    if (q.peek) s += '<p class="note warn notice">' + T('odPeek') + '</p>';
     if (q.panelN) s += '<p class="note">' + T('odOnePanel') + '</p>';
     if (q.thick && !q.consultAll) s += '<p class="note warn notice">' + T('odThick') + '</p>';
     if (o.kind === 'lam') s += '<p class="note">' + T('odSame') + '</p>';
@@ -1991,7 +1997,7 @@ var Order = (function () {
       lang: U.getLang(), page: location.href.slice(0, 200),
       name: val('odName'), org: val('odOrg'), phone: val('odPhone'), email: val('odMail'), due: val('odDue'), memo: val('odMemo'),
       special: $('odSpecial').checked, supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
-      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + won(q.panelSum) : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
+      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
       sum: q.sum, vat: q.vat, total: q.total, count: q.n,
       items: q.items.map(function (it) { return { name: it.name, std: it.std, size: String(it.size).replace(/×/g, 'x'), n: it.n, unit: it.unit, sub: it.sub, tab: it.tab }; }),
       website: val('odWeb')
@@ -2411,7 +2417,7 @@ var Sheet = (function () {
   function buildMain(o) {
     var s = '<div class="sh-grid' + (o.lam ? '' : ' metal') + '">', rows = dataRows(o), tens = sh.test === 'tension' || sh.test === 'e8' || sh.test === 'ptension' || sh.test === 'rtension';
     s += '<section class="card c-data"><h2>' + T('shData') + ' <span class="sub">' + esc(o.lam ? o.L.label + ', ' + f(o.h, 2) + ' mm, ' + o.L.n + ' ' + T('lmPlies') : o.m.name + ', ' + f(o.h, 2) + ' mm') + '</span></h2>';
-    if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'plNotice' : 'rbNotice') + '</p>';
+    if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'plNotice' : 'rbNotice') + (o.mat === 'PL_PEEK' ? ' ' + T('odPeek') : '') + '</p>';
     s += '<div class="tw"><table class="ds"><thead><tr><th>' + T('shItem') + '</th><th>' + T('shUnit') + '</th><th>' + T('shTarget') + '</th><th>' + T(o.kind === 'plastic' || o.kind === 'rubber' ? 'vIn' : 'shPred') + '</th><th>' + T('shVerdict') + '</th><th>' + T('shStd') + '</th><th>' + T('shRemark') + '</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       var tg = sh.tg[r[0]] || 0, v = r[2], pass = v !== null && v >= tg * (1 - 1e-9), chip;
