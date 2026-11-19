@@ -1,5 +1,5 @@
 var CAM_HTML = "";
-var CAM_VER = "v1.3";
+var CAM_VER = "v1.5";
 /* calc.js: 외팔보 계산부 (화면과 무관). 단위 mm, N, MPa, kg, Hz, J */
 var BeamCalc = (function () {
   'use strict';
@@ -371,17 +371,17 @@ var Lam = (function () {
 
   // 층 소재 기본값 (탄성률 GPa, 강도 MPa). 근거는 BEAM_07 2절
   var PLY = {
-    cf_ud: { fab: false, E1: 135, E2: 10, G12: 5, nu12: 0.30, G13: 5, G23: 3.5, Xt: 1500, Xc: 1200, Yt: 50, Yc: 250, S12: 70, S13: 70, vf0: 0.60, rhof: 1.78, faw: 160, t: 0.15 },
+    cf_ud: { fab: false, E1: 135, E2: 10, G12: 5, nu12: 0.30, G13: 5, G23: 3.5, Xt: 1500, Xc: 1200, Yt: 50, Yc: 250, S12: 70, S13: 70, vf0: 0.60, rhof: 1.78, faw: 214, t: 0.20 },   // UD는 CFRP·GFRP 모두 0.2T (2026-11-20 대표 지시). FAW는 Vf 0.60이 유지되게 214로 맞춤(가정)
     gf_ud: { fab: false, E1: 40, E2: 8, G12: 4, nu12: 0.25, G13: 4, G23: 3.4, Xt: 1000, Xc: 600, Yt: 30, Yc: 110, S12: 40, S13: 40, vf0: 0.60, rhof: 2.54, faw: 305, t: 0.20 },
     cf_fab: { fab: true, E1: 70, E2: 70, G12: 5, nu12: 0.10, G13: 3.5, G23: 3.5, Xt: 600, Xc: 570, Yt: 600, Yc: 570, S12: 90, S13: 60, vf0: 0.50, rhof: 1.78, faw: 200, t: 0.225 },
     gf_fab: { fab: true, E1: 25, E2: 25, G12: 4, nu12: 0.20, G13: 3.4, G23: 3.4, Xt: 440, Xc: 425, Yt: 440, Yc: 425, S12: 40, S13: 40, vf0: 0.50, rhof: 2.54, faw: 305, t: 0.24 }
   };
   var RESIN = { rho: 1.2, E: 3.5, G: 1.3 };
   var PRESETS = {
-    ud0: { sym: true, rep: 10, plies: [['cf_ud', 0]] },
-    cross: { sym: true, rep: 5, plies: [['cf_ud', 0], ['cf_ud', 90]] },
+    ud0: { sym: false, rep: 15, plies: [['cf_ud', 0]] },                 // 0.2T × 15겹 = 3.0 mm
+    cross: { sym: true, rep: 4, plies: [['cf_ud', 0], ['cf_ud', 90]] },    // 16겹 = 3.2 mm (대칭·균형을 지키는 가장 가까운 수)
     quasi: { sym: true, rep: 2, plies: [['cf_ud', 0], ['cf_ud', 45], ['cf_ud', -45], ['cf_ud', 90]] },
-    pm45: { sym: true, rep: 5, plies: [['cf_ud', 45], ['cf_ud', -45]] },
+    pm45: { sym: true, rep: 4, plies: [['cf_ud', 45], ['cf_ud', -45]] },   // 16겹 = 3.2 mm
     fabric: { sym: true, rep: 6, plies: [['cf_fab', 0]] },
     hybrid: { sym: true, rep: 1, plies: [['cf_fab', 0, 2], ['gf_fab', 0, 6]] }
   };
@@ -1363,25 +1363,66 @@ var Spec = (function () {
   }
 
   // ---------- 재단 배치 ----------
-  function layout(rows, opt) {
-    var Lmax = 0, blocks = [], shelves = [], y = 0, rects = [], gap = opt.kerf;
-    rows.forEach(function (r) { if (r.n > 0) { Lmax = Math.max(Lmax, r.shape.len); blocks.push({ r: r, len: r.shape.len, w: r.shape.w, n: r.n }); } });
-    var plen = opt.plen > 0 ? opt.plen - 2 * opt.margin : Lmax, short = plen < Lmax - 1e-9;
-    if (short) plen = Lmax;
-    blocks.sort(function (a, b) { return b.len - a.len; });
-    // 긴 시편부터 줄에 채움. 한 줄 안에서는 같은 시험끼리 세로로 쌓음
-    blocks.forEach(function (b) {
-      var left = b.n;
-      while (left > 0) {
-        var s = null, i;
-        for (i = 0; i < shelves.length; i++) if (shelves[i].used + gap + b.len <= plen + 1e-9) { s = shelves[i]; break; }
-        if (!s) { s = { used: -gap, h: 0, items: [] }; shelves.push(s); }
-        var cap = s.h > 0 ? Math.max(1, Math.floor((s.h + gap) / (b.w + gap))) : left, take = Math.min(left, cap);
-        s.items.push({ b: b, x: s.used + gap, n: take }); s.used += gap + b.len; s.h = Math.max(s.h, take * b.w + (take - 1) * gap); left -= take;
-      }
+  // ---------- 재단 배치: 300 × 300 판 여러 장. 빈 사각형 채우기(왼쪽 위부터). 시편은 돌리지 않음(섬유 0° 방향 유지) ----------
+  var PANEL = { L: 300, W: 300 };
+  // tol: 높이가 tol mm 안에서 비슷한 빈자리는 같은 줄로 보고 왼쪽부터 채움 (줄이 2 mm 어긋나 자리가 끊기는 것을 막음)
+  function packOnce(items, UL, UW, g, tol) {
+    var bins = [], E = 1e-6;
+    function place(bin, it) {
+      var best = null, i, fr, nf = [], w = it.l + g, h = it.w + g;
+      var ymin = Infinity;
+      for (i = 0; i < bin.free.length; i++) { fr = bin.free[i]; if (fr.w + E >= w && fr.h + E >= h && fr.y < ymin) ymin = fr.y; }
+      for (i = 0; i < bin.free.length; i++) { fr = bin.free[i]; if (fr.w + E >= w && fr.h + E >= h && fr.y <= ymin + tol + E && (!best || fr.x < best.x - E || (Math.abs(fr.x - best.x) <= E && fr.y < best.y))) best = fr; }
+      if (!best) return false;
+      var x = best.x, y = best.y, x2 = x + w, y2 = y + h;
+      bin.free.forEach(function (f) {
+        if (x >= f.x + f.w - E || x2 <= f.x + E || y >= f.y + f.h - E || y2 <= f.y + E) { nf.push(f); return; }
+        if (x > f.x + E) nf.push({ x: f.x, y: f.y, w: x - f.x, h: f.h });
+        if (x2 < f.x + f.w - E) nf.push({ x: x2, y: f.y, w: f.x + f.w - x2, h: f.h });
+        if (y > f.y + E) nf.push({ x: f.x, y: f.y, w: f.w, h: y - f.y });
+        if (y2 < f.y + f.h - E) nf.push({ x: f.x, y: y2, w: f.w, h: f.y + f.h - y2 });
+      });
+      bin.free = nf.filter(function (p, pi) {
+        return !nf.some(function (q, qi) {
+          if (pi === qi || !(p.x >= q.x - E && p.y >= q.y - E && p.x + p.w <= q.x + q.w + E && p.y + p.h <= q.y + q.h + E)) return false;
+          var same = Math.abs(p.x - q.x) <= E && Math.abs(p.y - q.y) <= E && Math.abs(p.w - q.w) <= E && Math.abs(p.h - q.h) <= E;
+          return !same || qi < pi;
+        });
+      });
+      bin.put.push({ it: it, x: x, y: y });
+      return true;
+    }
+    items.forEach(function (it) {
+      for (var k = 0; k < bins.length; k++) if (place(bins[k], it)) return;
+      var nb = { free: [{ x: 0, y: 0, w: UL + g, h: UW + g }], put: [] }; bins.push(nb); place(nb, it);
     });
-    shelves.forEach(function (s) { s.items.forEach(function (it) { for (var i = 0; i < it.n; i++) rects.push({ key: it.b.r.key, shape: it.b.r.shape, x: it.x + opt.margin, y: y + i * (it.b.w + gap) + opt.margin }); }); y += s.h + gap; });
-    return { L: plen + 2 * opt.margin, W: Math.max(0, y - gap) + 2 * opt.margin, rects: rects, short: short };
+    return bins;
+  }
+  // rows → { L, W, panels:[{rects, cnt, n}], over:{key:n}, nOver }. 판 한 장에 못 넣는 시편(쓸 수 있는 길이·폭 초과)은 over로 뺌
+  function layout(rows, opt) {
+    var g = opt.kerf, m = opt.margin, PL = opt.L || PANEL.L, PW = opt.W || PANEL.W, UL = PL - 2 * m, UW = PW - 2 * m, items = [], over = {}, nOver = 0, best = null;
+    rows.forEach(function (r, ri) {
+      if (!(r.n > 0)) return;
+      if (r.shape.len > UL + 1e-6 || r.shape.w > UW + 1e-6) { over[r.key] = r.n; nOver += r.n; return; }
+      for (var i = 0; i < r.n; i++) items.push({ r: r, ri: ri, l: r.shape.len, w: r.shape.w });
+    });
+    // 놓는 순서 3가지 × 줄 맞춤 2가지를 해 보고 판 수가 가장 적은 것을 씀 (같으면 긴 것부터, 줄 맞춤)
+    [function (p, q) { return q.l - p.l || q.w - p.w || p.ri - q.ri; }, function (p, q) { return q.w - p.w || q.l - p.l || p.ri - q.ri; }, function (p, q) { return q.l * q.w - p.l * p.w || p.ri - q.ri; }].forEach(function (cmp) {
+      [3, 0].forEach(function (tol) {
+        var bins = packOnce(items.slice().sort(cmp), UL, UW, g, tol);
+        if (!best || bins.length < best.length) best = bins;
+      });
+    });
+    var panels = (best || []).map(function (bn) {
+      var cnt = {}, rects = bn.put.map(function (q) { cnt[q.it.r.key] = (cnt[q.it.r.key] || 0) + 1; return { key: q.it.r.key, shape: q.it.r.shape, x: q.x + m, y: q.y + m }; });
+      return { rects: rects, cnt: cnt, n: rects.length };
+    });
+    return { L: PL, W: PW, panels: panels, over: over, nOver: nOver };
+  }
+  // 선택한 판 하나를 예전 배치 모양({L, W, rects})으로 꺼냄
+  function panelView(all, i) {
+    var q = all.panels[i] || { rects: [], cnt: {}, n: 0 };
+    return { L: all.L, W: all.W, rects: q.rects, cnt: q.cnt, idx: i, N: all.panels.length, over: all.over, nOver: all.nOver, short: false };
   }
   // ---------- 도면 자료 (mm, Y 위쪽이 +). 항목: L 선, A 호(반시계, 도), C 원, T 문자 ----------
   function prims(sp, x, y, layer) {
@@ -1402,6 +1443,15 @@ var Spec = (function () {
   }
   var CODE = { tension: 'D3039', comp: 'COMP', flex: 'D790', ilss: 'D2344', vnotch: 'D5379', fiber: 'D3171', ptension: 'D638', pcomp: 'D695', pflex: 'D790', izod: 'D256', e8: 'E8' };
   function code(r) { return r.code || CODE[r.key] || r.key.toUpperCase(); }
+  // 시편 외곽선 길이 (mm, 도면 길이)
+  function perim(sp) {
+    var t = 0; prims(sp, 0, 0, 'X').forEach(function (e) {
+      if (e.t === 'L') t += Math.sqrt((e.x2 - e.x1) * (e.x2 - e.x1) + (e.y2 - e.y1) * (e.y2 - e.y1));
+      else if (e.t === 'A') t += e.r * (((e.a1 - e.a0) % 360 + 360) % 360) * Math.PI / 180;
+      else if (e.t === 'C') t += 2 * Math.PI * e.r;
+    });
+    return t;
+  }
   // 재단용: 판 외곽 + 시편 외곽 (+ 이름표)
   function cutDoc(lay, labels) {
     var Lp = Math.ceil(lay.L), Wp = Math.ceil(lay.W), it = prims({ type: 'rect', len: Lp, w: Wp }, 0, 0, 'PANEL'), cnt = {};
@@ -1472,7 +1522,7 @@ var Spec = (function () {
     return s + '</svg>\n';
   }
 
-  return { ROUND: ROUND, RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, cutSvg: cutSvg };
+  return { PANEL: PANEL, panelView: panelView, perim: perim, ROUND: ROUND, RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, cutSvg: cutSvg };
 })();
 
 /* views.js: 3D 창 4개의 장면 구성 */
@@ -1905,8 +1955,22 @@ Object.assign(I18N, {
   odTab: ['탭', 'Tabs'], odTabY: ['적용', 'Bonded'], odTabN: ['미적용', 'None'],
   odItem: ['시편', 'Coupon'], odQty: ['수량', 'Qty'], odUnit: ['개당', 'Each'], odSubt: ['소계', 'Subtotal'], odSum: ['합계', 'Total'], odVat: ['부가세 10 %', 'VAT 10 %'], odTotal: ['예상 금액 (부가세 포함)', 'Estimated total (VAT included)'],
   odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'], odPcsU: ['판', 'panel'],
-  odPanelLam: ['판 맞춤 성형 (400 × 400 mm, 3T)', 'Custom panel moulding (400 × 400 mm, 3 mm)'], odPanelSheet: ['판재 제작 (400 × 400 mm 기준)', 'Sheet stock (400 × 400 mm basis)'],
-  odOnePanel: ['시편이 1개여도 판 1장을 만들어야 해서 판 값은 판 단위로 들어갑니다. 판은 400 × 400 mm 기준이고 시편 간격은 4 mm로 셉니다.', 'Even one coupon needs a whole panel, so the panel is charged per panel. Panels are 400 × 400 mm and coupons are counted at a 4 mm spacing.'],
+  odPanelLam: ['판 맞춤 성형 (300 × 300 mm, {n}겹 {h} mm)', 'Custom panel moulding (300 × 300 mm, {n} plies, {h} mm)'],
+  psTitle: ['단가 설정 (이 화면에서만 적용)', 'Rate settings (this screen only)'], psDirty: ['기본값과 다름', 'changed'], psReset: ['기본값으로', 'Reset to defaults'],
+  psNote: ['원단 미터당 값이나 작업 단가를 바꾸면 겹당 값과 판 값이 바로 바뀝니다. 값은 이 브라우저에만 저장됩니다.', 'Change the fabric price per metre or the labour rate and the per-ply and panel prices update at once. Values are saved in this browser only.'],
+  ps_cfM: ['탄소 원단', 'Carbon fabric'], ps_gfM: ['유리 원단', 'Glass fabric'], ps_rollW: ['원단 폭', 'Roll width'], ps_cutL: ['겹 재단 길이', 'Ply cut length'], ps_cutW: ['겹 재단 폭', 'Ply cut width'], ps_scrap: ['자투리', 'Offcut'],
+  ps_labor: ['작업 단가', 'Labour rate'], ps_cutMin: ['겹당 재단', 'Cutting per ply'], ps_layMin: ['겹당 적층', 'Lay-up per ply'], ps_base: ['고정 (부자재·진공·성형·탈형·트림·검사)', 'Fixed (consumables, bagging, cure, demould, trim, inspection)'],
+  ps_machFix: ['깎는 값 고정 (개당)', 'Machining, fixed per coupon'], ps_machMm: ['깎는 값 외곽 길이당', 'Machining per outline length'], ps_vnF: ['V 노치 난이도', 'V-notch factor'], ps_tab: ['탭 값 (개당)', 'Tabs per coupon'], psWonMm: ['원/mm', 'KRW/mm'],
+  shtTitle: ['시편 단가표 (지금 두께 기준, 부가세 전)', 'Coupon price sheet (current thickness, before VAT)'], shtStd: ['규격', 'Standard'], shtSize: ['크기 (mm)', 'Size (mm)'], shtLen: ['외곽 길이 (mm)', 'Outline (mm)'], shtMach: ['깎는 값', 'Machining'], shtTab: ['탭', 'Tabs'], shtEach: ['개당', 'Each'],
+  shtNote: ['깎는 값 = (고정 {f}원 + 외곽 길이 × {m}원/mm) × 난이도 (V 노치 {v}), 500원 단위. 탭 규격 시편은 탭 적용 때 {t}원을 더합니다. 판 값은 따로입니다.', 'Machining = (fixed KRW {f} + outline length × KRW {m}/mm) × difficulty (V-notch {v}), rounded to KRW 500. Tabbed coupons add KRW {t} when tabs are applied. The panel is charged separately.'],
+  shtNoteK: ['깎는 값은 시편 종류별 계수로 정한 값입니다. 판재 값은 따로입니다.', 'Machining prices are set by a factor per coupon type. Sheet stock is charged separately.'],
+  psWonM: ['원/m', 'KRW/m'], psWonH: ['원/h', 'KRW/h'], psMin: ['분', 'min'],
+  psOut: ['겹 넓이 {a} m² → 겹당 원단 탄소 {mc}원 · 유리 {mg}원, 겹당 작업 {w}원 → 겹당 값 탄소 {c}원 · 유리 {g}원', 'Ply area {a} m² → material per ply KRW {mc} carbon · KRW {mg} glass, labour per ply KRW {w} → per ply KRW {c} carbon · KRW {g} glass'],
+  odPlyNote: ['판 값은 적층 수에 따라 달라집니다: 기본 {b}원 + 겹당 탄소 {c}원 · 유리 {g}원 (재단·적층·원단). 지금 적층은 탄소 {nc}겹, 유리 {ng}겹입니다.', 'The panel price follows the ply count: base KRW {b} + per ply KRW {c} carbon · KRW {g} glass (cutting, lay-up, material). This layup has {nc} carbon and {ng} glass plies.'], odPanelSheet: ['판재 제작 (300 × 300 mm 기준)', 'Sheet stock (300 × 300 mm basis)'],
+  odOnePanel: ['판은 300 × 300 mm 크기로 만듭니다. 시편이 1개여도 판 1장 값이 들어가고, 수량이 한 판을 넘으면 판 수만큼 판 값이 들어갑니다.', 'Panels are made at 300 × 300 mm. Even one coupon needs a whole panel, and when the quantities need more than one panel, each panel is charged.'],
+  odOwnPanel: ['사급 판재는 300 × 300 mm 기준으로 배치합니다. 판 크기가 다르면 메모에 적어 주세요.', 'Customer-supplied sheets are laid out on 300 × 300 mm panels. If your sheet is a different size, please note it in the memo.'],
+  odOver: ['300 × 300 mm 판에 들어가지 않는 시편은 이 견적에서 빠졌습니다. 별도로 문의해 주세요.', 'Coupons that do not fit a 300 × 300 mm panel are left out of this estimate. Please contact us about them.'],
+  odPanelOf: ['지금 수량은 판 {n}장이 필요해서 판 값을 {n}장으로 계산했습니다. 수량을 줄여 한 판에 맞추면 판 값은 1장입니다.', 'These quantities need {n} panels, so {n} panels are charged. Reduce the quantities to fit one panel and only one is charged.'], odPanelOfOwn: ['지금 수량은 300 × 300 mm 판재 {n}장이 필요합니다.', 'These quantities need {n} sheets of 300 × 300 mm.'], odPanelNo: ['판', 'panel'],
   odMachOnly: ['가공', 'machining'], odAsk: ['별도 견적', 'quoted separately'], odFrom: ['부터', 'and up'], odRush: ['사출 일정', 'Moulding schedule'], odRushN: ['모아서 진행 (일정 협의)', 'Batched run (date by arrangement)'], odRushY: ['급행 (세팅 비용 60만원부터)', 'Rush (set-up fee from KRW 600,000)'],
   odSetup: ['사출 세팅 비용', 'Moulding set-up fee'],
   odPlasNote: ['플라스틱은 사급(판재·사출품을 보내 주시는 것)을 기본으로 합니다. 사출도 해 드릴 수 있지만 날을 잡아 모아서 진행하므로 연락드린 뒤 일정을 정합니다. 급하게 필요하시면 세팅 비용이 60만원부터 들어갑니다.', 'Plastics are customer-supplied by default (send us the sheet or mouldings). We can mould them, but runs are batched on set dates, so we contact you to agree the schedule. For urgent work a set-up fee from KRW 600,000 applies.'],
@@ -1936,14 +2000,18 @@ var Order = (function () {
   var PRICE = {
     to: 'shindongwoo@gmail.com', vat: 0.10, baseT: 3.0, tolT: 0.3,
     mach: 25000,   // 가공: 인장 시편 1개 (대표 지시 11-19 23:11)
-    tab: 50000,    // 탭 부착: 탭이 붙는 시편 1개 (20만 - 15만)
+    tab: 55000,    // 탭 부착(참고): 실제 계산은 set.tab (BEAM_30 역산)
+    machF: { vnotch: 'vn' },   // 난이도 계수를 곱하는 시편
     // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 220만원에서 역산 (BEAM_22, 11-19 23:2x 대표 선택)
-    panelCost: { lam: 1475000, plastic: 50000, plasticEng: 100000 },
+    panelCost: { lam: 600000, plastic: 50000, plasticEng: 100000 },   // lam은 탄소 UD 15겹(3T) 기준값(참고). 실제 계산은 panelLam
+    // 복합소재 판 값 = base + 겹 수 × (cut + lay) + 탄소 겹 × mat.cf + 유리 겹 × mat.gf  (BEAM_28, 탄소 15겹 = 600,000)
+    // 입력값(기본): 원단 값은 원/m. 이 값만 바꾸면 겹당 값·판 값이 따라 바뀜 (BEAM_29)
+    set: { cfM: 30000, gfM: 15000, rollW: 1.3, cutL: 400, cutW: 400, scrap: 30, labor: 60000, cutMin: 2, layMin: 8, base: 378000, machFix: 6000, machMm: 36, vnF: 1.4, tab: 55000 },
     setup: 600000,   // 사출 세팅 비용 '부터': 급행일 때, PEEK는 항상 (대표 11-19 23:24)
     engPlastic: { PL_custom: 1 },        // 판 값 10만원: 등급을 모르는 직접 입력만 (가정). PA6·PA6-GF30은 ABS·PC와 같음 (대표 11-19 23:21)
     setupAlways: { PL_PEEK: 1 },         // 세팅 비용을 항상 받는 재질: PEEK (소재 50~60배, 어닐링, 사출기 세척)
     askPanel: { PL_PEEK: 1 },            // 판 값을 자동 계산하지 않고 별도 견적으로 둘 재질 (고무는 종류 전체)
-    panel: { L: 400, W: 400, margin: 10, gap: 4 },   // 기본 판, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
+    panel: { L: 300, W: 300, margin: 10, gap: 4 },   // 한 번 주문 = 판 1장, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
     k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
       ptension: 1.0, pcomp: 0.8, pflex: 0.6, izod: 0.6,
       rtension: 0.5, rtear: 0.5, rcset: 0.2, rhard: 0.2, rplanar: 0.6, rucomp: 0.2 }
@@ -1953,30 +2021,64 @@ var Order = (function () {
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function won(v) { return Math.round(v).toLocaleString('en-US'); }
   function r1000(v) { return Math.round(v / 1000) * 1000; }
-  // 필요한 판 수: 400 × 400 판에 선반식으로 채움. 시편은 길이 방향을 돌리지 않음 (섬유 방향 유지)
+  // 필요한 판 수: 화면의 재단 배치와 같은 계산 (300 × 300, Spec.layout)
   function panels(rows) {
-    var P = PRICE.panel, UL = P.L - 2 * P.margin, UW = P.W - 2 * P.margin, items = [], bins = [], over = false;
-    rows.forEach(function (r) { for (var i = 0; i < r.n; i++) items.push({ l: r.shape.len, w: r.shape.w }); });
-    items.sort(function (a, b) { return b.w - a.w || b.l - a.l; });
-    items.forEach(function (it) {
-      if (it.l > UL || it.w > UW) over = true;
-      var placed = false, b, s, bin, sh2;
-      for (b = 0; b < bins.length && !placed; b++) {
-        bin = bins[b];
-        for (s = 0; s < bin.shelves.length && !placed; s++) { sh2 = bin.shelves[s]; if (sh2.h >= it.w && sh2.x + it.l <= UL + 1e-9) { sh2.x += it.l + P.gap; placed = true; } }
-        if (!placed && bin.y + it.w <= UW + 1e-9) { bin.shelves.push({ h: it.w, x: it.l + P.gap }); bin.y += it.w + P.gap; placed = true; }
-      }
-      if (!placed) bins.push({ shelves: [{ h: it.w, x: it.l + P.gap }], y: it.w + P.gap });
+    var P = PRICE.panel, all = Spec.layout(rows.filter(function (r) { return !r.round; }), { kerf: P.gap, margin: P.margin, L: P.L, W: P.W });
+    return { n: Math.max(1, all.panels.length), over: all.nOver > 0, all: all };
+  }
+  // ---- 단가 설정: 기본값 PRICE.set, 아티팩트(단일 파일)에서는 화면에서 바꿔 볼 수 있음. 홈페이지는 기본값만 ----
+  var SET0 = JSON.parse(JSON.stringify(PRICE.set)), SETK = 'bb_price', editable = !window.SITE, psOpen = false;
+  var SLIM = { cfM: [0, 1e6], gfM: [0, 1e6], rollW: [0.1, 5], cutL: [100, 2000], cutW: [100, 2000], scrap: [0, 200], labor: [0, 1e6], cutMin: [0, 120], layMin: [0, 120], base: [0, 1e7], machFix: [0, 1e6], machMm: [0, 1e4], vnF: [0.1, 10], tab: [0, 1e7] };
+  function loadSet() { if (!editable) return; try { var j = JSON.parse(localStorage.getItem(SETK) || 'null'); if (j) Object.keys(SET0).forEach(function (k) { var v = +j[k]; if (isFinite(v) && v >= SLIM[k][0] && v <= SLIM[k][1]) PRICE.set[k] = v; }); } catch (e) { /* 저장소 없음 */ } }
+  function saveSet() { try { localStorage.setItem(SETK, JSON.stringify(PRICE.set)); } catch (e) { /* 저장소 없음 */ } }
+  // 겹당 값: 원단(원/m ÷ 폭 × 겹 넓이) + 작업(재단·적층 시간 × 작업 단가)
+  function plyRates() {
+    var s = PRICE.set, area = s.cutL * s.cutW / 1e6 * (1 + s.scrap / 100), work = s.labor * (s.cutMin + s.layMin) / 60;
+    var mc = area * s.cfM / s.rollW, mg = area * s.gfM / s.rollW;
+    return { base: s.base, area: area, work: work, matCf: mc, matGf: mg, cf: mc + work, gf: mg + work };
+  }
+  // 깎는 값(개당): 복합소재는 시편 크기에 비례 = (고정 + 외곽 길이 × mm당 값) × 난이도, 500원 단위. 나머지는 계수 방식
+  function r500(v) { return Math.round(v / 500) * 500; }
+  function machUnit(r, kind) {
+    if (kind === 'lam') { var s = PRICE.set; return r500((s.machFix + Spec.perim(r.shape) * s.machMm) * (PRICE.machF[r.key] === 'vn' ? s.vnF : 1)); }
+    var k = PRICE.k[r.key]; return k ? PRICE.mach * k : null;
+  }
+  // 시편 단가표 (지금 두께 기준)
+  function priceSheet(o) {
+    var h = '<details class="psheet"><summary>' + T('shtTitle') + '</summary><div class="tw"><table class="ds ord"><thead><tr><th>' + T('odItem') + '</th><th>' + T('shtStd') + '</th><th>' + T('shtSize') + '</th><th>' + T('shtLen') + '</th><th>' + T('shtMach') + '</th><th>' + T('shtTab') + '</th><th>' + T('shtEach') + '</th></tr></thead><tbody>';
+    o.all.forEach(function (r) {
+      if (r.round) return;
+      var m = machUnit(r, o.kind), tb = r.tab && o.kind === 'lam' ? PRICE.set.tab : 0;
+      h += '<tr><th scope="row"><i class="sw pc-' + r.key + '"></i>' + esc(r.name || T('t_' + r.key)) + '</th><td>' + esc(r.std || '') + '</td><td>' + esc(String(r.size)) + '</td><td class="nv">' + U.fix(Spec.perim(r.shape), 0) + '</td><td class="nv">' + (m === null ? '–' : won(m)) + '</td><td class="nv">' + (tb ? '+' + won(tb) : '–') + '</td><td class="nv">' + (m === null ? '–' : won(m + tb)) + '</td></tr>';
     });
-    return { n: Math.max(1, bins.length), over: over };
+    return h + '</tbody></table></div><p class="note">' + T(o.kind === 'lam' ? 'shtNote' : 'shtNoteK').replace('{f}', won(PRICE.set.machFix)).replace('{m}', PRICE.set.machMm).replace('{v}', PRICE.set.vnF).replace('{t}', won(PRICE.set.tab)) + '</p></details>';
+  }
+  function setPanel() {
+    var s = PRICE.set, R = plyRates(), dirty = Object.keys(SET0).some(function (k) { return PRICE.set[k] !== SET0[k]; });
+    var row = function (k, unit, step) { return '<label class="psrow"><span>' + T('ps_' + k) + '</span><input type="number" class="num" data-ps="' + k + '" value="' + s[k] + '" step="' + step + '" min="' + SLIM[k][0] + '" max="' + SLIM[k][1] + '"><i>' + unit + '</i></label>'; };
+    var h = '<details class="pset"' + (psOpen ? ' open' : '') + '><summary>' + T('psTitle') + (dirty ? ' <span class="chip">' + T('psDirty') + '</span>' : '') + '</summary><p class="note">' + T('psNote') + '</p><div class="psgrid">';
+    h += row('cfM', T('psWonM'), 1000) + row('gfM', T('psWonM'), 1000) + row('rollW', 'm', 0.05) + row('cutL', 'mm', 10) + row('cutW', 'mm', 10) + row('scrap', '%', 5) + row('labor', T('psWonH'), 1000) + row('cutMin', T('psMin'), 0.5) + row('layMin', T('psMin'), 0.5) + row('base', T('odWon'), 1000) + row('machFix', T('odWon'), 500) + row('machMm', T('psWonMm'), 1) + row('vnF', '×', 0.1) + row('tab', T('odWon'), 1000);
+    h += '</div><p class="note psout">' + T('psOut').replace('{a}', U.fix(R.area, 3)).replace('{mc}', won(R.matCf)).replace('{mg}', won(R.matGf)).replace('{w}', won(R.work)).replace('{c}', won(R.cf)).replace('{g}', won(R.gf)) + '</p><button type="button" class="btn" data-psreset="1"' + (dirty ? '' : ' disabled') + '>' + T('psReset') + '</button></details>';
+    return h;
+  }
+  // 복합소재 판 값: 적층의 겹 수와 섬유 종류로 계산
+  function lamPanel(o) {
+    var P = plyRates(), nc = 0, ng = 0;
+    ((o.L && o.L.plies) || []).forEach(function (p) { if (String(p.m).indexOf('cf') === 0) nc++; else ng++; });
+    return { n: nc + ng, nc: nc, ng: ng, rates: P, price: r1000(P.base + nc * P.cf + ng * P.gf) };
   }
   // 견적: o = 물성 시트 계산 결과, op = {supply:'sw'|'own', tab:true|false}
   function quote(o, op) {
     var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0, panelN: 0, panelUnit: 0, panelSum: 0, panelOver: false, setup: 0 };
+    // 전체 판 기준: 판 값 = 판 수 × 1장 값. 수량은 판에 놓인 시편 전체(판에 안 들어가는 크기는 제외). 배치가 없으면(원형 시편 등) 입력 수량
+    var lay = o.lay && o.lay.N > 0 ? o.lay : null, tot = {};
+    ((o.layAll && o.layAll.panels) || (lay ? [lay] : [])).forEach(function (pn) { Object.keys(pn.cnt).forEach(function (k) { tot[k] = (tot[k] || 0) + pn.cnt[k]; }); });
+    q.pidx = lay ? lay.idx : 0; q.pN = lay ? lay.N : 0; q.panelOver = !!(o.lay && o.lay.nOver > 0);
     if (op.supply === 'sw' && !q.consultAll && o.rows.length) {
-      var pn = panels(o.rows), pc = PRICE.panelCost;
-      q.panelN = pn.n; q.panelOver = pn.over;
-      q.panelUnit = o.kind === 'lam' ? pc.lam : (PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic);
+      var pc = PRICE.panelCost;
+      q.panelN = Math.max(1, q.pN);
+      if (o.kind === 'lam') { q.ply = lamPanel(o); q.panelUnit = q.ply.price; }
+      else q.panelUnit = PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic;
       if (o.kind !== 'lam') q.consultMat = true;                                   // 플라스틱·고무 공급은 연락해서 일정·값을 정함
       if (o.kind === 'rubber' || PRICE.askPanel[o.mat]) q.panelUnit = null;        // 별도 견적
       if (o.kind === 'plastic' && (op.rush || PRICE.setupAlways[o.mat])) { q.setup = PRICE.setup; q.sum += q.setup; }
@@ -1984,11 +2086,12 @@ var Order = (function () {
       q.panelSum = q.panelUnit === null ? 0 : q.panelN * q.panelUnit; q.sum += q.panelSum;
     }
     o.rows.forEach(function (r) {
-      var k = PRICE.k[r.key], tabbed = !!r.tab && o.kind === 'lam', unit = null;
+      var k = PRICE.k[r.key], tabbed = !!r.tab && o.kind === 'lam', unit = null, n = lay && !r.round ? (tot[r.key] || 0) : r.n;
+      if (!n) return;
       if (tabbed) q.hasTab = true;
-      if (!q.consultAll && k) unit = PRICE.mach * k + (op.tab && tabbed ? PRICE.tab : 0);
-      q.items.push({ key: r.key, name: r.name || T('t_' + r.key), std: r.std, size: r.size, n: r.n, unit: unit, sub: unit === null ? null : unit * r.n, tab: op.tab && tabbed });
-      q.n += r.n; if (unit !== null) q.sum += unit * r.n;
+      if (!q.consultAll && k) unit = machUnit(r, o.kind) + (op.tab && tabbed ? PRICE.set.tab : 0);
+      q.items.push({ key: r.key, name: r.name || T('t_' + r.key), std: r.std, size: r.size, n: n, unit: unit, sub: unit === null ? null : unit * n, tab: op.tab && tabbed });
+      q.n += n; if (unit !== null) q.sum += unit * n;
     });
     q.sum = r1000(q.sum); q.vat = r1000(q.sum * PRICE.vat); q.total = q.sum + q.vat;
     return q;
@@ -2002,11 +2105,12 @@ var Order = (function () {
     $('odSupply').value = opt.supply; $('odTab').value = opt.tab ? '1' : '0';
     $('odTab').disabled = !q.hasTab;
     if (!q.items.length) { host.innerHTML = '<p class="note">' + T('odNone') + '</p>'; return; }
+    if (q.pN > 1) s += '<p class="note warn notice">' + T(q.panelN ? 'odPanelOf' : 'odPanelOfOwn').replace(/\{n\}/g, q.pN) + '</p>';
     s += '<div class="tw"><table class="ds ord"><thead><tr><th>' + T('odItem') + '</th><th>' + T('odQty') + '</th><th>' + T('odUnit') + '</th><th>' + T('odSubt') + '</th></tr></thead><tbody>';
     q.items.forEach(function (it) {
       s += '<tr><th scope="row"><i class="sw pc-' + it.key + '"></i>' + esc(it.name) + (it.tab ? ' <span class="chip">' + T('odTabIn') + '</span>' : '') + '</th><td class="nv">' + it.n + '</td><td class="nv">' + (it.unit === null ? '–' : won(it.unit)) + '</td><td class="nv">' + (it.sub === null ? '–' : won(it.sub)) + '</td></tr>';
     });
-    if (q.panelN) s += '<tr><th scope="row">' + T(o.kind === 'lam' ? 'odPanelLam' : 'odPanelSheet') + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelUnit) + (q.from ? ' ' + T('odFrom') : '')) + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) + '</td></tr>';
+    if (q.panelN) s += '<tr><th scope="row">' + (o.kind === 'lam' && q.ply ? T('odPanelLam').replace('{n}', q.ply.n).replace('{h}', U.fix(o.h, 2)) : T('odPanelSheet')) + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelUnit) + (q.from ? ' ' + T('odFrom') : '')) + '</td><td class="nv">' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum) + (q.from ? ' ' + T('odFrom') : '')) + '</td></tr>';
     if (q.setup) s += '<tr><th scope="row">' + T('odSetup') + '</th><td class="nv">1</td><td class="nv">' + won(q.setup) + ' ' + T('odFrom') + '</td><td class="nv">' + won(q.setup) + ' ' + T('odFrom') + '</td></tr>';
     s += '</tbody>';
     if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T(q.consultMat && q.panelUnit === null ? 'odTotalEx' : 'odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
@@ -2015,10 +2119,15 @@ var Order = (function () {
     if (o.kind === 'plastic' || o.kind === 'rubber') s += '<p class="note warn notice">' + T(o.kind === 'plastic' ? 'odPlasNote' : 'odRubNote') + '</p>';
     if (q.peek) s += '<p class="note warn notice">' + T('odPeek') + '</p>';
     if (q.panelN) s += '<p class="note">' + T('odOnePanel') + '</p>';
+    if (q.ply) s += '<p class="note">' + T('odPlyNote').replace('{b}', won(q.ply.rates.base)).replace('{c}', won(q.ply.rates.cf)).replace('{g}', won(q.ply.rates.gf)).replace('{nc}', q.ply.nc).replace('{ng}', q.ply.ng) + '</p>';
+    else if (!q.consultAll && q.pN && !q.panelN) s += '<p class="note">' + T('odOwnPanel') + '</p>';
+    if (q.panelOver) s += '<p class="note warn notice">' + T('odOver') + '</p>';
     if (q.thick && !q.consultAll) s += '<p class="note warn notice">' + T('odThick') + '</p>';
     if (o.kind === 'lam') s += '<p class="note">' + T('odSame') + '</p>';
+    if (!q.consultAll) s += priceSheet(o);
+    if (editable && o.kind === 'lam') s += setPanel();
     host.innerHTML = s;
-    $('ordMat').textContent = matName(o);
+    $('ordMat').textContent = matName(o) + (q.pN > 1 ? ' · ' + T('odPanelNo') + ' × ' + q.pN : '');
   }
   // ---- 주문 내용 ----
   function val(id) { var e = $(id); return e ? String(e.value || '').trim() : ''; }
@@ -2027,8 +2136,8 @@ var Order = (function () {
     return {
       lang: U.getLang(), page: location.href.slice(0, 200),
       name: val('odName'), org: val('odOrg'), phone: val('odPhone'), email: val('odMail'), due: val('odDue'), memo: val('odMemo'),
-      special: $('odSpecial').checked, supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
-      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum)) : '') + (q.setup ? ', ' + T('odSetup') + ' ' + won(q.setup) + ' ' + T('odFrom') : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
+      special: $('odSpecial').checked, panelNo: q.pN > 1 ? String(q.pN) : '', supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
+      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.ply ? ' (' + q.ply.n + ' plies: CF ' + q.ply.nc + ', GF ' + q.ply.ng + ')' : '') + (q.pN > 1 && !q.panelN ? ', ' + T('odPanelNo') + ' × ' + q.pN : '') + (q.panelN ? ', ' + T('odPcsU') + ' × ' + q.panelN + ' = ' + (q.panelUnit === null ? T('odAsk') : won(q.panelSum)) : '') + (q.setup ? ', ' + T('odSetup') + ' ' + won(q.setup) + ' ' + T('odFrom') : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
       sum: q.sum, vat: q.vat, total: q.total, count: q.n,
       items: q.items.map(function (it) { return { name: it.name, std: it.std, size: String(it.size).replace(/×/g, 'x'), n: it.n, unit: it.unit, sub: it.sub, tab: it.tab }; }),
       website: val('odWeb')
@@ -2043,7 +2152,7 @@ var Order = (function () {
     return null;
   }
   function subject(p) {
-    return '[' + T('odSubj') + (p.special || p.thick || p.consult ? ', ' + T('odSpecialTag') : '') + '] ' + p.material + ', ' + p.count + ' ' + T('odPcs') + (p.total ? ', ' + won(p.total) + ' ' + T('odWon') : '');
+    return '[' + T('odSubj') + (p.special || p.thick || p.consult ? ', ' + T('odSpecialTag') : '') + '] ' + p.material + (p.panelNo ? ', ' + T('odPanelNo') + ' × ' + p.panelNo : '') + ', ' + p.count + ' ' + T('odPcs') + (p.total ? ', ' + won(p.total) + ' ' + T('odWon') : '');
   }
   function bodyText(p) {
     var L = [];
@@ -2078,12 +2187,23 @@ var Order = (function () {
       if (e.id === 'odSupply') { opt.supply = e.value === 'own' ? 'own' : 'sw'; if (cur) render(cur); }
       else if (e.id === 'odTab') { opt.tab = e.value === '1'; if (cur) render(cur); }
       else if (e.id === 'odRush') { opt.rush = e.value === '1'; if (cur) render(cur); }
+      else if (editable && e.getAttribute && e.getAttribute('data-ps')) {
+        var k = e.getAttribute('data-ps'), v = parseFloat(e.value);
+        if (isFinite(v) && SLIM[k]) { PRICE.set[k] = Math.max(SLIM[k][0], Math.min(SLIM[k][1], v)); saveSet(); }
+        psOpen = true; if (cur) render(cur);
+      }
     });
-    c.addEventListener('click', function (ev) { ev.stopPropagation(); });
+    c.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      var rb = ev.target.closest ? ev.target.closest('[data-psreset]') : null;
+      if (rb && editable) { Object.keys(SET0).forEach(function (k) { PRICE.set[k] = SET0[k]; }); saveSet(); psOpen = true; if (cur) render(cur); }
+    });
+    c.addEventListener('toggle', function (ev) { if (ev.target.classList && ev.target.classList.contains('pset')) psOpen = ev.target.open; }, true);
+    loadSet();
     $('ordForm').addEventListener('submit', function (ev) { ev.preventDefault(); send(); });
   }
   function relang() { if (cur) render(cur); var m = $('ordMsg'); if (m && m.getAttribute('data-k')) m.textContent = T(m.getAttribute('data-k')); }
-  return { PRICE: PRICE, panels: panels, quote: quote, render: render, init: init, relang: relang, opt: opt, payload: payload, subject: subject, bodyText: bodyText, check: check };
+  return { PRICE: PRICE, machUnit: machUnit, plyRates: plyRates, lamPanel: lamPanel, panels: panels, quote: quote, render: render, init: init, relang: relang, opt: opt, payload: payload, subject: subject, bodyText: bodyText, check: check };
 })();
 
 /* sheet.js: 물성 시트 탭 (적층 편집기, 목표 대비 예상, 변위-하중·응력 곡선, 시편 치수와 판 크기) */
@@ -2136,14 +2256,18 @@ Object.assign(I18N, {
   shRec: ['권장 두께', 'recommended thickness'], shTab: ['탭', 'tab'], shNoTab: ['탭 없음 (사포 물림)', 'no tabs (emery cloth)'], shNotchW: ['노치 사이', 'between notches'], shDepth: ['노치 깊이', 'notch depth'],
   shSbsRange: ['규격 두께 범위(2 ~ 6 mm) 밖입니다.', 'Outside the standard thickness range (2–6 mm).'],
   shMem: ['† 규격 원문과 대조가 필요한 치수입니다.', '† Dimensions to be checked against the standard text.'],
-  shPanel: ['필요 판 크기', 'Panel size needed'], shPanelNote: ['길이 방향이 섬유 0° 방향입니다. 시편 사이 간격은 재단 여유입니다.', 'Length runs along the 0° fibre direction. Gaps between specimens are the cutting allowance.'],
+  shPanel: ['판 크기', 'Panel size'], spPanelFix: ['판 300 × 300 mm 고정', 'Panel fixed at 300 × 300 mm'], spSheets: ['{n}장', '{n} panels'], spSheet1: ['1장', '1 panel'], spPanelNo: ['판 {i}', 'Panel {i}'], spFit: ['한 판에 맞추기', 'Fit to one panel'],
+  spOneOrder: ['지금 수량은 300 × 300 mm 판 {n}장이 필요합니다. 판 값은 판 수만큼 들어갑니다. 아래에서 판을 고르면 도면과 CAM이 그 판으로 바뀝니다.', 'These quantities need {n} panels of 300 × 300 mm, and each panel is charged. Pick a panel below and the drawings and CAM switch to it.'],
+  spCutLen: ['선택한 판의 가공 길이: 외곽 트림 {a} mm, 시편 외곽 합계 {b} mm (도면 길이, 깊이 나눔·공구 지름은 뺀 값)', 'Cutting length for this panel: outer trim {a} mm, coupon outlines {b} mm in total (drawing length; depth passes and tool diameter not included)'],
+  spOneOk: ['지금 수량은 300 × 300 mm 판 1장에 들어갑니다.', 'These quantities fit on one 300 × 300 mm panel.'],
+  spOver: ['300 × 300 mm 판에 들어가지 않아 배치에서 뺀 시편: {list}. 별도 문의가 필요합니다.', 'Left out because they do not fit a 300 × 300 mm panel: {list}. Please contact us.'], shPanelNote: ['길이 방향이 섬유 0° 방향입니다. 시편 사이 간격은 재단 여유입니다.', 'Length runs along the 0° fibre direction. Gaps between specimens are the cutting allowance.'],
   shLen: ['길이', 'Length'], shWid: ['폭', 'Width'], shThick: ['두께', 'Thickness'], shSupport: ['지점 거리', 'Span'], shPcs: ['개', 'pcs'],
   shScale: ['치수 1:1 mm, 그림은 화면에 맞춰 축소', 'Dimensions 1:1 in mm; drawings scaled to fit'],
   tabFab: ['시편 가공', 'Fabrication'], fbGo: ['시편 가공 탭에서 재단 배치·도면 저장', 'Layout and drawings on the Fabrication tab'],
-  fbLay: ['재단 배치', 'Cutting layout'], fbDraw: ['도면 저장', 'Save drawings'], fbDrawNote: ['치수 1:1, 단위 mm. DXF는 R12 형식이며 외형선은 녹색 층(OUTLINE)입니다. 재단용은 판과 시편 외곽, 도면용은 시편별 치수를 담습니다.', 'Scale 1:1 in mm. DXF is R12 with outlines on the green OUTLINE layer. Cutting files hold the panel and outlines; drawing files hold dimensions per specimen.'],
+  fbLay: ['재단 배치', 'Cutting layout'], fbDraw: ['도면 저장', 'Save drawings'], fbDrawNote: ['치수 1:1, 단위 mm. DXF는 R12 형식이며 판은 PANEL 층, 외형선은 녹색 층(OUTLINE)입니다. 재단용은 판과 시편 외곽, 도면용은 시편별 치수를 담습니다. SVG는 보기용으로 함께 둡니다.', 'Scale 1:1 in mm. DXF is R12 with the panel on the PANEL layer and outlines on the green OUTLINE layer. Cutting files hold the panel and outlines; drawing files hold dimensions per specimen. SVG is kept for viewing.'],
   fbCutSvg: ['재단용 SVG', 'Cutting SVG'], fbCutDxf: ['재단용 DXF', 'Cutting DXF'], fbDrSvg: ['도면용 SVG', 'Drawing SVG'], fbDrDxf: ['도면용 DXF', 'Drawing DXF'],
-  fbCam: ['루타 가공·시뮬레이션', 'Router machining and simulation'], fbCamNote: ['전에 만든 RichAuto 시편 CAM·시뮬레이터입니다. 위 재단 배치가 SVG 입력으로 들어가고, 가공 조건(회전수·이송·절입·목표 공구 부하), NC 코드, 2D·3D 시뮬레이션은 CAM 화면에서 다룹니다. 두께와 소재 분류는 자동으로 맞춥니다.', 'This is the RichAuto coupon CAM and simulator made earlier. The layout above goes in as its SVG input; cutting conditions (speed, feed, depth, target tool load), NC code and the 2D/3D simulation are handled in the CAM. Thickness and material class are set automatically.'],
-  fbSend: ['재단 배치를 CAM에 넣기', 'Load layout into the CAM'], fbPop: ['CAM을 새 창으로', 'Open CAM in a new window'], fbPopOk: ['새 창을 열었습니다. 새 창에서는 재단용 SVG를 저장해 SVG 파일로 여세요.', 'New window opened. There, save the cutting SVG and open it as an SVG file.'], fbPopNo: ['이 환경에서는 새 창이 열리지 않습니다.', 'A new window cannot be opened here.'], fbSent: ['CAM에 넣었습니다:', 'Loaded into the CAM:'], fbNoMat: ['CAM에 이 재질의 가공 조건이 없습니다. CAM에서 소재를 직접 고르세요.', 'The CAM has no cutting data for this material. Choose the material in the CAM.'], fbSentNoWin: ['재단 배치를 저장했습니다. CAM 창이 열리지 않으면 재단용 SVG를 저장해 CAM에서 여세요.', 'Layout stored. If the CAM window did not open, save the cutting SVG and open it in the CAM.'], fbSendFail: ['CAM에 넣지 못했습니다. 재단용 SVG를 저장해 CAM의 SVG 파일 열기로 넣어 주세요.', 'Could not load into the CAM. Save the cutting SVG and use the CAM\'s SVG file input.'],
+  fbCam: ['루타 가공·시뮬레이션', 'Router machining and simulation'], fbCamNote: ['전에 만든 RichAuto 시편 CAM·시뮬레이터입니다. 위 재단 배치가 DXF 입력으로 들어가고, 가공 조건(회전수·이송·절입·목표 공구 부하), NC 코드, 2D·3D 시뮬레이션은 CAM 화면에서 다룹니다. 두께와 소재 분류는 자동으로 맞춥니다. CAM은 다른 DXF·SVG 파일도 엽니다.', 'This is the RichAuto coupon CAM and simulator made earlier. The layout above goes in as its DXF input; cutting conditions (speed, feed, depth, target tool load), NC code and the 2D/3D simulation are handled in the CAM. Thickness and material class are set automatically. The CAM also opens other DXF and SVG files.'],
+  fbSend: ['재단 배치를 CAM에 넣기', 'Load layout into the CAM'], fbPop: ['CAM을 새 창으로', 'Open CAM in a new window'], fbPopOk: ['새 창을 열었습니다. 새 창에서는 재단용 DXF를 저장해 DXF·SVG 파일 열기로 여세요.', 'New window opened. There, save the cutting DXF and open it with the DXF or SVG file input.'], fbPopNo: ['이 환경에서는 새 창이 열리지 않습니다.', 'A new window cannot be opened here.'], fbSent: ['CAM에 넣었습니다:', 'Loaded into the CAM:'], fbNoMat: ['CAM에 이 재질의 가공 조건이 없습니다. CAM에서 소재를 직접 고르세요.', 'The CAM has no cutting data for this material. Choose the material in the CAM.'], fbSentNoWin: ['재단 배치를 저장했습니다. CAM 창이 열리지 않으면 재단용 DXF를 저장해 CAM에서 여세요.', 'Layout stored. If the CAM window did not open, save the cutting DXF and open it in the CAM.'], fbSendFail: ['CAM에 넣지 못했습니다. 재단용 DXF를 저장해 CAM의 DXF·SVG 파일 열기로 넣어 주세요.', 'Could not load into the CAM. Save the cutting DXF and use the CAM\'s DXF or SVG file input.'],
   fbMach: ['장비', 'Machines'], fbM1: ['미스터조각기 MR-LM6090 · RichAuto A11', 'MR-LM6090 router · RichAuto A11'], fbM2: ['마하 보드 (Mach3) 조각기', 'Mach3 board router'], fbM3: ['두산 MCT (Fanuc)', 'Doosan machining centre (Fanuc)'],
   fbSim: ['NC + 시뮬레이션', 'NC + simulation'], fbFmt: ['NC 형식', 'NC format'], fbMachNote: ['NC 출력과 시뮬레이션은 아래 시편 CAM에서 합니다. 지금은 미스터조각기(RichAuto)만 지원하고, 다른 장비는 이름만 표시합니다.', 'NC output and simulation run in the coupon CAM below. Only the MR-LM6090 (RichAuto) is supported for now; other machines are listed by name only.'],
   shParallel: ['평행부', 'Reduced section'], shCnt: ['겹 수', 'Ply count'], r_cs: ['압축강도', 'Compressive strength']
@@ -2154,7 +2278,7 @@ var Sheet = (function () {
   var T = U.T, api, $, lastMode = null, R = null;
   var MK = ['cf_ud', 'gf_ud', 'cf_fab', 'gf_fab'], MATK = ['LAM'].concat(Object.keys(Spec.RUB), Object.keys(Spec.PLAS), ['SS400', 'S235', 'STS304', 'AL6061', 'custom']);
   var PROPS = [['E1', 'GPa'], ['E2', 'GPa'], ['G12', 'GPa'], ['nu12', ''], ['G13', 'GPa'], ['G23', 'GPa'], ['Xt', 'MPa'], ['Xc', 'MPa'], ['Yt', 'MPa'], ['Yc', 'MPa'], ['S12', 'MPa'], ['S13', 'MPa'], ['vf0', ''], ['rhof', 'g/cm³']];
-  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 4, margin: 10, plen: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', mform: 'flat', mround: 'E8_12', q: {}, cam: 'RichAuto_시편CAM.html',
+  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 4, margin: 10, plen: 0, pidx: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', mform: 'flat', mround: 'E8_12', q: {}, cam: 'RichAuto_시편CAM.html',
     inc: {}, open: {},
     tg: { ts: 900, te: 45, cs: 0, fs: 800, fe: 40, ilss: 70, vn: 70, wf: 34 } };
   var STD = { q_hs: 'ASTM D2240', q_su: 'ASTM D412', q_el: 'ASTM D412', q_m100: 'ASTM D412', q_tear: 'ASTM D624', q_cs: 'ASTM D395', q_rho: 'ASTM D297', cs: 'ASTM D6641 / D3410 / D695', p_su: 'ASTM D638', p_E: 'ASTM D638', p_el: 'ASTM D638', p_sf: 'ASTM D790', p_Ef: 'ASTM D790', p_sc: 'ASTM D695', p_iz: 'ASTM D256', p_rho: 'ASTM D792', ts: 'ASTM D3039', te: 'ASTM D3039', fs: 'ASTM D790', fe: 'ASTM D790', ilss: 'ASTM D2344', vn: 'ASTM D5379', wf: 'ASTM D3171' };
@@ -2189,7 +2313,9 @@ var Sheet = (function () {
     }
     o.all.forEach(function (r) { var q = sh.q[r.key]; r.n = sh.inc[r.key] === false ? 0 : (q === undefined ? (r.n0 || 7) : q); });
     o.rows = o.all.filter(function (r) { return r.n > 0; });
-    o.lay = Spec.layout(o.rows.filter(function (r) { return !r.round; }), { kerf: sh.kerf, margin: sh.margin, plen: sh.plen });
+    o.layAll = Spec.layout(o.rows.filter(function (r) { return !r.round; }), { kerf: sh.kerf, margin: sh.margin });
+    sh.pidx = Math.max(0, Math.min(sh.pidx | 0, o.layAll.panels.length - 1));
+    o.lay = Spec.panelView(o.layAll, sh.pidx);   // 선택한 판 (도면·CAM용. 견적은 전체 판 기준)
     if (o.tests.indexOf(sh.test) < 0) sh.test = o.tests[0];
     return o;
   }
@@ -2358,7 +2484,7 @@ var Sheet = (function () {
       }
       s += '</ol><button type="button" class="btn sm" data-act="add"' + (cfg.lam.plies.length >= 24 ? ' disabled' : '') + '>' + T('shAdd') + '</button>';
       s += '<div class="row row-check"><input type="checkbox" id="sh_sym" data-ll="sym"' + (cfg.lam.sym ? ' checked' : '') + '><label class="lab" for="sh_sym">' + T('shSym') + '</label></div>';
-      s += '<div class="row row-top"><label class="lab" for="sh_rep">' + T('shRep') + '</label><span class="numbox">' + numIn('id="sh_rep" data-ll="rep"', cfg.lam.rep, 1, 1, 20, '') + '</span></div>';
+      s += '<div class="row row-top"><label class="lab" for="sh_rep">' + T('shRep') + '</label><span class="numbox">' + numIn('id="sh_rep" data-ll="rep"', cfg.lam.rep, 1, 1, 50, '') + '</span></div>';
       s += '<div class="row row-top"><label class="lab" for="sh_tgt">' + T('shTgt') + '</label><span class="numbox">' + numIn('id="sh_tgt" data-sh="tgtH"', sh.tgtH, 0.1, 0.1, 100, '') + '<span class="unit">mm</span><button type="button" class="btn sm" data-act="fit">' + T('shFit') + '</button></span></div>';
       s += '<p class="note warn" id="shCapNote" hidden>' + T('shCap') + '</p></section>';
       s += '<section class="grp"><h2 class="grp-h">' + T('shStack') + '</h2><div id="shSum"></div><div id="shStack"></div></section>';
@@ -2418,8 +2544,9 @@ var Sheet = (function () {
     return rows;
   }
   function rowName(k) { return k.indexOf('p_') === 0 ? T('pl_' + k.slice(2)) : k.indexOf('q_') === 0 ? T('rb_' + k.slice(2)) : T('r_' + k); }
-  function panelSvg(lay) {
-    var sc = Math.min(700 / lay.L, 340 / lay.W), W = lay.L * sc, H = lay.W * sc, s = '<svg class="panel-svg" viewBox="-4 -4 ' + (W + 8).toFixed(1) + ' ' + (H + 8).toFixed(1) + '" style="max-width:' + (W + 8).toFixed(0) + 'px" role="img" aria-label="' + esc(T('shPanel')) + '">';
+  function sheets(n) { return n === 1 ? T('spSheet1') : T('spSheets').replace('{n}', n); }
+  function panelSvg(lay, px) {
+    var sc = Math.min((px || 340) / lay.L, (px || 340) / lay.W), W = lay.L * sc, H = lay.W * sc, s = '<svg class="panel-svg" viewBox="-4 -4 ' + (W + 8).toFixed(1) + ' ' + (H + 8).toFixed(1) + '" style="max-width:' + (W + 8).toFixed(0) + 'px" role="img" aria-label="' + esc(T('shPanel')) + '">';
     s += '<rect class="pn-b" x="0" y="0" width="' + W.toFixed(1) + '" height="' + H.toFixed(1) + '"/>';
     lay.rects.forEach(function (r) { s += '<path class="pc pc-' + r.key + '" d="' + Spec.outline(r.shape, r.x * sc, r.y * sc, sc) + '"/>'; });
     return s + '</svg>';
@@ -2492,7 +2619,7 @@ var Sheet = (function () {
     if (o.lam) s += '<section class="card c-ply"><h2>' + T('shPly') + '</h2><div id="shPly"></div></section>';
     // 시편
     s += '<section class="card c-spec"><h2>' + T('shSpec') + ' <span class="sub">' + T('shScale') + '</span></h2><div class="cbar">';
-    s += '<label>' + T('spGap') + ' ' + numIn('data-sh="kerf"', sh.kerf, 0.5, 0, 20) + ' mm</label><label>' + T('shMargin') + ' ' + numIn('data-sh="margin"', sh.margin, 1, 0, 50) + ' mm</label><label>' + T('spPlen') + ' ' + numIn('data-sh="plen"', sh.plen, 10, 0, 3000) + ' mm</label>';
+    s += '<span class="chip pnfix">' + T('spPanelFix') + '</span><label>' + T('spGap') + ' ' + numIn('data-sh="kerf"', sh.kerf, 0.5, 4, 20) + ' mm</label><label>' + T('shMargin') + ' ' + numIn('data-sh="margin"', sh.margin, 1, 10, 50) + ' mm</label>';
     if (o.lam) {
       s += '<label>' + T('shRatio') + ' <select data-sh="ratio">'; [16, 20, 32, 40, 60].forEach(function (k) { s += '<option value="' + k + '"' + (sh.ratio === k ? ' selected' : '') + '>' + k + ':1</option>'; }); s += '</select></label>';
       s += '<label>' + T('spCstd') + ' <select data-sh="cstd">'; ['D6641', 'D3410', 'D695'].forEach(function (k) { s += '<option value="' + k + '"' + (sh.cstd === k ? ' selected' : '') + '>ASTM ' + k + '</option>'; }); s += '</select></label>';
@@ -2511,13 +2638,13 @@ var Sheet = (function () {
     s += '</tbody></table></div><p class="note">' + T('shMem') + '</p><div class="specs">';
     o.rows.forEach(function (r) { if (r.view !== 'none') s += '<figure><figcaption>' + (r.name || T('t_' + r.key)) + '</figcaption>' + drawSpec(r, o) + '</figure>'; });
     s += '</div>';
-    if (o.rows.length) s += '<p class="gofab"><b>' + T('shPanel') + ' ' + f(Math.ceil(o.lay.L), 0) + ' × ' + f(Math.ceil(o.lay.W), 0) + ' × ' + f(o.h, 2) + ' mm</b> <button type="button" class="btn big solid" data-go="fab">' + T('fbGo') + '</button></p>';
+    if (o.rows.length) s += '<p class="gofab"><b>' + T('shPanel') + ' ' + f(o.lay.L, 0) + ' × ' + f(o.lay.W, 0) + ' × ' + f(o.h, 2) + ' mm' + (o.lay.N ? ' · ' + sheets(o.lay.N) : '') + '</b> <button type="button" class="btn big solid" data-go="fab">' + T('fbGo') + '</button></p>';
     s += '</section></div>';
     $('shMain').innerHTML = s;
   }
   function buildFab(o) {
     var s = '<div class="fab-grid"><section class="card c-lay"><h2>' + T('fbLay') + ' <span class="sub">' + esc((o.lam ? o.L.label : o.m.name) + ', ' + f(o.h, 2) + ' mm') + '</span></h2><div class="cbar">';
-    s += '<label>' + T('spGap') + ' ' + numIn('data-sh="kerf"', sh.kerf, 0.5, 0, 20) + ' mm</label><label>' + T('shMargin') + ' ' + numIn('data-sh="margin"', sh.margin, 1, 0, 50) + ' mm</label><label>' + T('spPlen') + ' ' + numIn('data-sh="plen"', sh.plen, 10, 0, 3000) + ' mm</label></div>';
+    s += '<span class="chip pnfix">' + T('spPanelFix') + '</span><label>' + T('spGap') + ' ' + numIn('data-sh="kerf"', sh.kerf, 0.5, 4, 20) + ' mm</label><label>' + T('shMargin') + ' ' + numIn('data-sh="margin"', sh.margin, 1, 10, 50) + ' mm</label></div>';
     s += '<div class="tw"><table class="ds spec"><thead><tr><th>' + T('shTest') + '</th><th>' + T('shSize') + '</th><th>' + T('shQty') + '</th></tr></thead><tbody>';
     o.all.forEach(function (r) {
       var nm = r.name || T('t_' + r.key);
@@ -2525,22 +2652,51 @@ var Sheet = (function () {
     });
     s += '</tbody></table></div>';
     if (o.rows.length && !o.lay.rects.length) s += '<p class="note warn notice">' + T('spRoundNote') + '</p>';
-    else if (o.rows.length) s += '<h3>' + T('shPanel') + ' <b>' + f(Math.ceil(o.lay.L), 0) + ' × ' + f(Math.ceil(o.lay.W), 0) + ' × ' + f(o.h, 2) + ' mm</b></h3>' + panelSvg(o.lay) + '<p class="note' + (o.lay.short ? ' warn' : '') + '">' + T(o.lay.short ? 'spTooLong' : 'shPanelNote') + '</p>';
+    else if (o.rows.length) {
+      s += '<h3>' + T('shPanel') + ' <b>' + f(o.lay.L, 0) + ' × ' + f(o.lay.W, 0) + ' × ' + f(o.h, 2) + ' mm</b> · ' + sheets(o.lay.N) + '</h3>';
+      if (o.lay.N > 1) s += '<p class="note warn notice">' + T('spOneOrder').replace('{n}', o.lay.N) + ' <button type="button" class="btn" data-fit="1">' + T('spFit') + '</button></p>';
+      else s += '<p class="note">' + T('spOneOk') + '</p>';
+      s += '<div class="pnlist" role="group" aria-label="' + esc(T('shPanel')) + '">';
+      o.layAll.panels.forEach(function (pn, i) {
+        s += '<button type="button" class="pnbtn' + (i === o.lay.idx ? ' on' : '') + '" data-pidx="' + i + '" aria-pressed="' + (i === o.lay.idx) + '"><span class="pncap">' + T('spPanelNo').replace('{i}', i + 1) + ' · ' + pn.n + ' ' + T('shPcs') + '</span>' + panelSvg(Spec.panelView(o.layAll, i), o.layAll.panels.length > 1 ? 300 : 420) + '</button>';
+      });
+      s += '</div>';
+      if (o.lay.nOver) s += '<p class="note warn notice">' + T('spOver').replace('{list}', o.all.filter(function (r) { return o.lay.over[r.key]; }).map(function (r) { return (r.name || T('t_' + r.key)) + ' ' + r.size; }).join(', ')) + '</p>';
+      s += '<p class="note cutlen">' + T('spCutLen').replace('{a}', f(2 * (o.lay.L + o.lay.W), 0)).replace('{b}', f(o.lay.rects.reduce(function (t, r) { return t + Spec.perim(r.shape); }, 0), 0)) + '</p>';
+      s += '<p class="note">' + T('shPanelNote') + '</p>';
+    }
     s += '</section><div class="fab-side"><section class="card"><h2>' + T('fbDraw') + '</h2><p class="note">' + T('fbDrawNote') + '</p><div class="bigrow">';
-    [['cut.svg', 'fbCutSvg'], ['cut.dxf', 'fbCutDxf'], ['draw.svg', 'fbDrSvg'], ['draw.dxf', 'fbDrDxf']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length && (o.lay.rects.length || b[0].indexOf('draw') === 0) ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
+    [['cut.dxf', 'fbCutDxf'], ['draw.dxf', 'fbDrDxf'], ['cut.svg', 'fbCutSvg'], ['draw.svg', 'fbDrSvg']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length && (o.lay.rects.length || b[0].indexOf('draw') === 0) ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
     s += '</div></section><section class="card"><h2>' + T('fbMach') + '</h2><ul class="mach"><li><b>' + T('fbM1') + '</b> <span class="chip ok">' + T('fbSim') + '</span></li><li>' + T('fbM2') + ' <span class="chip">' + T('fbFmt') + '</span></li><li>' + T('fbM3') + ' <span class="chip">' + T('fbFmt') + '</span></li></ul><p class="note">' + T('fbMachNote') + '</p></section></div></div>';
     $('fabTop').innerHTML = s; Order.render(o); ensureCam();
     if (o.rows.length && !o.lay.rects.length) { sent = null; noLay = true; $('fabMsg').textContent = T('spRoundNote'); }
     else if (noLay) { noLay = false; $('fabMsg').textContent = ''; sendCam(true); }
   }
+  // 수량이 많은 시험부터 1개씩 줄여 한 판(300 × 300)에 들어가게 함
+  function fitOne() {
+    var o = compute(), guard = 0, ar = function (r) { return r.shape.len * r.shape.w; };
+    while (o.layAll.panels.length > 1 && guard++ < 600) {
+      var c = null; o.rows.forEach(function (r) { if (!r.round && !o.layAll.over[r.key] && r.n > 1 && (!c || r.n > c.n || (r.n === c.n && ar(r) > ar(c)))) c = r; });
+      if (!c) break;
+      sh.q[c.key] = c.n - 1; o = compute();
+    }
+    sh.pidx = 0;
+  }
   function onFabClick(ev) {
+    var pb = ev.target.closest ? ev.target.closest('[data-pidx],[data-fit]') : null;
+    if (pb && R) {
+      if (pb.hasAttribute('data-fit')) fitOne(); else sh.pidx = +pb.getAttribute('data-pidx') || 0;
+      render(false); sendCam(true); return;
+    }
     var b = ev.target.closest ? ev.target.closest('[data-ex]') : null; if (!b || !R) return;
     var k = b.getAttribute('data-ex'), ttl = T('title') + ' ' + (R.lam ? R.L.label : R.m.name) + ' ' + f(R.h, 2) + ' mm', cut = Spec.cutDoc(R.lay, true);
-    if (k === 'cut.svg') api.saveFile('coupon-cut.svg', Spec.cutSvg(R.lay, ttl), 'image/svg+xml', T('fbCutSvg'));
-    else if (k === 'cut.dxf') api.saveFile('coupon-cut.dxf', Spec.toDxf(cut), 'application/dxf', T('fbCutDxf'));
+    if (k === 'cut.svg') api.saveFile('coupon-cut' + pno() + '.svg', Spec.cutSvg(R.lay, ttl + ptag()), 'image/svg+xml', T('fbCutSvg'));
+    else if (k === 'cut.dxf') api.saveFile('coupon-cut' + pno() + '.dxf', Spec.toDxf(cut), 'application/dxf', T('fbCutDxf'));
     else if (k === 'draw.svg') api.saveFile('coupon-drawing.svg', Spec.toSvg(Spec.drawDoc(R.rows, +R.h.toFixed(3)), ttl), 'image/svg+xml', T('fbDrSvg'));
     else if (k === 'draw.dxf') api.saveFile('coupon-drawing.dxf', Spec.toDxf(Spec.drawDoc(R.rows, +R.h.toFixed(3))), 'application/dxf', T('fbDrDxf'));
   }
+  function pno() { return R && R.lay.N > 1 ? '_P' + (R.lay.idx + 1) : ''; }
+  function ptag() { return R && R.lay.N > 1 ? ' P' + (R.lay.idx + 1) + '/' + R.lay.N : ''; }
   // ---------- 시편 CAM (대표가 만든 RichAuto 시편 CAM을 그대로 끼워 씀) ----------
   var camFrame = null, camReady = false;
   function ensureCam() {
@@ -2557,7 +2713,7 @@ var Sheet = (function () {
     });
   }
   var sent = null, noLay = false;
-  function sentMsg() { if (sent) $('fabMsg').textContent = (sent.key ? '' : T('fbNoMat') + ' ') + T('fbSent') + ' ' + sent.n + ' ' + T('shPcs') + ', ' + sent.L + ' × ' + sent.W + ' × ' + f(sent.h, 2) + ' mm'; }
+  function sentMsg() { if (sent) $('fabMsg').textContent = (sent.key ? '' : T('fbNoMat') + ' ') + T('fbSent') + ' ' + sent.n + ' ' + T('shPcs') + ', ' + sent.L + ' × ' + sent.W + ' × ' + f(sent.h, 2) + ' mm' + (sent.N > 1 ? ' (' + T('spPanelNo').replace('{i}', sent.p + 1) + ' / ' + sent.N + ')' : ''); }
   function camLang(l) {
     if (!camFrame || !camReady) return;
     if (noLay) $('fabMsg').textContent = T('spRoundNote'); else sentMsg();
@@ -2573,10 +2729,10 @@ var Sheet = (function () {
       var mk = api.st.mat, key = R.lam ? (R.L.plies.some(function (p) { return p.m.indexOf('cf') === 0; }) ? 'cfrp' : 'gfrp') : R.kind === 'plastic' ? (mk === 'PL_PP' ? 'pp' : 'pc') : (mk === 'AL6061' ? 'al' : ''), ms = d.getElementById('mat');
       if (ms && key && ms.value !== key) { ms.value = key; if (ms.value === key) fire(ms, 'change'); }
       var te = d.getElementById('T'); if (te) { te.value = +R.h.toFixed(2); fire(te, 'input'); fire(te, 'change'); }
-      var ttl = T('title') + ' ' + (R.lam ? R.L.label : R.m.name), svg = Spec.cutSvg(R.lay, ttl), inp = d.getElementById('svgfile'), dt = new w.DataTransfer();
-      dt.items.add(new w.File([svg], 'coupon-cut_' + Math.ceil(R.lay.L) + 'x' + Math.ceil(R.lay.W) + '_T' + (+R.h.toFixed(2)) + '.svg', { type: 'image/svg+xml' }));
+      var dxf = Spec.toDxf(Spec.cutDoc(R.lay, true)), inp = d.getElementById('svgfile'), dt = new w.DataTransfer();   // DXF(R12)로 넣음: 판 = PANEL 층, 시편 = OUTLINE 층, 이름표(TEXT 층)는 CAM이 가공에서 뺌
+      dt.items.add(new w.File([dxf], 'coupon-cut_' + Math.ceil(R.lay.L) + 'x' + Math.ceil(R.lay.W) + '_T' + (+R.h.toFixed(2)) + pno() + '.dxf', { type: 'application/dxf' }));
       inp.files = dt.files; fire(inp, 'change');
-      sent = { key: key, n: R.lay.rects.length, L: Math.ceil(R.lay.L), W: Math.ceil(R.lay.W), h: R.h }; sentMsg();
+      sent = { key: key, n: R.lay.rects.length, L: Math.ceil(R.lay.L), W: Math.ceil(R.lay.W), h: R.h, p: R.lay.idx, N: R.lay.N }; sentMsg();
     } catch (e) { msg.textContent = T('fbSendFail'); }
   }
   function drawCurve() {
@@ -2671,7 +2827,7 @@ var Sheet = (function () {
     else if ((a = e.getAttribute('data-pm')) !== null) { cfg.lam.plies[+a].m = e.value; changed(false); }
     else if ((a = e.getAttribute('data-pa')) !== null) { var an = Math.round(clampN(e.value, -90, 90, NaN)); if (isFinite(an)) { cfg.lam.plies[+a].a = an; if (fin) e.value = an; changed(false); } }
     else if ((a = e.getAttribute('data-ll'))) {
-      if (a === 'sym') cfg.lam.sym = e.checked; else { var rp = Math.round(clampN(e.value, 1, 20, NaN)); if (!isFinite(rp)) return; cfg.lam.rep = rp; if (fin) e.value = rp; }
+      if (a === 'sym') cfg.lam.sym = e.checked; else { var rp = Math.round(clampN(e.value, 1, 50, NaN)); if (!isFinite(rp)) return; cfg.lam.rep = rp; if (fin) e.value = rp; }
       changed(false); if (fin && a === 'rep') e.value = cfg.lam.rep;
     } else if ((a = e.getAttribute('data-sh'))) {
       if (a === 'mt') { sh.mt = clampN(e.value, 0.3, 50, sh.mt); render(false); } else if (a === 'tgtH') sh.tgtH = clampN(e.value, 0.1, 100, sh.tgtH);
@@ -2690,7 +2846,7 @@ var Sheet = (function () {
     if (a === 'add') { p.push({ m: p[p.length - 1].m, a: p[p.length - 1].a, n: 1 }); changed(true); focusBtn('data-pa', p.length - 1); }
     else if (a === 'fit') {
       var eff = {}, base = 0; MK.forEach(function (k) { eff[k] = cfg.mats[k].t; }); p.forEach(function (q) { base += eff[q.m] * Math.max(1, Math.round(q.n || 1)); });
-      cfg.lam.rep = Math.max(1, Math.min(20, Math.round(sh.tgtH / (base * (cfg.lam.sym ? 2 : 1))))); changed(true);
+      cfg.lam.rep = Math.max(1, Math.min(50, Math.round(sh.tgtH / (base * (cfg.lam.sym ? 2 : 1))))); changed(true);
     } else if (a === 'resetMats') { var d = Lam.defaults(); cfg.mats = d.mats; cfg.resin = d.resin; cfg.corr = true; changed(true); }
   }
   function focusBtn(attr, i) { var b = $('shLeft').querySelector('[' + attr + '="' + i + '"]'); if (b && !b.disabled) b.focus(); }
@@ -2704,7 +2860,7 @@ var Sheet = (function () {
     else if ((a = e.getAttribute('data-sh'))) {
       if (a === 'test' || a === 'xmode' || a === 'cmp' || a === 'cstd' || a === 'd638' || a === 'rstd' || a === 'mform' || a === 'mround') { sh[a] = e.value; if (a === 'test') sh.cur = 1; }
       else if (a === 'ratio') sh.ratio = +e.value;
-      else { var lim = { Lg: [10, 200], kerf: [0, 20], margin: [0, 50], plen: [0, 3000] }[a]; sh[a] = clampN(e.value, lim[0], lim[1], sh[a]); }
+      else { var lim = { Lg: [10, 200], kerf: [4, 20], margin: [10, 50], plen: [0, 3000] }[a]; sh[a] = clampN(e.value, lim[0], lim[1], sh[a]); }
       render(false);
     }
   }
@@ -2726,7 +2882,8 @@ var Sheet = (function () {
     }
     out.push(''); row(T('shSpec'), T('shStd'), T('shSize'), T('shSpan'), T('shRate'), T('shPf') + ' (N)', T('shQty'), T('shRemark'));
     o.rows.forEach(function (r) { row(r.name || T('t_' + r.key), r.std, r.size, r.span, r.rate, r.P === null ? '' : +r.P.toFixed(1), r.n, r.rem); });
-    row(T('shPanel') + ' (mm)', Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + o.h);
+    row(T('shPanel') + ' (mm)', o.lay.L + ' x ' + o.lay.W + ' x ' + o.h, sheets(o.lay.N));
+    o.layAll.panels.forEach(function (pn, i) { row(T('spPanelNo').replace('{i}', i + 1), o.rows.filter(function (r) { return pn.cnt[r.key]; }).map(function (r) { return (r.name || T('t_' + r.key)) + ' ' + pn.cnt[r.key]; }).join(' / ')); });
     var c = curve(o, sh.test); out.push(''); row(T('shCurve'), testName(sh.test)); row(c.xl, T('shLoad') + ' (N)', c.sl);
     c.pts.forEach(function (p) { row(+p[0].toFixed(5), +p[1].toFixed(2), +p[2].toFixed(3)); });
     return out.join('\n');
