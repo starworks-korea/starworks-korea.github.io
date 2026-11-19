@@ -1877,14 +1877,18 @@ var Scenes = (function () {
     autoExag: autoExag, SURF_RNG: SURF_RNG, SER: SER, fieldRange: fieldRange };
 })();
 
-/* order.js: 예상 견적과 주문. 근거: BEAM_20
-   단가는 3T 시편 1개 기준(부가세 전, 원). 고칠 곳은 아래 PRICE 한 곳입니다. */
+/* order.js: 예상 견적과 주문. 근거: BEAM_20, BEAM_22
+   값 = 판 값 × 판 수 + Σ(가공 × 계수 × 수량) + 탭 × 탭 시편 수. 부가세 전, 원, 3T 기준.
+   시편이 1개여도 판 1장은 만들어야 하므로 판 수는 최소 1입니다. 고칠 곳은 아래 PRICE 한 곳입니다. */
 Object.assign(I18N, {
   odT: ['예상 견적과 주문', 'Estimate and order'], odSub: ['3T 시편 기준, 부가세 포함', 'based on 3 mm coupons, VAT included'],
-  odSupply: ['소재', 'Material'], odSw: ['스타웍스가 공급 (성형 포함)', 'Supplied by STAR Works (laminate included)'], odOwn: ['사급 (가공만)', 'Customer-supplied (machining only)'],
+  odSupply: ['소재', 'Material'], odSw: ['스타웍스가 공급 (판 제작 포함)', 'Supplied by STAR Works (panel included)'], odOwn: ['사급 (가공만)', 'Customer-supplied (machining only)'],
   odTab: ['탭', 'Tabs'], odTabY: ['적용', 'Bonded'], odTabN: ['미적용', 'None'],
   odItem: ['시편', 'Coupon'], odQty: ['수량', 'Qty'], odUnit: ['개당', 'Each'], odSubt: ['소계', 'Subtotal'], odSum: ['합계', 'Total'], odVat: ['부가세 10 %', 'VAT 10 %'], odTotal: ['예상 금액 (부가세 포함)', 'Estimated total (VAT included)'],
-  odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'],
+  odWon: ['원', 'KRW'], odTabIn: ['탭 포함', 'with tabs'], odPcsU: ['판', 'panel'],
+  odPanelLam: ['판 맞춤 성형 (400 × 400 mm, 3T)', 'Custom panel moulding (400 × 400 mm, 3 mm)'], odPanelSheet: ['판재 제작 (400 × 400 mm 기준)', 'Sheet stock (400 × 400 mm basis)'],
+  odOnePanel: ['시편이 1개여도 판 1장을 만들어야 해서 판 값은 판 단위로 들어갑니다. 판은 400 × 400 mm 기준이고 시편 간격은 4 mm로 셉니다.', 'Even one coupon needs a whole panel, so the panel is charged per panel. Panels are 400 × 400 mm and coupons are counted at a 4 mm spacing.'],
+  odMachOnly: ['가공', 'machining'],
   odNotice: ['확정 금액이 아닙니다. 상세 요구사항에 따라 가격은 내려갈 수도, 올라갈 수도 있습니다. 확정 금액과 납기는 회신으로 알려 드립니다.', 'This is not a confirmed price. It may go down or up depending on the detailed requirements. The confirmed price and lead time follow by reply.'],
   odSame: ['복합소재는 탄소섬유·유리섬유 모두 같은 단가입니다. 특수 소재나 다른 조건이 있으면 아래에 표시해 주세요. 따로 연락드립니다.', 'Carbon and glass fibre composites share the same rates. If you have a special material or other conditions, tick the box below and we will contact you.'],
   odThick: ['단가는 3T 기준입니다. 지금 두께는 3T와 달라 금액을 회신으로 확정합니다.', 'Rates are for 3 mm. This thickness differs, so the price will be confirmed by reply.'],
@@ -1906,9 +1910,12 @@ var Order = (function () {
   // ---- 단가 표 (원, 부가세 전, 3T 시편 1개) ----
   var PRICE = {
     to: 'shindongwoo@gmail.com', vat: 0.10, baseT: 3.0, tolT: 0.3,
-    mach: 40000,   // 가공
-    mat: 110000,   // 소재·성형 (스타웍스 공급일 때)
-    tab: 50000,    // 탭 부착 (탭이 붙는 시편만)
+    mach: 25000,   // 가공: 인장 시편 1개 (대표 지시 11-19 23:11)
+    tab: 50000,    // 탭 부착: 탭이 붙는 시편 1개 (20만 - 15만)
+    // 판 값 (스타웍스 공급일 때, 판 1장): 복합소재는 기준 세트 250만원에서 역산 (BEAM_22)
+    panelCost: { lam: 1775000, plastic: 50000, plasticEng: 100000, rubber: 50000 },
+    engPlastic: { PL_PEEK: 1, PL_PA6GF30: 1, PL_custom: 1 },
+    panel: { L: 400, W: 400, margin: 10, gap: 4 },   // 기본 판, 가장자리 여유, 시편 간격(Ø3 공구, 피치 4)
     k: { tension: 1.0, comp: 0.8, flex: 0.6, vnotch: 0.8, ilss: 0.3, fiber: 0.3,
       ptension: 1.0, pcomp: 0.8, pflex: 0.6, izod: 0.6,
       rtension: 0.5, rtear: 0.5, rcset: 0.2, rhard: 0.2, rplanar: 0.6, rucomp: 0.2 }
@@ -1918,15 +1925,36 @@ var Order = (function () {
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function won(v) { return Math.round(v).toLocaleString('en-US'); }
   function r1000(v) { return Math.round(v / 1000) * 1000; }
+  // 필요한 판 수: 400 × 400 판에 선반식으로 채움. 시편은 길이 방향을 돌리지 않음 (섬유 방향 유지)
+  function panels(rows) {
+    var P = PRICE.panel, UL = P.L - 2 * P.margin, UW = P.W - 2 * P.margin, items = [], bins = [], over = false;
+    rows.forEach(function (r) { for (var i = 0; i < r.n; i++) items.push({ l: r.shape.len, w: r.shape.w }); });
+    items.sort(function (a, b) { return b.w - a.w || b.l - a.l; });
+    items.forEach(function (it) {
+      if (it.l > UL || it.w > UW) over = true;
+      var placed = false, b, s, bin, sh2;
+      for (b = 0; b < bins.length && !placed; b++) {
+        bin = bins[b];
+        for (s = 0; s < bin.shelves.length && !placed; s++) { sh2 = bin.shelves[s]; if (sh2.h >= it.w && sh2.x + it.l <= UL + 1e-9) { sh2.x += it.l + P.gap; placed = true; } }
+        if (!placed && bin.y + it.w <= UW + 1e-9) { bin.shelves.push({ h: it.w, x: it.l + P.gap }); bin.y += it.w + P.gap; placed = true; }
+      }
+      if (!placed) bins.push({ shelves: [{ h: it.w, x: it.l + P.gap }], y: it.w + P.gap });
+    });
+    return { n: Math.max(1, bins.length), over: over };
+  }
   // 견적: o = 물성 시트 계산 결과, op = {supply:'sw'|'own', tab:true|false}
   function quote(o, op) {
-    var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0 };
-    var withMat = op.supply === 'sw' && o.kind === 'lam';
-    q.consultMat = op.supply === 'sw' && o.kind !== 'lam' && o.kind !== 'metal';
+    var q = { items: [], sum: 0, vat: 0, total: 0, consultAll: o.kind === 'metal', consultMat: false, thick: Math.abs(o.h - PRICE.baseT) > PRICE.tolT + 1e-9, hasTab: false, n: 0, panelN: 0, panelUnit: 0, panelSum: 0, panelOver: false };
+    if (op.supply === 'sw' && !q.consultAll && o.rows.length) {
+      var pn = panels(o.rows), pc = PRICE.panelCost;
+      q.panelN = pn.n; q.panelOver = pn.over;
+      q.panelUnit = o.kind === 'lam' ? pc.lam : o.kind === 'rubber' ? pc.rubber : (PRICE.engPlastic[o.mat] ? pc.plasticEng : pc.plastic);
+      q.panelSum = q.panelN * q.panelUnit; q.sum += q.panelSum;
+    }
     o.rows.forEach(function (r) {
       var k = PRICE.k[r.key], tabbed = !!r.tab && o.kind === 'lam', unit = null;
       if (tabbed) q.hasTab = true;
-      if (!q.consultAll && k) unit = PRICE.mach * k + (withMat ? PRICE.mat * k : 0) + (op.tab && tabbed ? PRICE.tab : 0);
+      if (!q.consultAll && k) unit = PRICE.mach * k + (op.tab && tabbed ? PRICE.tab : 0);
       q.items.push({ key: r.key, name: r.name || T('t_' + r.key), std: r.std, size: r.size, n: r.n, unit: unit, sub: unit === null ? null : unit * r.n, tab: op.tab && tabbed });
       q.n += r.n; if (unit !== null) q.sum += unit * r.n;
     });
@@ -1944,11 +1972,12 @@ var Order = (function () {
     q.items.forEach(function (it) {
       s += '<tr><th scope="row"><i class="sw pc-' + it.key + '"></i>' + esc(it.name) + (it.tab ? ' <span class="chip">' + T('odTabIn') + '</span>' : '') + '</th><td class="nv">' + it.n + '</td><td class="nv">' + (it.unit === null ? '–' : won(it.unit)) + '</td><td class="nv">' + (it.sub === null ? '–' : won(it.sub)) + '</td></tr>';
     });
+    if (q.panelN) s += '<tr><th scope="row">' + T(o.kind === 'lam' ? 'odPanelLam' : 'odPanelSheet') + '</th><td class="nv">' + q.panelN + ' ' + T('odPcsU') + '</td><td class="nv">' + won(q.panelUnit) + '</td><td class="nv">' + won(q.panelSum) + '</td></tr>';
     s += '</tbody>';
     if (!q.consultAll) s += '<tfoot><tr><th scope="row" colspan="3">' + T('odSum') + '</th><td class="nv">' + won(q.sum) + '</td></tr><tr><th scope="row" colspan="3">' + T('odVat') + '</th><td class="nv">' + won(q.vat) + '</td></tr><tr class="tot"><th scope="row" colspan="3">' + T('odTotal') + '</th><td class="nv"><b>' + won(q.total) + '</b> ' + T('odWon') + '</td></tr></tfoot>';
     s += '</table></div>';
     if (q.consultAll) s += '<p class="note warn notice">' + T('odConsultAll') + '</p>';
-    if (q.consultMat) s += '<p class="note warn notice">' + T('odConsultMat') + '</p>';
+    if (q.panelN) s += '<p class="note">' + T('odOnePanel') + '</p>';
     if (q.thick && !q.consultAll) s += '<p class="note warn notice">' + T('odThick') + '</p>';
     if (o.kind === 'lam') s += '<p class="note">' + T('odSame') + '</p>';
     host.innerHTML = s;
@@ -1962,7 +1991,7 @@ var Order = (function () {
       lang: U.getLang(), page: location.href.slice(0, 200),
       name: val('odName'), org: val('odOrg'), phone: val('odPhone'), email: val('odMail'), due: val('odDue'), memo: val('odMemo'),
       special: $('odSpecial').checked, supply: opt.supply, tab: opt.tab && q.hasTab, material: matName(o), kind: o.kind,
-      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm', thick: q.thick, consult: q.consultAll || q.consultMat,
+      panel: Math.ceil(o.lay.L) + ' x ' + Math.ceil(o.lay.W) + ' x ' + U.fix(o.h, 2) + ' mm' + (q.panelN ? ', ' + T('odPcsU') + ' ' + q.panelN + ' = ' + won(q.panelSum) : ''), panelN: q.panelN, panelSum: q.panelSum, thick: q.thick || q.panelOver, consult: q.consultAll || q.consultMat,
       sum: q.sum, vat: q.vat, total: q.total, count: q.n,
       items: q.items.map(function (it) { return { name: it.name, std: it.std, size: String(it.size).replace(/×/g, 'x'), n: it.n, unit: it.unit, sub: it.sub, tab: it.tab }; }),
       website: val('odWeb')
@@ -2016,7 +2045,7 @@ var Order = (function () {
     $('ordForm').addEventListener('submit', function (ev) { ev.preventDefault(); send(); });
   }
   function relang() { if (cur) render(cur); var m = $('ordMsg'); if (m && m.getAttribute('data-k')) m.textContent = T(m.getAttribute('data-k')); }
-  return { PRICE: PRICE, quote: quote, render: render, init: init, relang: relang, opt: opt, payload: payload, subject: subject, bodyText: bodyText, check: check };
+  return { PRICE: PRICE, panels: panels, quote: quote, render: render, init: init, relang: relang, opt: opt, payload: payload, subject: subject, bodyText: bodyText, check: check };
 })();
 
 /* sheet.js: 물성 시트 탭 (적층 편집기, 목표 대비 예상, 변위-하중·응력 곡선, 시편 치수와 판 크기) */
@@ -2086,7 +2115,7 @@ var Sheet = (function () {
   var T = U.T, api, $, lastMode = null, R = null;
   var MK = ['cf_ud', 'gf_ud', 'cf_fab', 'gf_fab'], MATK = ['LAM'].concat(Object.keys(Spec.RUB), Object.keys(Spec.PLAS), ['SS400', 'S235', 'STS304', 'AL6061', 'custom']);
   var PROPS = [['E1', 'GPa'], ['E2', 'GPa'], ['G12', 'GPa'], ['nu12', ''], ['G13', 'GPa'], ['G23', 'GPa'], ['Xt', 'MPa'], ['Xc', 'MPa'], ['Yt', 'MPa'], ['Yc', 'MPa'], ['S12', 'MPa'], ['S13', 'MPa'], ['vf0', ''], ['rhof', 'g/cm³']];
-  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 3, margin: 10, plen: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', q: {}, cam: 'RichAuto_시편CAM.html',
+  var sh = { test: 'tension', xmode: 'gauge', Lg: 50, cmp: 'none', cur: 1, ratio: 16, kerf: 4, margin: 10, plen: 0, mt: 3, tgtH: 3, cstd: 'D6641', d638: 'auto', rstd: 'ASTM', q: {}, cam: 'RichAuto_시편CAM.html',
     inc: {}, open: {},
     tg: { ts: 900, te: 45, cs: 0, fs: 800, fe: 40, ilss: 70, vn: 70, wf: 34 } };
   var STD = { q_hs: 'ASTM D2240', q_su: 'ASTM D412', q_el: 'ASTM D412', q_m100: 'ASTM D412', q_tear: 'ASTM D624', q_cs: 'ASTM D395', q_rho: 'ASTM D297', cs: 'ASTM D6641 / D3410 / D695', p_su: 'ASTM D638', p_E: 'ASTM D638', p_el: 'ASTM D638', p_sf: 'ASTM D790', p_Ef: 'ASTM D790', p_sc: 'ASTM D695', p_iz: 'ASTM D256', p_rho: 'ASTM D792', ts: 'ASTM D3039', te: 'ASTM D3039', fs: 'ASTM D790', fe: 'ASTM D790', ilss: 'ASTM D2344', vn: 'ASTM D5379', wf: 'ASTM D3171' };
@@ -2099,7 +2128,7 @@ var Sheet = (function () {
 
   // ---------- 계산 ----------
   function compute() {
-    var mat = api.st.mat, o = { kind: mat === 'LAM' ? 'lam' : (Spec.PLAS[mat] ? 'plastic' : (Spec.RUB[mat] ? 'rubber' : 'metal')) };
+    var mat = api.st.mat, o = { mat: mat, kind: mat === 'LAM' ? 'lam' : (Spec.PLAS[mat] ? 'plastic' : (Spec.RUB[mat] ? 'rubber' : 'metal')) };
     o.lam = o.kind === 'lam';
     if (o.lam) {
       var L = Lam.build(api.cfg()); o.L = L; o.h = L.h; o.d = o.sp = Spec.lamDims(L, sh); o.geo = o.d.geo;
