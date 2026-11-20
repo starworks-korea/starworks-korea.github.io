@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20 00:35",
+ "updated": "2026-11-20 16:10",
  "pages": [
   {
    "key": "tech",
@@ -29,9 +29,9 @@
      "key": "fem",
      "name": "오픈소스 해석",
      "color": "#2f855a",
-     "desc": "FreeCAD FEM · 복합재 · 2재료 · OpenFOAM 코팅 유동 · 용접 변형",
+     "desc": "FreeCAD FEM · 복합재 · 2재료",
      "name_en": "Open-Source Analysis",
-     "desc_en": "FreeCAD FEM · composites · two materials · OpenFOAM coating flow · welding distortion"
+     "desc_en": "FreeCAD FEM · composites · two materials"
     }
    ],
    "videos": [
@@ -55,6 +55,7 @@
     {
      "field": "fem",
      "id": "bWfDLImP_fc",
+     "hide": true,
      "vis": "일부 공개",
      "date": "2026-11-17",
      "dur": "3:36",
@@ -71,6 +72,7 @@
     {
      "field": "fem",
      "id": "zmmx1sqxW6M",
+     "hide": true,
      "vis": "일부 공개",
      "date": "2026-11-17",
      "dur": "3:49",

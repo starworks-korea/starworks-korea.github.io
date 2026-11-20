@@ -73,7 +73,7 @@ html{scroll-behavior:smooth}
 def build(P, L):
     FIELDS = [(f["key"], tr(f, "name", L), f["color"], tr(f, "desc", L)) for f in P["fields"]]
     V = {k: [] for k, *_ in FIELDS}
-    for v in sorted(P["videos"], key=lambda x: x["date"], reverse=True):
+    for v in sorted((x for x in P["videos"] if not x.get("hide")), key=lambda x: x["date"], reverse=True):
         V[v["field"]].append(v)
     ALLV = [v for k,*_ in FIELDS for v in V[k]]
     total = len(ALLV)
