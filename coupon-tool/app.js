@@ -1,5 +1,5 @@
 var CAM_HTML = "";
-var CAM_VER = "v1.5";
+var CAM_VER = "v1.6";
 /* calc.js: 외팔보 계산부 (화면과 무관). 단위 mm, N, MPa, kg, Hz, J */
 var BeamCalc = (function () {
   'use strict';
@@ -1506,6 +1506,49 @@ var Spec = (function () {
     o.push('0', 'ENDSEC', '0', 'EOF');
     return o.join('\r\n') + '\r\n';
   }
+  // ---- PDF (1.4, 벡터, 치수 1:1: 1 mm = 72/25.4 pt). 글자는 Helvetica(영문·숫자), 줄바꿈은 LF만 씀(저장 창을 거쳐도 위치표가 맞게) ----
+  var HW = [278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584];
+  function pdfAscii(v) { return String(v).replace(/×/g, 'x').replace(/[^\x20-\x7e]/g, '').replace(/\s+/g, ' ').trim(); }
+  function pdfText(x, y, h, str, mid) {
+    var t = pdfAscii(str), size = h / 0.718, w = 0, i; if (!t) return '';
+    for (i = 0; i < t.length; i++) w += HW[t.charCodeAt(i) - 32] || 556;
+    return 'BT /F1 ' + size.toFixed(3) + ' Tf ' + (x - (mid ? w / 1000 * size / 2 : 0)).toFixed(3) + ' ' + (+y).toFixed(3) + ' Td (' + t.replace(/([\\()])/g, '\\$1') + ') Tj ET\n';
+  }
+  function pdfArc(cx, cy, r, a0, sw, move) {   // a0, sw: rad. sw > 0 반시계
+    var n = Math.max(1, Math.ceil(Math.abs(sw) / (Math.PI / 2) - 1e-9)), d = sw / n, k = 4 / 3 * Math.tan(d / 4), s = '', i, f = function (v) { return v.toFixed(3); };
+    for (i = 0; i < n; i++) {
+      var a = a0 + d * i, b = a + d, x0 = cx + r * Math.cos(a), y0 = cy + r * Math.sin(a), x3 = cx + r * Math.cos(b), y3 = cy + r * Math.sin(b);
+      if (i === 0 && move) s += f(x0) + ' ' + f(y0) + ' m ';
+      s += f(x0 - k * r * Math.sin(a)) + ' ' + f(y0 + k * r * Math.cos(a)) + ' ' + f(x3 + k * r * Math.sin(b)) + ' ' + f(y3 - k * r * Math.cos(b)) + ' ' + f(x3) + ' ' + f(y3) + ' c ';
+    }
+    return s;
+  }
+  // pages: [{ doc: {items, W, H}, title: '표제 줄(영문)' }]
+  function toPdf(pages) {
+    var K = 72 / 25.4, M = 10, TB = 8, objs = ['<< /Type /Catalog /Pages 2 0 R >>', '', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'], kids = [], f = function (v) { return (+v).toFixed(3); };
+    var col = { PANEL: '0.35 0.35 0.35', OUTLINE: '0 0.5 0', DIM: '0.6 0.38 0' }, lw = { PANEL: 0.3, OUTLINE: 0.25, DIM: 0.13 };
+    pages.forEach(function (pg) {
+      var doc = pg.doc, g = { PANEL: '', OUTLINE: '', DIM: '' }, tx = '', W = doc.W + 2 * M, H = doc.H + 2 * M + TB;
+      doc.items.forEach(function (q) {
+        if (q.t === 'L') g[q.l] += f(q.x1) + ' ' + f(q.y1) + ' m ' + f(q.x2) + ' ' + f(q.y2) + ' l S\n';
+        else if (q.t === 'A') g[q.l] += pdfArc(q.cx, q.cy, q.r, q.a0 * Math.PI / 180, (((q.a1 - q.a0) % 360 + 360) % 360 || 360) * Math.PI / 180, true) + 'S\n';
+        else if (q.t === 'C') g[q.l] += pdfArc(q.cx, q.cy, q.r, 0, 2 * Math.PI, true) + 'h S\n';
+        else tx += pdfText(q.x, q.y, q.h, q.s, q.mid);
+      });
+      var st = K.toFixed(6) + ' 0 0 ' + K.toFixed(6) + ' 0 0 cm\n1 J 1 j\n' + pdfText(M, 4.5, 2.6, pg.title || '', false) + '0.6 0.6 0.6 RG 0.13 w ' + f(M) + ' ' + f(TB + M / 2) + ' m ' + f(W - M) + ' ' + f(TB + M / 2) + ' l S\nq 1 0 0 1 ' + f(M) + ' ' + f(M + TB) + ' cm\n';
+      ['PANEL', 'OUTLINE', 'DIM'].forEach(function (k) { if (g[k]) st += col[k] + ' RG ' + lw[k] + ' w\n' + g[k]; });
+      st += '0 0 0 rg\n' + tx + 'Q\n';
+      objs.push('<< /Length ' + st.length + ' >>\nstream\n' + st + 'endstream');
+      objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + (W * K).toFixed(2) + ' ' + (H * K).toFixed(2) + '] /Resources << /Font << /F1 3 0 R >> >> /Contents ' + (objs.length) + ' 0 R >>');
+      kids.push(objs.length + ' 0 R');
+    });
+    objs[1] = '<< /Type /Pages /Count ' + kids.length + ' /Kids [' + kids.join(' ') + '] >>';
+    var out = '%PDF-1.4\n', off = [], i;
+    for (i = 0; i < objs.length; i++) { off.push(out.length); out += (i + 1) + ' 0 obj\n' + objs[i] + '\nendobj\n'; }
+    var xr = out.length; out += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n';
+    off.forEach(function (v) { out += ('0000000000' + v).slice(-10) + ' 00000 n \n'; });
+    return out + 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + xr + '\n%%EOF\n';
+  }
   function toSvg(doc, title) {
     var H = doc.H, r = function (v) { return +(+v).toFixed(3); }, col = { PANEL: '#000000', OUTLINE: '#008000', DIM: '#b08000', TEXT: '#000000' }, g = { PANEL: '', OUTLINE: '', DIM: '', TEXT: '' }; // eslint-disable-line
     doc.items.forEach(function (q) {
@@ -1522,7 +1565,7 @@ var Spec = (function () {
     return s + '</svg>\n';
   }
 
-  return { PANEL: PANEL, panelView: panelView, perim: perim, ROUND: ROUND, RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, cutSvg: cutSvg };
+  return { PANEL: PANEL, panelView: panelView, perim: perim, ROUND: ROUND, RUB: RUB, RKEYS: RKEYS, gent: gent, yeoh: yeoh, rubS: rubS, rubDims: rubDims, rubRows: rubRows, PLAS: PLAS, PKEYS: PKEYS, D638: D638, outline: outline, lamDims: lamDims, lamRows: lamRows, plasDims: plasDims, plasRows: plasRows, metalRows: metalRows, layout: layout, prims: prims, cutDoc: cutDoc, drawDoc: drawDoc, toDxf: toDxf, toSvg: toSvg, toPdf: toPdf, pdfAscii: pdfAscii, cutSvg: cutSvg };
 })();
 
 /* views.js: 3D 창 4개의 장면 구성 */
@@ -2264,7 +2307,7 @@ Object.assign(I18N, {
   shLen: ['길이', 'Length'], shWid: ['폭', 'Width'], shThick: ['두께', 'Thickness'], shSupport: ['지점 거리', 'Span'], shPcs: ['개', 'pcs'],
   shScale: ['치수 1:1 mm, 그림은 화면에 맞춰 축소', 'Dimensions 1:1 in mm; drawings scaled to fit'],
   tabFab: ['시편 가공', 'Fabrication'], fbGo: ['시편 가공 탭에서 재단 배치·도면 저장', 'Layout and drawings on the Fabrication tab'],
-  fbLay: ['재단 배치', 'Cutting layout'], fbDraw: ['도면 저장', 'Save drawings'], fbDrawNote: ['치수 1:1, 단위 mm. DXF는 R12 형식이며 판은 PANEL 층, 외형선은 녹색 층(OUTLINE)입니다. 재단용은 판과 시편 외곽, 도면용은 시편별 치수를 담습니다. SVG는 보기용으로 함께 둡니다.', 'Scale 1:1 in mm. DXF is R12 with the panel on the PANEL layer and outlines on the green OUTLINE layer. Cutting files hold the panel and outlines; drawing files hold dimensions per specimen. SVG is kept for viewing.'],
+  fbLay: ['재단 배치', 'Cutting layout'], fbDraw: ['도면 저장', 'Save drawings'], fbDrawNote: ['치수 1:1, 단위 mm. DXF는 R12 형식이며 판은 PANEL 층, 외형선은 녹색 층(OUTLINE)입니다. 재단용은 판과 시편 외곽, 도면용은 시편별 치수를 담습니다. PDF는 휴대폰에서도 볼 수 있고, 재단용 PDF는 판마다 한 쪽씩 모든 판을 담습니다. DXF·SVG는 고른 판 1장입니다.', 'Scale 1:1 in mm. DXF is R12 with the panel on the PANEL layer and outlines on the green OUTLINE layer. Cutting files hold the panel and outlines; drawing files hold dimensions per specimen. PDF opens on a phone, and the cutting PDF holds every panel, one per page. DXF and SVG hold the selected panel.'], fbCutPdf: ['재단용 PDF', 'Cutting PDF'], fbDrPdf: ['도면용 PDF', 'Drawing PDF'],
   fbCutSvg: ['재단용 SVG', 'Cutting SVG'], fbCutDxf: ['재단용 DXF', 'Cutting DXF'], fbDrSvg: ['도면용 SVG', 'Drawing SVG'], fbDrDxf: ['도면용 DXF', 'Drawing DXF'],
   fbCam: ['루타 가공·시뮬레이션', 'Router machining and simulation'], fbCamNote: ['전에 만든 RichAuto 시편 CAM·시뮬레이터입니다. 위 재단 배치가 DXF 입력으로 들어가고, 가공 조건(회전수·이송·절입·목표 공구 부하), NC 코드, 2D·3D 시뮬레이션은 CAM 화면에서 다룹니다. 두께와 소재 분류는 자동으로 맞춥니다. CAM은 다른 DXF·SVG 파일도 엽니다.', 'This is the RichAuto coupon CAM and simulator made earlier. The layout above goes in as its DXF input; cutting conditions (speed, feed, depth, target tool load), NC code and the 2D/3D simulation are handled in the CAM. Thickness and material class are set automatically. The CAM also opens other DXF and SVG files.'],
   fbSend: ['재단 배치를 CAM에 넣기', 'Load layout into the CAM'], fbPop: ['CAM을 새 창으로', 'Open CAM in a new window'], fbPopOk: ['새 창을 열었습니다. 새 창에서는 재단용 DXF를 저장해 DXF·SVG 파일 열기로 여세요.', 'New window opened. There, save the cutting DXF and open it with the DXF or SVG file input.'], fbPopNo: ['이 환경에서는 새 창이 열리지 않습니다.', 'A new window cannot be opened here.'], fbSent: ['CAM에 넣었습니다:', 'Loaded into the CAM:'], fbNoMat: ['CAM에 이 재질의 가공 조건이 없습니다. CAM에서 소재를 직접 고르세요.', 'The CAM has no cutting data for this material. Choose the material in the CAM.'], fbSentNoWin: ['재단 배치를 저장했습니다. CAM 창이 열리지 않으면 재단용 DXF를 저장해 CAM에서 여세요.', 'Layout stored. If the CAM window did not open, save the cutting DXF and open it in the CAM.'], fbSendFail: ['CAM에 넣지 못했습니다. 재단용 DXF를 저장해 CAM의 DXF·SVG 파일 열기로 넣어 주세요.', 'Could not load into the CAM. Save the cutting DXF and use the CAM\'s DXF or SVG file input.'],
@@ -2666,7 +2709,7 @@ var Sheet = (function () {
       s += '<p class="note">' + T('shPanelNote') + '</p>';
     }
     s += '</section><div class="fab-side"><section class="card"><h2>' + T('fbDraw') + '</h2><p class="note">' + T('fbDrawNote') + '</p><div class="bigrow">';
-    [['cut.dxf', 'fbCutDxf'], ['draw.dxf', 'fbDrDxf'], ['cut.svg', 'fbCutSvg'], ['draw.svg', 'fbDrSvg']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length && (o.lay.rects.length || b[0].indexOf('draw') === 0) ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
+    [['cut.dxf', 'fbCutDxf'], ['draw.dxf', 'fbDrDxf'], ['cut.pdf', 'fbCutPdf'], ['draw.pdf', 'fbDrPdf'], ['cut.svg', 'fbCutSvg'], ['draw.svg', 'fbDrSvg']].forEach(function (b) { s += '<button type="button" class="btn big" data-ex="' + b[0] + '"' + (o.rows.length && (o.lay.rects.length || b[0].indexOf('draw') === 0) ? '' : ' disabled') + '>' + T(b[1]) + '</button>'; });
     s += '</div></section><section class="card"><h2>' + T('fbMach') + '</h2><ul class="mach"><li><b>' + T('fbM1') + '</b> <span class="chip ok">' + T('fbSim') + '</span></li><li>' + T('fbM2') + ' <span class="chip">' + T('fbFmt') + '</span></li><li>' + T('fbM3') + ' <span class="chip">' + T('fbFmt') + '</span></li></ul><p class="note">' + T('fbMachNote') + '</p></section></div></div>';
     $('fabTop').innerHTML = s; Order.render(o); ensureCam();
     if (o.rows.length && !o.lay.rects.length) { sent = null; noLay = true; $('fabMsg').textContent = T('spRoundNote'); }
@@ -2694,6 +2737,16 @@ var Sheet = (function () {
     else if (k === 'cut.dxf') api.saveFile('coupon-cut' + pno() + '.dxf', Spec.toDxf(cut), 'application/dxf', T('fbCutDxf'));
     else if (k === 'draw.svg') api.saveFile('coupon-drawing.svg', Spec.toSvg(Spec.drawDoc(R.rows, +R.h.toFixed(3)), ttl), 'image/svg+xml', T('fbDrSvg'));
     else if (k === 'draw.dxf') api.saveFile('coupon-drawing.dxf', Spec.toDxf(Spec.drawDoc(R.rows, +R.h.toFixed(3))), 'application/dxf', T('fbDrDxf'));
+    else if (k === 'cut.pdf') api.saveFile('coupon-cut.pdf', Spec.toPdf(pdfPages()), 'application/pdf', T('fbCutPdf'));
+    else if (k === 'draw.pdf') api.saveFile('coupon-drawing.pdf', Spec.toPdf([{ doc: Spec.drawDoc(R.rows, +R.h.toFixed(3)), title: 'STAR Works   Coupon drawing   ' + pdfMat() + 'T ' + f(R.h, 2) + ' mm   scale 1:1   unit mm' }]), 'application/pdf', T('fbDrPdf'));
+  }
+  // 재단용 PDF: 판마다 한 쪽씩 모든 판. 표제 줄은 영문(PDF 기본 글꼴에 한글이 없음)
+  function pdfMat() { var m = Spec.pdfAscii(R.lam ? R.L.label : (R.m.name || '')); return m ? m + '   ' : ''; }
+  function pdfPages() {
+    return R.layAll.panels.map(function (pn, i) {
+      var lay = Spec.panelView(R.layAll, i);
+      return { doc: Spec.cutDoc(lay, true), title: 'STAR Works   Coupon cutting layout   panel ' + (i + 1) + '/' + lay.N + '   ' + Math.ceil(lay.L) + ' x ' + Math.ceil(lay.W) + ' x ' + f(R.h, 2) + ' mm   ' + lay.rects.length + ' pcs   ' + pdfMat() + 'scale 1:1   unit mm' };
+    });
   }
   function pno() { return R && R.lay.N > 1 ? '_P' + (R.lay.idx + 1) : ''; }
   function ptag() { return R && R.lay.N > 1 ? ' P' + (R.lay.idx + 1) + '/' + R.lay.N : ''; }
