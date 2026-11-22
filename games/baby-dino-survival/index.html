@@ -92,6 +92,7 @@
     <b data-en="Sky-Demon Dragon">천마용</b><span data-en="The boss born when Demon and Sky Dragon merge">마용과 천용이 합쳐진 보스</span>
     <b data-en="Glacier Dragon">빙하용</b><span data-en="Ice monster after the Sky-Demon Dragon; its ice beam freezes you">천마용 다음 얼음 괴수, 아이스 빔에 맞으면 얼어요</span>
     <b data-en="Evolved Flame Dragon">진화 화염용</b><span data-en="After the Glacier Dragon, the Flame Dragon returns evolved">빙하용 다음, 진화해서 돌아온 화염용</span>
+    <b data-en="King Frostflame Dragon">킹 빙화용</b><span data-en="A three-headed dragon born when the Glacier and Flame Dragons merge. Jump when you see a yellow circle!">빙하용과 화염용이 합쳐진 머리 3개 용, 노란 원이 보이면 점프!</span>
   </div>
   <p class="small" data-en="PC: WASD/arrow keys move · Space jump · X jump 2 · F ultimate · C tail · 1/2/3 choose · P pause<br>Phone: drag = move · bottom-right button = jump · above it = ultimate · left = tail · left of ultimate = jump 2<br>Best on a tablet or PC — a phone screen shows less of the area around you.">PC: WASD·방향키 이동 · Space 점프 · X 점프2 · F 필살기 · C 꼬리 · 1/2/3 선택 · P 정지<br>
      폰: 화면 드래그 = 이동 · 오른쪽 아래 버튼 = 점프 · 그 위 = 필살기 · 왼쪽 = 꼬리 · 필살기 왼쪽 = 점프2<br>태블릿·PC를 추천해요 — 폰은 주변이 잘 안 보여요.</p>
@@ -167,7 +168,7 @@ const BLK = { cycle:['charge','breath','fly','zap'], bwarn:0.8, bwarn2:0.35, bdu
   up:0.6, loop:1.8, loopR:240, aim:0.7, dive:0.35, land:0.8, height:130,
   headR:80, headDmg:150, spikeDmg:50, rings:[50,95,140,185,230,275,320], spikeGap:15, fireR:120, fireT:7, fireDps:25,
   zap:3.0, zapGap:0.5, zapSpd:380, zapDmg:60 };   // 흑룡 패턴
-function bcfg(e){ return e.kind === 'black' ? BLK : e.kind === 'white' ? WHT : e.kind === 'demon' ? DMN : e.kind === 'tdemon' ? TDM : e.kind === 'ice' ? ICE : e.kind === 'evo' ? EVO : RED; }
+function bcfg(e){ return e.kind === 'black' ? BLK : e.kind === 'white' ? WHT : e.kind === 'demon' ? DMN : e.kind === 'tdemon' ? TDM : e.kind === 'ice' ? ICE : e.kind === 'evo' ? EVO : e.kind === 'king' ? KNG : RED; }
 const WHT = { hp:25599, cycle:['fly','spear','zap','breath'], bwarn:0.7, bdur:2.4, range:250, half:0.42, turn:1.0,
   breathDmg:120, burnDps:12, burnT:4, zoneBurnT:3,
   spear:2.8, spearN:10, spearGap:0.22, spearWarn:0.45, spearSpd:560, spearDmg:55,
@@ -208,6 +209,20 @@ const EVO = { hp:25599, cycle:['wing','golem','breath','fbeam','flyspike','throw
   headR:90, headDmg:160, spikeDmg:60, rings:[55,105,155,205], spikeGap:18, fireR:120, fireT:6, fireDps:20,
   throwT:3.2, throwGap:0.45, metN:5, metSum:1.2, metGap:0.35, metSpd:420, metR:55, metDmg:70,
   wingT:1.2, waveN:5, waveSpd:420, waveDmg:55 };   // 진화 화염용 패턴
+const KNG = { hp:25599, cycle:['tail','blue','stomp','headbutt','purple','mace','red','meteor','skyslam','zap','rocks','breath3','grab'],
+  burnDps:15, burnT:4, zoneBurnT:3, freezeT:1.4,
+  up:0.6, loop:1.6, loopR:250, aim:0.7, dive:0.35, land:0.9, height:130,
+  headR:95, headDmg:150, spikeDmg:55, rings:[65,120,175], spikeGap:22,
+  twarn:0.8, tR:215, tDmg:70, tspN:6, tspSpd:320, tspTurn:1.8, tspDmg:35,
+  bwarn:0.8, bdur:1.3, beamLen:540, beamW:26, beamDmg:65, shardN:6, shardGap:0.22, shardSpd:300, shardTurn:2.0, shardDmg:35,
+  hop:0.5, stompR:100, stompDmg:70, icN:8, icWarn:0.6, icSpd:270, icTurn:1.5, icDmg:40, icLife:4,
+  hbwarn:0.7, hbdur:0.5, hbSpd:620, hbDmg:120,
+  mwarn:0.6, maceDmg:80, maceR:55, maceRegrow:2.5,
+  metN:5, metSum:1.2, metGap:0.35,
+  zapT:3.0, zapGap:0.5, zapSpd:400, zapDmg:45,
+  rockT:3.0, rockGap:0.45,
+  b3warn:0.8, b3dur:2.2, range:230, half:0.3, turn:0.9, breathDmg:100,
+  gaim:1.0, gdive:0.4, gR:60, carry:1.0, grabDmg:60, throwV:1100 };   // 킹 빙화용(빙하용+화염용) 패턴
 const STAGES = [
   { name:'1스테이지 · 고사리 숲', short:'STAGE 1', time:180,
     bg:'#26331f', grid:'#2e3d26', deco:'#4d6a34', deco2:'#6f8f45',
@@ -267,7 +282,7 @@ const KO_DATA = {
   PASSIVES: Object.fromEntries(Object.keys(PASSIVES).map(k => [k, { name:PASSIVES[k].name, desc:PASSIVES[k].desc }])) };
 function bossLabel(kind){
   const m = { white:['천용','Sky Dragon'], demon:['마용','Demon Dragon'], tdemon:['천마용','Sky-Demon Dragon'],
-              ice:['빙하용','Glacier Dragon'], evo:['진화 화염용','Evolved Flame Dragon'] };
+              ice:['빙하용','Glacier Dragon'], evo:['진화 화염용','Evolved Flame Dragon'], king:['킹 빙화용','King Frostflame Dragon'] };
   return m[kind] ? L(m[kind][0], m[kind][1]) : STAGES[G.stage].bossName;
 }
 function setLang(lang){
@@ -402,7 +417,7 @@ function doJump(slot){                             // slot 2 = 점프2 버튼
   if (!G || G.state !== 'play') return;
   const p = G.p, j = G.jump;
   const two = slot === 2;
-  if (p.frozen > 0) return;                         // 얼어 있으면 점프 못 함
+  if (p.frozen > 0 || p.grab > 0) return;          // 얼어 있거나 잡혀 있으면 점프 못 함
   if (j.t > 0 || (two ? j.cd2 : j.cd) > 0) return;
   let dx = p.mvx, dy = p.mvy;
   if (Math.hypot(dx, dy) < 0.1){ dx = p.dirx; dy = p.diry; }
@@ -582,7 +597,7 @@ function updHazards(dt){                           // 보스 가시·불바다·
   for (const b of G.eshots){                       // 보라색 불꽃 전기
     b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
     if (!safe && Math.hypot(p.x - b.x, p.y - b.y) < b.r + p.r){
-      b.life = 0; p.hp -= (b.dmg || BLK.zapDmg); igniteP(b.burnT || BLK.burnT, b.bdps || BLK.burnDps);
+      b.life = 0; p.hp -= (b.dmg || BLK.zapDmg); if (!b.noburn) igniteP(b.burnT || BLK.burnT, b.bdps || BLK.burnDps);
       p.stag = Math.max(p.stag || 0, 0.2); G.shake = Math.max(G.shake, 0.18);
       G.fx.push({ type:'zap', x:p.x, y:p.y, life:0.25, max:0.25 });
       addText(p.x, p.y - 26, '-' + (b.dmg || BLK.zapDmg), b.wht ? '#7aa0ff' : '#c77dff');
@@ -710,7 +725,7 @@ function updHazards(dt){                           // 보스 가시·불바다·
   G.bigspikes = G.bigspikes.filter(b => !b.done);
   if (p.fimm > 0) p.fimm -= dt;
   const freezeP = () => {                          // 얼음이 됨 (풀린 뒤 잠깐은 다시 안 얼음)
-    if (!(p.frozen > 0) && !(p.fimm > 0)){ p.frozen = ICE.pfreeze; p.fimm = ICE.pimm; addText(p.x, p.y - 34, L('꽁꽁!', 'Frozen!'), '#9fe0ff'); }
+    if (!(p.frozen > 0) && !(p.fimm > 0)){ p.frozen = ICE.pfreeze; p.fimm = ICE.pimm; p.pfz = false; addText(p.x, p.y - 34, L('꽁꽁!', 'Frozen!'), '#9fe0ff'); }
   };
   for (const b of G.icebolts){                     // 하늘에서 날아오는 고드름
     b.x += b.vx * dt; b.y += b.vy * dt; b.left -= ICE.icSpd2 * dt;
@@ -737,16 +752,18 @@ function updHazards(dt){                           // 보스 가시·불바다·
       G.fx.push({ type:'slam', x:r.tx, y:r.ty, life:0.35, max:0.35 });
       if (r.fire) G.fires.push({ x:r.tx, y:r.ty, r:50, life:4, max:4, seed:Math.random() * 10, small:true, burnT:EVO.zoneBurnT, bdps:EVO.burnDps });   // 불덩이가 떨어진 곳은 불
       for (let i = 0; i < 6; i++){ const a = Math.random() * Math.PI * 2, v = rand(60, 160); G.fx.push({ type:'debris', x:r.tx, y:r.ty, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 60, life:0.5, max:0.5, s:rand(3, 6) }); }
-      if (!safe && Math.hypot(p.x - r.tx, p.y - r.ty) < ICE.rockR + p.r){
-        p.hp -= ICE.rockDmg; G.shake = 0.3; if (r.fire) igniteP(EVO.burnT, EVO.burnDps);
+      if (!safe && Math.hypot(p.x - r.tx, p.y - r.ty) < (r.rr || ICE.rockR) + p.r){
+        const rd = r.dmg || ICE.rockDmg;           // 꼬리 철퇴는 더 아픔
+        p.hp -= rd; G.shake = 0.3; if (r.fire) igniteP(EVO.burnT, EVO.burnDps);
         const ax = p.x - r.tx, ay = p.y - r.ty, al = Math.hypot(ax, ay) || 1;
-        p.kx += ax / al * 400; p.ky += ay / al * 400;
-        addText(p.x, p.y - 26, '-' + ICE.rockDmg, '#d0c8b8');
+        p.kx += ax / al * (r.mace ? 650 : 400); p.ky += ay / al * (r.mace ? 650 : 400);
+        addText(p.x, p.y - 26, '-' + rd, '#d0c8b8');
         if (p.hp <= 0){ p.hp = 0; gameOver(); return; }
       }
     }
   }
   G.rocks = G.rocks.filter(r => !r.done);
+  if (G.boss && !G.boss.dead && G.boss.kind === 'king' && G.boss.maceT > 0) G.boss.maceT -= dt;   // 던진 철퇴가 다시 자람
   if (G.boss && !G.boss.dead && G.boss.kind === 'ice'){   // 빙하용이 5초마다 얼음 골렘 소환
     G.golemT = (G.golemT === undefined ? ICE.golemGap : G.golemT) - dt;
     if (G.golemT <= 0){
@@ -842,6 +859,7 @@ function updHazards(dt){                           // 보스 가시·불바다·
     if (!G.bsHit && !safe && Math.abs(d - w.r) < 22 + p.r){
       G.bsHit = true; p.hp -= w.dmg; G.shake = Math.max(G.shake, 0.15);
       if (w.ign) igniteP(w.burnT || BLK.burnT, w.bdps || BLK.burnDps);    // 흑룡 가시: 닿으면 불이 옮겨 붙음
+      if (w.frz){ p.frozen = 0; p.fimm = 0; kFreeze(w.frz === 'pur', 1.2); }   // 킹 빙화용 가시: 파랑·보라 얼음
       addText(p.x, p.y - 26, '-' + w.dmg, '#ff6b6b');
       if (p.hp <= 0){ p.hp = 0; gameOver(); return; }
     }
@@ -995,7 +1013,8 @@ function update(dt){
     const l = Math.hypot(mx, my); if (l > 0){ mx /= l; my /= l; }
   }
   if (p.stag > 0){ p.stag -= dt; mx *= 0.15; my *= 0.15; }
-  if (p.frozen > 0){ p.frozen -= dt; mx = 0; my = 0; }   // 얼음이 되어 멈춤   // 박치기에 맞아 휘청
+  if (p.frozen > 0){ p.frozen -= dt; mx = 0; my = 0; }
+  if (p.grab > 0){ mx = 0; my = 0; }                // 킹 빙화용에게 잡힘   // 얼음이 되어 멈춤   // 박치기에 맞아 휘청
   p.mvx = mx; p.mvy = my; p.moving = Math.hypot(mx, my) > 0.05;
   if (j.cd > 0) j.cd -= dt;
   if (j.cd2 > 0) j.cd2 -= dt;
@@ -1222,7 +1241,8 @@ function updEnemies(dt){
         e.bcd -= dt;
         if (e.bcd <= 0){                         // 화염룡: 불 뿜기 → 하늘 박치기 → 돌진 순서
           const R = bcfg(e), pat = R.cycle[e.pat = ((e.pat || 0) + 1) % R.cycle.length];
-          if (pat === 'breath'){ e.mode = 'bwarn'; e.mt = R.bwarn; e.fa = Math.atan2(dy, dx); e.hit100 = false; e.after = false; }
+          if (e.kind === 'king') kingStart(e, pat, dx, dy);
+          else if (pat === 'breath'){ e.mode = 'bwarn'; e.mt = R.bwarn; e.fa = Math.atan2(dy, dx); e.hit100 = false; e.after = false; }
           else if (pat === 'fly'){ e.mode = 'up'; e.mt = R.up; e.lockFace = e.face; e.slamN = 1; e.after = ''; }
           else if (pat === 'spear'){ e.mode = 'spear'; e.mt = R.spear; e.zt = 0.2; e.sn = R.spearN; }
           else if (pat === 'combo'){ e.hn = R.hops; demonHop(e); }
@@ -1238,7 +1258,7 @@ function updEnemies(dt){
       }
       else if (e.mode === 'warn'){ sp = 0; e.cx = ux; e.cy = uy; e.mt -= dt; if (e.mt <= 0){ e.mode = 'charge'; e.mt = 0.75; } }
       else if (e.mode === 'charge'){ ux = e.cx; uy = e.cy; sp = e.spd * 3.4; e.mt -= dt; if (e.mt <= 0){ e.mode = 'walk'; e.bcd = rand(2.8, 4.2); } }
-      else { sp = 0; if ((e.kind === 'black' ? updBlack : e.kind === 'white' ? updWhite : e.kind === 'demon' ? updDemon : e.kind === 'tdemon' ? updTdemon : e.kind === 'ice' ? updIce : e.kind === 'evo' ? updEvo : updRed)(e, dt, dx, dy) === false) return; }
+      else { sp = 0; if ((e.kind === 'black' ? updBlack : e.kind === 'white' ? updWhite : e.kind === 'demon' ? updDemon : e.kind === 'tdemon' ? updTdemon : e.kind === 'ice' ? updIce : e.kind === 'evo' ? updEvo : e.kind === 'king' ? updKing : updRed)(e, dt, dx, dy) === false) return; }
     } else if (e.type === 'trike'){                // 박치기: 발 구르기 → 돌진 → 숨 고르기
       if (e.mode === 'walk'){
         e.bcd -= dt;
@@ -1419,7 +1439,7 @@ function onBossDead(){
       L('2스테이지 시작', 'Start Stage 2'), () => startStage(G.stage + 1), 'clear');
   } else {
     const bk = G.boss && G.boss.kind;
-    if (bk === 'evo') startFinal(); else if (bk === 'ice') startEvo(); else if (bk === 'tdemon') startIce(); else if (bk === 'demon') startFinale(); else if (bk === 'white') startDemon(); else startEnding();                                 // 하얀 풍경 + 하얀 용 친구
+    if (bk === 'king') startFinal(); else if (bk === 'evo') startKing(); else if (bk === 'ice') startEvo(); else if (bk === 'tdemon') startIce(); else if (bk === 'demon') startFinale(); else if (bk === 'white') startDemon(); else startEnding();                                 // 하얀 풍경 + 하얀 용 친구
   }
 }
 function startEnding(){                            // 흑룡을 물리치면: 하얀 풍경에 하얀 용 친구가 내려옴
@@ -1430,13 +1450,13 @@ function startEnding(){                            // 흑룡을 물리치면: �
   showBanner(L('흑룡을 물리쳤다! …그런데 천용이 나타났다!', 'Black Dragon defeated! …but the Sky Dragon appeared!'), 3);
   setState('ending');
 }
-function friendY(){ const E = G.end, k = E.kind === 'merge' ? 1 : clamp(E.t / 2, 0, 1); return E.y - 320 * (1 - k) * (1 - k); }   // 하늘에서 내려옴
+function friendY(){ const E = G.end, k = E.kind === 'merge' || E.kind === 'kmerge' ? 1 : clamp(E.t / 2, 0, 1); return E.y - 320 * (1 - k) * (1 - k); }   // 하늘에서 내려옴
 function updEnding(dt){
   const E = G.end, p = G.p;
   E.t += dt; G.total += dt; if (G.shake > 0) G.shake -= dt;
   if (Math.random() < dt * 18){                    // 반짝이
     const a = Math.random() * Math.PI * 2, r = rand(20, 90);
-    G.fx.push({ type:'spark', ember:E.kind === 'demon' || E.kind === 'merge' || E.kind === 'evo', snow:E.kind === 'ice', x:E.x + Math.cos(a) * r, y:friendY() + Math.sin(a) * r, vx:0, vy:-15, life:0.7, max:0.7, s:rand(3, 6) });
+    G.fx.push({ type:'spark', ember:E.kind === 'demon' || E.kind === 'merge' || E.kind === 'evo' || E.kind === 'kmerge', snow:E.kind === 'ice', x:E.x + Math.cos(a) * r, y:friendY() + Math.sin(a) * r, vx:0, vy:-15, life:0.7, max:0.7, s:rand(3, 6) });
   }
   updFx(dt);
   if (G.banner){ G.banner.t -= dt; if (G.banner.t <= 0) G.banner = null; }
@@ -1447,6 +1467,15 @@ function updEnding(dt){
   if (E.kind === 'merge' && !E.b3 && E.t > 2.3){    // 천마룡이 흑룡을 공격
     E.b3 = true; showBanner(L('천마용이 흑룡을 공격했다!', 'The Sky-Demon Dragon attacked the Black Dragon!'), 2); G.shake = 0.3;
     G.fx.push({ type:'bonk', x:E.x + 95, y:E.y - 10, life:0.4, max:0.4 });
+  }
+  if (E.kind === 'kmerge' && !E.b3 && E.t > 1.2){   // 빙하용 + 화염용 = 킹 빙화용
+    E.b3 = true; showBanner(L('빙하용과 화염용이 합쳐져 킹 빙화용이 되었다!', 'Glacier and Flame Dragons merged into the King Frostflame Dragon!'), 2.6); G.shake = 0.4;
+  }
+  if (!E.shown && E.t >= E.dur && E.kind === 'kmerge'){
+    E.shown = true; spawnKing(E.x, E.y); resetPlayer();   // 킹 빙화용 등장: 체력 가득
+    showBanner(L('킹 빙화용 출현! 노란 원이 보이면 점프!', 'King Frostflame Dragon appears! Jump when you see a yellow circle!'), 3);
+    setState('play');
+    return;
   }
   if (!E.shown && E.t >= E.dur && E.kind === 'finale'){   // 그런데… 마용이 천용과 합쳐짐
     G.end = { t:0, dur:4.5, x:E.x, y:E.y, shown:false, kind:'merge', total:E.total };
@@ -1461,7 +1490,7 @@ function updEnding(dt){
   }
   if (!E.shown && E.t >= E.dur && E.kind === 'final'){
     E.shown = true;
-    showMsg(L('엔딩 끝!', 'The End!'), L(`총 시간 ${fmt(E.total)} · 처치 ${G.kills} · Lv ${G.p.lv}<br>아기 공룡이 진화 화염용까지 물리쳤습니다!<br>마용은 사라지고, 모두 다 친구가 되었어요.`, `Total time ${fmt(E.total)} · Kills ${G.kills} · Lv ${G.p.lv}<br>The baby dinosaur beat even the Evolved Flame Dragon!<br>The Demon Dragon is gone, and everyone became friends.`),
+    showMsg(L('엔딩 끝!', 'The End!'), L(`총 시간 ${fmt(E.total)} · 처치 ${G.kills} · Lv ${G.p.lv}<br>아기 공룡이 킹 빙화용까지 물리쳤습니다!<br>흑룡과 천용이 친구가 되고, 모두 다 친구가 되었어요.`, `Total time ${fmt(E.total)} · Kills ${G.kills} · Lv ${G.p.lv}<br>The baby dinosaur beat even the King Frostflame Dragon!<br>The Black Dragon and the Sky Dragon became friends, and so did everyone.`),
       L('다시 하기', 'Play Again'), () => newGame(), 'win');
     return;
   }
@@ -1758,7 +1787,7 @@ function drawBossAt(kind, x, y, face){             // 장면용 용 그리기
   const t = G.total, e = { kind, mode:'walk', alt:0, flash:0 };
   ctx.fillStyle = 'rgba(0,0,0,.2)'; ell(x, y + 36, 38, 11);
   ctx.save(); ctx.translate(x, y); ctx.scale(face, 1);
-  if (kind === 'white') drawWhite(e, t); else if (kind === 'demon') drawDemon(e, t); else if (kind === 'tdemon') drawTdemon(e, t); else if (kind === 'ice') drawIce(e, t); else if (kind === 'evo') drawEvo(e, t, c => c); else drawBoss(e, t, c => c);
+  if (kind === 'white') drawWhite(e, t); else if (kind === 'demon') drawDemon(e, t); else if (kind === 'tdemon') drawTdemon(e, t); else if (kind === 'ice') drawIce(e, t); else if (kind === 'evo') drawEvo(e, t, c => c); else if (kind === 'king') drawKing(e, t); else drawBoss(e, t, c => c);
   ctx.restore();
 }
 function startFinal(){                             // 천마룡을 물리치면: 마용은 사라지고 모두 친구 (엔딩)
@@ -1766,7 +1795,7 @@ function startFinal(){                             // 천마룡을 물리치면:
   G.enemies = []; G.shots = []; G.saws = []; G.eshots = []; G.wspears = []; G.swords = []; G.bolts = []; G.fspikes = []; G.fires = []; G.bspikes = [];
   p.burn = 0; p.kx = 0; p.ky = 0;
   G.swalk = []; G.icicles = []; G.bigspikes = []; G.icebolts = []; G.ipatches = []; G.rocks = []; G.golems = []; G.tornados = []; G.meteors = []; G.waves = []; p.frozen = 0; G.end = { t:0, dur:7, x:p.x, y:p.y - 80, shown:false, friend:false, kind:'final', total:G.total };
-  showBanner(L('진화 화염용을 물리쳤다! 천용이 돌아왔어요', 'Evolved Flame Dragon defeated! The Sky Dragon is back'), 3.5);
+  G.p.grab = 0; showBanner(L('킹 빙화용을 물리쳤다! 흑룡과 천용이 친구가 되었어요', 'King Frostflame Dragon defeated! The Black and Sky Dragons became friends'), 3.5);
   setState('ending');
 }
 function spawnTdemon(x, y){                        // 천마룡 등장
@@ -2197,9 +2226,359 @@ function drawEvo(e, t, C){                         // 진화 화염용: 더 크�
     for (let i = 0; i < 3; i++){ ctx.beginPath(); ctx.arc(30, -10, 20 + i * 12 + k * 10, -1, 1); ctx.stroke(); }
   }
 }
+const KHX = [-40, 0, 40], KHY = [-50, -64, -50], KS = 1.5;   // 킹 빙화용 머리 자리 (왼쪽 파랑, 가운데 보라, 오른쪽 빨강)
+function kMouth(e, i){ return { x:e.x + KHX[i] * KS, y:e.y - (e.alt || 0) * RED.height + (KHY[i] + 9) * KS }; }
+function kTail(e){ return { x:e.x + 66 * KS, y:e.y - (e.alt || 0) * RED.height + 4 * KS }; }   // 꼬리 철퇴 자리
+function startKing(){                              // 진화 화염용을 물리치면: 빙하용과 화염용이 합쳐짐
+  const p = G.p;
+  G.enemies = []; G.shots = []; G.saws = []; G.eshots = []; G.wspears = []; G.swords = []; G.bolts = []; G.fspikes = []; G.swalk = [];
+  G.icicles = []; G.bigspikes = []; G.icebolts = []; G.ipatches = []; G.rocks = []; G.golems = []; G.tornados = []; G.meteors = []; G.waves = []; G.fires = []; G.bspikes = [];
+  p.burn = 0; p.frozen = 0; p.grab = 0; p.kx = 0; p.ky = 0;
+  G.end = { t:0, dur:4.5, x:p.x + 190, y:p.y - 40, shown:false, friend:false, kind:'kmerge' };
+  showBanner(L('진화 화염용을 물리쳤다! …그런데 빙하용이 다시 나타났다!', 'Evolved Flame Dragon defeated! …but the Glacier Dragon is back!'), 2.3);
+  setState('ending');
+}
+function spawnKing(x, y){                          // 킹 빙화용 등장 (몸이 아주 큼)
+  const b = spawn('boss');
+  b.kind = 'king'; b.r = 64; b.hp = b.maxHp = KNG.hp; b.x = x; b.y = y; b.bcd = 1.5; b.mode = 'walk'; b.maceT = 0;
+  G.boss = b; return b;
+}
+function kFreeze(pur, t){                          // 얼음이 됨 (pur = 보라색 얼음)
+  const p = G.p;
+  if (p.frozen > 0 || p.fimm > 0) return;
+  p.frozen = t || KNG.freezeT; p.fimm = ICE.pimm; p.pfz = !!pur;
+  addText(p.x, p.y - 34, pur ? L('보라 얼음!', 'Purple ice!') : L('꽁꽁!', 'Frozen!'), pur ? '#d6a8ff' : '#9fe0ff');
+}
+function kHit(dmg, col, txt){                      // 플레이어 피해 (쓰러지면 false)
+  const p = G.p;
+  p.hp -= dmg; addText(p.x, p.y - 30, '-' + dmg + (txt || ''), col || '#ff6b6b');
+  if (p.hp <= 0){ p.hp = 0; gameOver(); return false; }
+  return true;
+}
+function kingStart(e, pat, dx, dy){               // 킹 빙화용: 다음 패턴 시작
+  const B = KNG;
+  e.fa = Math.atan2(dy, dx); e.lockFace = e.face; e.hit100 = false;
+  if (pat === 'tail'){ e.mode = 'ktwarn'; e.mt = B.twarn; }
+  else if (pat === 'blue' || pat === 'purple' || pat === 'red'){ e.kh = pat === 'blue' ? 0 : pat === 'purple' ? 1 : 2; e.mode = 'kbwarn'; e.mt = B.bwarn; }
+  else if (pat === 'stomp'){
+    const d = Math.hypot(dx, dy) || 1, j = Math.max(0, Math.min(d - 50, 240));
+    e.mode = 'khop'; e.mt = B.hop; e.sx = e.x; e.sy = e.y; e.tx = e.x + dx / d * j; e.ty = e.y + dy / d * j;
+  }
+  else if (pat === 'headbutt'){ e.mode = 'khwarn'; e.mt = B.hbwarn; }
+  else if (pat === 'mace'){ if (e.maceT > 0){ e.mode = 'walk'; e.bcd = 0.6; return; } e.mode = 'kmwarn'; e.mt = B.mwarn; }
+  else if (pat === 'breath3'){ e.mode = 'k3warn'; e.mt = B.b3warn; }
+  else { e.mode = 'up'; e.mt = B.up; e.after = pat; }   // meteor·skyslam·zap·rocks·grab: 하늘로
+}
+function updKing(e, dt, dx, dy){                   // 킹 빙화용 전용 패턴
+  const p = G.p, B = KNG, safe = G.jump.t > 0 || G.ult.t > 0, d = Math.hypot(dx, dy) || 1;
+  const done = () => { e.mode = 'walk'; e.bcd = rand(2, 3); };
+  e.mt -= dt;
+  if (e.mode === 'ktwarn'){                        // 꼬리를 들어 올림 (빨간 원 = 꼬리가 닿는 곳)
+    if (e.mt <= 0){
+      e.mode = 'ktswing'; e.mt = 0.35; G.shake = 0.25;
+      if (!safe && d < B.tR + p.r){
+        p.kx += dx / d * 700; p.ky += dy / d * 700; p.stag = 0.4;
+        G.fx.push({ type:'bonk', x:p.x, y:p.y - 6, life:0.4, max:0.4 });
+        if (!kHit(B.tDmg, '#d0d0e0')) return false;
+      }
+    }
+  } else if (e.mode === 'ktswing'){                // 꼬리 철퇴의 가시가 플레이어에게 날아감
+    if (e.mt <= 0){
+      const m = kTail(e), ba = Math.atan2(p.y - m.y, p.x - m.x);
+      for (let i = 0; i < B.tspN; i++){
+        const a = ba + (i - (B.tspN - 1) / 2) * 0.35;
+        G.icicles.push({ x:m.x, y:m.y, vx:Math.cos(a) * B.tspSpd, vy:Math.sin(a) * B.tspSpd, warn:0, life:3.5, turn:B.tspTurn, spd:B.tspSpd, dmg:B.tspDmg, hit:false, col:'steel' });
+      }
+      done();
+    }
+  } else if (e.mode === 'kbwarn'){                 // 빔 조준 (파랑 = 아이스 빔, 보라 = 보라 빔, 빨강 = 불 빔)
+    const m = kMouth(e, e.kh); e.fa = Math.atan2(p.y - m.y, p.x - m.x);
+    if (e.mt <= 0){ e.mode = 'kbeam'; e.mt = B.bdur; e.hit100 = false; }
+  } else if (e.mode === 'kbeam'){
+    const m = kMouth(e, e.kh);
+    let da = Math.atan2(p.y - m.y, p.x - m.x) - e.fa; da = Math.atan2(Math.sin(da), Math.cos(da));
+    e.fa += clamp(da, -0.6 * dt, 0.6 * dt);
+    const ux = Math.cos(e.fa), uy = Math.sin(e.fa), px = p.x - m.x, py = p.y - m.y, along = px * ux + py * uy, side = Math.abs(-px * uy + py * ux);
+    if (Math.random() < dt * 40){
+      const q = rand(0, B.beamLen);
+      G.fx.push(e.kh === 2 ? { type:'flame', x:m.x + ux * q, y:m.y + uy * q, vx:rand(-20, 20), vy:rand(-40, -10), r:rand(5, 9), life:0.4, max:0.4 }
+        : { type:'frost', pur:e.kh === 1, x:m.x + ux * q, y:m.y + uy * q, vx:rand(-20, 20), vy:rand(-30, 0), life:0.5, max:0.5, r:rand(3, 6) });
+    }
+    if (!safe && along > 0 && along < B.beamLen && side < B.beamW / 2 + p.r){
+      if (e.kh === 2) igniteP(B.burnT, B.burnDps);  // 불 빔: 몸이 탐
+      if (!e.hit100){
+        e.hit100 = true; G.shake = 0.2;
+        if (e.kh === 2){ if (!kHit(B.beamDmg, '#ff7a2e', L(' 활활!', ' Burn!'))) return false; }
+        else { p.frozen = 0; p.fimm = 0; kFreeze(e.kh === 1); if (!kHit(B.beamDmg, e.kh === 1 ? '#d6a8ff' : '#9fe0ff')) return false; }
+      }
+    }
+    if (e.mt <= 0){
+      if (e.kh === 2) done();
+      else { e.mode = 'kshards'; e.mt = B.shardN * B.shardGap + 0.3; e.zt = 0; e.sn = B.shardN; }
+    }
+  } else if (e.mode === 'kshards'){                // 고드름 / 보라 얼음 발사
+    e.zt -= dt;
+    if (e.zt <= 0 && e.sn > 0){
+      e.zt = B.shardGap; e.sn--;
+      const m = kMouth(e, e.kh), a = Math.atan2(p.y - m.y, p.x - m.x) + rand(-0.5, 0.5);
+      G.icicles.push({ x:m.x, y:m.y, vx:Math.cos(a) * B.shardSpd, vy:Math.sin(a) * B.shardSpd, warn:0, life:3.5, turn:B.shardTurn, spd:B.shardSpd, dmg:B.shardDmg, hit:false, col:e.kh === 1 ? 'pur' : '' });
+    }
+    if (e.mt <= 0) done();
+  } else if (e.mode === 'khop'){                   // 뛰어올라 왼발로 쿵! → 고드름이 솟아 날아옴
+    const k = clamp(1 - e.mt / B.hop, 0, 1);
+    e.x = e.sx + (e.tx - e.sx) * k; e.y = e.sy + (e.ty - e.sy) * k; e.alt = Math.sin(k * Math.PI) * 0.45;
+    if (e.mt <= 0){
+      e.alt = 0; e.mode = 'land'; e.mt = B.land;
+      const fx = e.x - 16 * KS, fy = e.y + 30 * KS;   // 왼발 자리
+      G.shake = 0.35; G.fx.push({ type:'slam', x:fx, y:fy, life:0.45, max:0.45 });
+      for (let i = 0; i < B.icN; i++){
+        const a = i / B.icN * Math.PI * 2;
+        G.icicles.push({ x:fx + Math.cos(a) * 90, y:fy + Math.sin(a) * 90, warn:B.icWarn + i * 0.06, vx:0, vy:0, life:B.icLife, turn:B.icTurn, spd:B.icSpd, dmg:B.icDmg, hit:false, grow:0 });
+      }
+      if (!safe && Math.hypot(p.x - fx, p.y - fy) < B.stompR + p.r){ if (!kHit(B.stompDmg, '#9fe0ff')) return false; }
+    }
+  } else if (e.mode === 'khwarn'){                 // 가운데 보라 머리 박치기 준비 (점선 = 돌진 길)
+    e.fa = Math.atan2(dy, dx);
+    if (e.mt <= 0){ e.mode = 'khead'; e.mt = B.hbdur; e.hit100 = false; e.cx = Math.cos(e.fa); e.cy = Math.sin(e.fa); }
+  } else if (e.mode === 'khead'){                  // 박치기 돌진
+    e.x += e.cx * B.hbSpd * dt; e.y += e.cy * B.hbSpd * dt;
+    if (Math.random() < 0.6) G.fx.push({ type:'dust', x:e.x - e.cx * e.r + rand(-6, 6), y:e.y + e.r * 0.6, vx:-e.cx * rand(20, 50), vy:rand(-15, 0), r:rand(6, 10), life:0.45, max:0.45 });
+    if (!e.hit100 && !safe && d < e.r + p.r + 12){
+      e.hit100 = true; p.kx += e.cx * 800; p.ky += e.cy * 800; p.stag = 0.45; G.shake = 0.35;
+      G.fx.push({ type:'bonk', x:(p.x + e.x) / 2, y:(p.y + e.y) / 2 - 10, life:0.4, max:0.4 });
+      if (!kHit(B.hbDmg, '#d6a8ff')) return false;
+    }
+    if (e.mt <= 0){ e.mode = 'land'; e.mt = 0.5; }
+  } else if (e.mode === 'kmwarn'){                 // 꼬리 철퇴 던지기 (던진 뒤 다시 자람)
+    if (e.mt <= 0){
+      const m = kTail(e);
+      G.rocks.push({ sx:m.x, sy:m.y, tx:p.x + p.mvx * 70, ty:p.y + p.mvy * 70, t:0, spin:rand(5, 9), size:24, mace:true, dmg:B.maceDmg, rr:B.maceR });
+      e.maceT = B.maceRegrow; G.shake = 0.15; done();
+    }
+  } else if (e.mode === 'k3warn'){                 // 세 머리 모두 브레스 준비
+    e.fa = Math.atan2(dy, dx);
+    if (e.mt <= 0){ e.mode = 'k3breath'; e.mt = B.b3dur; e.hit100 = false; }
+  } else if (e.mode === 'k3breath'){               // 세 머리 브레스: 파랑 = 얼음, 보라 = 보라 얼음, 빨강 = 불
+    let da = Math.atan2(dy, dx) - e.fa; da = Math.atan2(Math.sin(da), Math.cos(da));
+    e.fa += clamp(da, -B.turn * dt, B.turn * dt);
+    for (let i = 0; i < 3; i++){
+      const m = kMouth(e, i), fa = e.fa + (i - 1) * 0.35;
+      for (let q = 0; q < 2; q++){
+        const b = fa + rand(-B.half, B.half), v = B.range / 0.5 * rand(0.55, 1);
+        G.fx.push(i === 2 ? { type:'flame', x:m.x, y:m.y, vx:Math.cos(b) * v, vy:Math.sin(b) * v, r:rand(8, 14), life:0.5, max:0.5 }
+          : { type:'frost', pur:i === 1, x:m.x, y:m.y, vx:Math.cos(b) * v, vy:Math.sin(b) * v, r:rand(4, 8), life:0.5, max:0.5 });
+      }
+      const px = p.x - m.x, py = p.y - m.y, pd = Math.hypot(px, py);
+      let pa = Math.atan2(py, px) - fa; pa = Math.abs(Math.atan2(Math.sin(pa), Math.cos(pa)));
+      if (!safe && pd < B.range + p.r && pa < B.half + 0.08){
+        if (i === 2) igniteP(B.burnT, B.burnDps); else kFreeze(i === 1, 1.0);
+        if (!e.hit100){ e.hit100 = true; G.shake = 0.25; if (!kHit(B.breathDmg, i === 2 ? '#ff5a2e' : i === 1 ? '#d6a8ff' : '#9fe0ff')) return false; }
+      }
+    }
+    if (e.mt <= 0) done();
+  } else if (e.mode === 'up'){                     // 하늘로 날아오름
+    e.alt = clamp(1 - e.mt / B.up, 0, 1);
+    if (e.mt <= 0){
+      if (e.after === 'meteor'){ e.mode = 'msum'; e.mt = B.metSum; for (let i = 0; i < B.metN; i++) G.meteors.push({ st:'orbit', a:i / B.metN * Math.PI * 2, x:e.x, y:e.y }); }
+      else if (e.after === 'zap'){ e.mode = 'kzap'; e.mt = B.zapT; e.zt = 0.2; }
+      else if (e.after === 'rocks'){ e.mode = 'krocks'; e.mt = B.rockT; e.zt = 0.2; e.rk = 0; }
+      else if (e.after === 'grab'){ e.mode = 'kgaim'; e.mt = B.gaim; e.tx = p.x; e.ty = p.y; }
+      else { e.mode = 'loop'; e.mt = B.loop; e.la = Math.atan2(-dy, -dx); e.lr0 = d; }
+    }
+  } else if (e.mode === 'loop'){
+    const k = clamp(1 - e.mt / B.loop, 0, 1), a = e.la + k * Math.PI * 2, r = e.lr0 + (B.loopR - e.lr0) * Math.min(1, k / 0.3);
+    e.x = p.x + Math.cos(a) * r; e.y = p.y + Math.sin(a) * r;
+    if (e.mt <= 0){ e.mode = 'aim'; e.mt = B.aim; e.tx = p.x; e.ty = p.y; }
+  } else if (e.mode === 'aim'){
+    if (e.mt <= 0){ e.mode = 'dive'; e.mt = B.dive; e.sx = e.x; e.sy = e.y; }
+  } else if (e.mode === 'dive'){                   // 내려찍기 → 파랑·보라·빨강 3층 가시
+    const k = clamp(1 - e.mt / B.dive, 0, 1);
+    e.x = e.sx + (e.tx - e.sx) * k; e.y = e.sy + (e.ty - e.sy) * k; e.alt = 1 - k;
+    if (e.mt <= 0){
+      e.alt = 0; e.mode = 'land'; e.mt = B.land;
+      const x = e.tx, y = e.ty, pd = Math.hypot(p.x - x, p.y - y);
+      G.shake = 0.45; G.fx.push({ type:'slam', x, y, life:0.45, max:0.45 });
+      const ks = [{ ice:true, frz:'blue' }, { pur:true, frz:'pur' }, { ign:true, burnT:B.burnT, bdps:B.burnDps }];
+      for (let i = 0; i < 3; i++) G.bspikes.push(Object.assign({ r:B.rings[i], delay:0.05 + i * 0.15, cx:x, cy:y, gap:B.spikeGap, dmg:B.spikeDmg, big:true }, ks[i]));
+      G.bsHit = false;
+      if (!safe && pd < B.headR + p.r){
+        p.kx += (p.x - x) / (pd || 1) * 700; p.ky += (p.y - y) / (pd || 1) * 700; p.stag = 0.4;
+        G.fx.push({ type:'bonk', x:(p.x + x) / 2, y:(p.y + y) / 2 - 6, life:0.4, max:0.4 });
+        if (!kHit(B.headDmg, '#d6a8ff')) return false;
+      }
+    }
+  } else if (e.mode === 'msum'){                   // 메테오 모으기 (빨간 머리)
+    if (e.mt <= 0){ e.mode = 'mshoot'; e.mt = B.metN * B.metGap + 0.3; e.zt = 0; }
+  } else if (e.mode === 'mshoot'){                 // 메테오 발사: 맞으면 불에 탐
+    e.zt -= dt;
+    if (e.zt <= 0){
+      e.zt = B.metGap;
+      const mt = G.meteors.find(q => q.st === 'orbit');
+      if (mt){
+        const tx = p.x + p.mvx * 50, ty = p.y + p.mvy * 50, ax = tx - mt.x, ay = ty - mt.y, al = Math.hypot(ax, ay) || 1;
+        mt.st = 'fly'; mt.vx = ax / al * EVO.metSpd; mt.vy = ay / al * EVO.metSpd; mt.left = al;
+      }
+    }
+    if (e.mt <= 0){ e.mode = 'edown'; e.mt = B.up; }
+  } else if (e.mode === 'kzap'){                   // 하늘에서 세 머리가 전기 발사
+    e.x += dx / d * e.spd * 0.3 * dt; e.y += dy / d * e.spd * 0.3 * dt; e.zt -= dt;
+    if (e.zt <= 0){
+      e.zt = B.zapGap;
+      for (let i = 0; i < 3; i++){
+        const m = kMouth(e, i), a = Math.atan2(p.y - m.y, p.x - m.x) + (i - 1) * 0.18;
+        G.eshots.push({ x:m.x, y:m.y, vx:Math.cos(a) * B.zapSpd, vy:Math.sin(a) * B.zapSpd, life:2.5, r:9, dmg:B.zapDmg, wht:i === 0, red:i === 2, noburn:i !== 2, burnT:B.burnT, bdps:B.burnDps });
+      }
+    }
+    if (e.mt <= 0){ e.mode = 'edown'; e.mt = B.up; }
+  } else if (e.mode === 'krocks'){                 // 하늘에서 바위 던지기 (빨간 머리는 불덩이)
+    e.x += dx / d * e.spd * 0.3 * dt; e.y += dy / d * e.spd * 0.3 * dt; e.zt -= dt;
+    if (e.zt <= 0){
+      e.zt = B.rockGap; e.rk++;
+      const h = e.rk % 3, m = kMouth(e, h);
+      G.rocks.push({ sx:m.x, sy:m.y, tx:p.x + p.mvx * 70 + rand(-30, 30), ty:p.y + p.mvy * 70 + rand(-30, 30), t:0, spin:rand(-6, 6), size:rand(16, 22), fire:h === 2 });
+    }
+    if (e.mt <= 0){ e.mode = 'edown'; e.mt = B.up; }
+  } else if (e.mode === 'kgaim'){                  // 하늘에서 플레이어를 노림 (노란 원 = 낚아챌 곳)
+    const f = Math.min(1, dt * 2.5);
+    e.x += (p.x - e.x) * f; e.y += (p.y - 60 - e.y) * f; e.tx = p.x; e.ty = p.y;
+    if (e.mt <= 0){ e.mode = 'kgdive'; e.mt = B.gdive; e.sx = e.x; e.sy = e.y; }
+  } else if (e.mode === 'kgdive'){                 // 휙! 낚아채기
+    const k = clamp(1 - e.mt / B.gdive, 0, 1);
+    e.x = e.sx + (e.tx - e.sx) * k; e.y = e.sy + (e.ty - 10 - e.sy) * k; e.alt = 1 - k * 0.7;
+    if (e.mt <= 0){
+      if (!safe && Math.hypot(p.x - e.tx, p.y - e.ty) < B.gR + p.r){
+        e.mode = 'kcarry'; e.mt = B.carry; p.grab = 1; p.frozen = 0; p.inv = B.carry + 0.3; G.shake = 0.2;
+        addText(p.x, p.y - 34, L('잡혔다!', 'Grabbed!'), '#ffd23a');
+      } else { e.alt = 0; e.mode = 'land'; e.mt = B.land; G.shake = 0.3; G.fx.push({ type:'slam', x:e.x, y:e.y + 10, life:0.4, max:0.4 }); }
+    }
+  } else if (e.mode === 'kcarry'){                 // 플레이어를 잡고 하늘로 올라감
+    e.alt = Math.min(1, (e.alt || 0) + dt * 1.2);
+    p.x = e.x; p.y = e.y - e.alt * RED.height + 40; p.kx = 0; p.ky = 0;
+    if (e.mt <= 0){                                // 휙! 던짐: 60 피해
+      const a = rand(0, Math.PI * 2);
+      p.grab = 0; p.y = e.y; p.kx = Math.cos(a) * B.throwV; p.ky = Math.sin(a) * B.throwV; p.stag = 0.6; p.inv = 0.8; G.shake = 0.35;
+      e.mode = 'edown'; e.mt = B.up;
+      if (!kHit(B.grabDmg, '#ffd23a', L(' 휙!', ' Whoosh!'))) return false;
+    }
+  } else if (e.mode === 'edown'){
+    e.alt = clamp(e.mt / B.up, 0, 1);
+    if (e.mt <= 0){ e.alt = 0; done(); }
+  } else if (e.mode === 'land'){
+    e.lockFace = 0;
+    if (e.mt <= 0) done();
+  }
+  return true;
+}
+function drawKingFx(e){                            // 킹 빙화용: 예고 표시·빔·브레스 (몸 아래에 그림)
+  const B = KNG, k = 0.5 + 0.5 * Math.sin(G.total * 28), HC = ['150,210,255', '200,140,255', '255,140,50'];
+  if (e.mode === 'ktwarn'){                        // 꼬리가 닿는 곳
+    ctx.fillStyle = `rgba(255,70,50,${0.08 + 0.06 * k})`; circ(e.x, e.y, B.tR);
+    ctx.strokeStyle = `rgba(255,70,50,${0.5 + 0.4 * k})`; ctx.lineWidth = 4; ctx.setLineDash([12, 8]);
+    ctx.beginPath(); ctx.arc(e.x, e.y, B.tR, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+  } else if (e.mode === 'ktswing'){                // 휘두른 꼬리 자국
+    const a = (1 - Math.max(0, e.mt) / 0.35) * Math.PI * 2;
+    ctx.strokeStyle = 'rgba(230,230,245,.85)'; ctx.lineWidth = 12; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(e.x, e.y, B.tR - 20, a - 1.4, a); ctx.stroke(); ctx.lineCap = 'butt';
+  }
+  if (e.mode === 'kbwarn' || e.mode === 'kbeam'){  // 빔
+    const m = kMouth(e, e.kh), ux = Math.cos(e.fa), uy = Math.sin(e.fa), L = B.beamLen, c = HC[e.kh];
+    if (e.mode === 'kbwarn'){
+      ctx.strokeStyle = `rgba(${c},${0.4 + 0.4 * k})`; ctx.lineWidth = 2; ctx.setLineDash([10, 8]);
+      ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + ux * L, m.y + uy * L); ctx.stroke(); ctx.setLineDash([]);
+    } else {
+      const wv = B.beamW * (0.85 + 0.15 * Math.sin(G.total * 40));
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = `rgba(${c},.45)`; ctx.lineWidth = wv * 1.8; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + ux * L, m.y + uy * L); ctx.stroke();
+      ctx.strokeStyle = `rgba(${c},.9)`; ctx.lineWidth = wv; ctx.stroke();
+      ctx.strokeStyle = e.kh === 2 ? '#fff3a0' : '#ffffff'; ctx.lineWidth = wv * 0.35; ctx.stroke();
+      ctx.lineCap = 'butt';
+    }
+  }
+  if (e.mode === 'khwarn'){                        // 박치기 길
+    const L = B.hbSpd * B.hbdur;
+    ctx.strokeStyle = `rgba(200,140,255,${0.5 + 0.4 * k})`; ctx.lineWidth = 4; ctx.setLineDash([10, 8]);
+    ctx.beginPath(); ctx.moveTo(e.x, e.y); ctx.lineTo(e.x + Math.cos(e.fa) * L, e.y + Math.sin(e.fa) * L); ctx.stroke(); ctx.setLineDash([]);
+  }
+  if (e.mode === 'k3warn' || e.mode === 'k3breath'){   // 세 머리 브레스
+    for (let i = 0; i < 3; i++){
+      const m = kMouth(e, i), fa = e.fa + (i - 1) * 0.35, c = HC[i];
+      if (e.mode === 'k3warn'){
+        ctx.strokeStyle = `rgba(${c},.65)`; ctx.lineWidth = 2; ctx.setLineDash([8, 7]);
+        ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.arc(m.x, m.y, B.range, fa - B.half, fa + B.half); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+      } else {
+        const g = ctx.createRadialGradient(m.x, m.y, 6, m.x, m.y, B.range);
+        g.addColorStop(0, 'rgba(255,255,255,.7)'); g.addColorStop(0.5, `rgba(${c},.45)`); g.addColorStop(1, `rgba(${c},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.arc(m.x, m.y, B.range, fa - B.half, fa + B.half); ctx.closePath(); ctx.fill();
+      }
+    }
+  }
+  if (e.mode === 'kgaim' || e.mode === 'kgdive'){  // 낚아챌 곳 (점프로 피함)
+    ctx.strokeStyle = `rgba(255,210,60,${0.55 + 0.35 * k})`; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.arc(e.tx, e.ty, B.gR + 10, 0, Math.PI * 2); ctx.stroke();
+    ctx.font = 'bold 22px sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#ffd23a'; ctx.fillText('!', e.tx, e.ty - B.gR - 16);
+  }
+  if (e.mode === 'kmwarn'){                        // 철퇴 던질 준비
+    const m = kTail(e);
+    ctx.strokeStyle = `rgba(255,255,255,${0.5 + 0.4 * k})`; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(m.x, m.y, 30 + 6 * k, 0, Math.PI * 2); ctx.stroke();
+  }
+}
+function drawKing(e, t){                           // 킹 빙화용: 머리 3개(왼쪽 파랑·가운데 보라·오른쪽 빨강), 꼬리 철퇴, 날개
+  const F = c => e.flash > 0 ? '#ffffff' : c, fly = (e.alt || 0) > 0.05;
+  let r0 = 0;                                      // drawCreature의 기울기·좌우 뒤집기를 되돌려 늘 정면을 봄
+  if (e.mode === 'dive') r0 = 0.45;
+  else if (e.mode === 'up' || e.mode === 'loop' || e.mode === 'aim' || e.mode === 'msum' || e.mode === 'mshoot') r0 = -0.12;
+  ctx.rotate(-r0); ctx.scale(e.face || 1, 1);
+  const w = Math.sin(t * (fly ? 12 : 4)), s = fly ? 0 : Math.sin(t * 6) * 2.5;
+  ctx.save(); ctx.scale(KS, KS);
+  ctx.shadowColor = 'rgba(60,20,90,.6)'; ctx.shadowBlur = 4;
+  ctx.fillStyle = F('#3b5f9a'); poly([-14, -24, -70, -66 + w * 10, -84, -20 + w * 8, -60, -8, -26, -2]);   // 왼쪽 날개 (파랑)
+  ctx.fillStyle = F('#9a3b3b'); poly([14, -24, 70, -66 + w * 10, 84, -20 + w * 8, 60, -8, 26, -2]);         // 오른쪽 날개 (빨강)
+  ctx.fillStyle = F('#5a4a8a'); poly([-20, -22, -62, -58 + w * 10, -56, -26 + w * 8, -24, -6]); poly([20, -22, 62, -58 + w * 10, 56, -26 + w * 8, 24, -6]);   // 날개 막 (보라)
+  ctx.fillStyle = F('#6a4f9a'); poly([14, 16, 58, 6, 66, 0, 62, 12, 18, 26]);                               // 꼬리
+  const mk = e.maceT > 0 ? clamp(1 - e.maceT / KNG.maceRegrow, 0, 1) : 1;                                     // 던진 철퇴가 다시 자람
+  if (mk > 0.05){
+    const ms = 11 * mk, sp = e.mode === 'ktswing' ? t * 20 : 0;
+    ctx.fillStyle = F('#55555f');
+    for (let i = 0; i < 8; i++){ const a = i / 8 * Math.PI * 2 + sp; poly([66 + Math.cos(a - 0.3) * ms * 0.8, 4 + Math.sin(a - 0.3) * ms * 0.8, 66 + Math.cos(a) * ms * 1.5, 4 + Math.sin(a) * ms * 1.5, 66 + Math.cos(a + 0.3) * ms * 0.8, 4 + Math.sin(a + 0.3) * ms * 0.8]); }
+    ctx.fillStyle = F('#8a8a98'); circ(66, 4, ms); ctx.fillStyle = '#d0d0dc'; circ(63, 1, ms * 0.35);
+  }
+  const lift = e.mode === 'khop' ? 8 : 0;                                                                        // 왼발 내려찍기 때 왼발을 듦
+  ctx.fillStyle = F('#3f6fb0'); ctx.fillRect(-22, 14 - lift, 12, 16 + s);
+  ctx.fillStyle = F('#b04040'); ctx.fillRect(10, 14, 12, 16 - s);
+  ctx.fillStyle = F('#eef0f6'); poly([-23, 30 + s - lift, -20, 35 + s - lift, -17, 30 + s - lift]); poly([-15, 30 + s - lift, -12, 35 + s - lift, -9, 30 + s - lift]);
+  poly([11, 30 - s, 14, 35 - s, 17, 30 - s]); poly([19, 30 - s, 22, 35 - s, 25, 30 - s]);
+  const g = ctx.createLinearGradient(-30, 0, 30, 0);                                                            // 몸통: 파랑 → 보라 → 빨강
+  g.addColorStop(0, F('#4a86d0')); g.addColorStop(0.5, F('#7a4fc0')); g.addColorStop(1, F('#c84040'));
+  ctx.fillStyle = g; ell(0, 2, 30, 24);
+  ctx.fillStyle = F('#d8c8f0'); ell(0, 8, 16, 13);                                                             // 배
+  const HC = [['#4a86d0', '#2a5a9a'], ['#7a4fc0', '#4a2a80'], ['#c84040', '#7a1a1a']];
+  for (let i = 0; i < 3; i++){                                                                                   // 목 3개
+    const hx = KHX[i], hy = KHY[i] + (e.mode === 'khead' && i === 1 ? 6 : 0);
+    ctx.strokeStyle = F(HC[i][0]); ctx.lineWidth = 9; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(hx * 0.3, -12); ctx.quadraticCurveTo(hx * 0.85, hy * 0.45, hx, hy + 4); ctx.stroke(); ctx.lineCap = 'butt';
+  }
+  ctx.shadowBlur = 0;
+  for (let i = 0; i < 3; i++){                                                                                   // 머리 3개
+    const hx = KHX[i], hy = KHY[i] + (e.mode === 'khead' && i === 1 ? 6 : 0);
+    const open = (e.mode === 'kbeam' && e.kh === i) || (e.mode === 'kshards' && e.kh === i) || e.mode === 'k3breath' || e.mode === 'kzap' || (i === 2 && (e.mode === 'msum' || e.mode === 'mshoot'));
+    ctx.fillStyle = F(HC[i][0]); ell(hx, hy, 12, 10);
+    ctx.fillStyle = F(HC[i][1]); ell(hx, hy + 8, 8, open ? 6 : 4);
+    if (open){ ctx.fillStyle = i === 2 ? '#ffb347' : i === 1 ? '#e6c8ff' : '#dff6ff'; ell(hx, hy + 9, 5, 3.5); }
+    if (i === 0){ ctx.fillStyle = F('#dff6ff'); poly([hx - 9, hy - 6, hx - 13, hy - 20, hx - 5, hy - 9]); poly([hx + 5, hy - 9, hx + 13, hy - 20, hx + 9, hy - 6]); }   // 얼음 뿔
+    else if (i === 2){ ctx.fillStyle = F('#ff9a3c'); poly([hx - 9, hy - 6, hx - 12, hy - 20, hx - 4, hy - 9]); poly([hx + 4, hy - 9, hx + 12, hy - 20, hx + 9, hy - 6]); }   // 불꽃 뿔
+    const ec = i === 0 ? '#2ee6ff' : '#ffd23a';
+    ctx.fillStyle = ec; ell(hx - 5, hy - 2, 2.6, 2.2); ell(hx + 5, hy - 2, 2.6, 2.2);
+    ctx.fillStyle = '#111'; ell(hx - 5, hy - 2, 0.9, 1.8); ell(hx + 5, hy - 2, 0.9, 1.8);
+  }
+  const cy = KHY[1] - 13 + (e.mode === 'khead' ? 6 : 0);                                                       // 가운데 머리 왕관
+  ctx.fillStyle = '#ffd23a'; poly([-9, cy + 4, -9, cy - 4, -5, cy, 0, cy - 7, 5, cy, 9, cy - 4, 9, cy + 4]);
+  ctx.fillStyle = '#ff4a6a'; circ(0, cy, 1.6);
+  ctx.restore();
+}
 function resetPlayer(){                            // 체력 가득 + 상태 초기화
   const p = G.p;
-  p.hp = p.maxHp; p.inv = 2; p.frozen = 0; p.fimm = 0; p.burn = 0; p.burnAcc = 0; p.burnDps = 0; p.kx = 0; p.ky = 0; p.stag = 0;
+  p.hp = p.maxHp; p.inv = 2; p.frozen = 0; p.fimm = 0; p.grab = 0; p.pfz = false; p.burn = 0; p.burnAcc = 0; p.burnDps = 0; p.kx = 0; p.ky = 0; p.stag = 0;
   G.jump.t = 0; G.jump.cd = 0; G.ult.t = 0; G.ult.cd = 0; G.jump.cd2 = 0; G.tail.t = 0; G.tail.post = 0; G.tail.waves = [];
 }
 function spawnWhite(x, y){                         // 천용 등장
@@ -2213,7 +2592,8 @@ function respawn(){                                // 쓰러진 곳에서 다시
   const kind = b.kind;
   G.enemies = []; G.shots = []; G.saws = []; G.eshots = []; G.wspears = []; G.swords = []; G.bolts = []; G.fspikes = []; G.swalk = []; G.icicles = []; G.bigspikes = []; G.icebolts = []; G.ipatches = []; G.rocks = []; G.golems = []; G.tornados = []; G.meteors = []; G.waves = []; G.fires = []; G.bspikes = []; G.fx = []; G.texts = [];
   resetPlayer();
-  if (kind === 'evo'){ spawnEvo(p.x + 190, p.y - 40); showBanner(L('진화 화염용과 다시 싸운다!', 'Fighting the Evolved Flame Dragon again!'), 2.5); }
+  if (kind === 'king'){ spawnKing(p.x + 190, p.y - 40); showBanner(L('킹 빙화용과 다시 싸운다!', 'Fighting the King Frostflame Dragon again!'), 2.5); }
+  else if (kind === 'evo'){ spawnEvo(p.x + 190, p.y - 40); showBanner(L('진화 화염용과 다시 싸운다!', 'Fighting the Evolved Flame Dragon again!'), 2.5); }
   else if (kind === 'ice'){ spawnIce(p.x + 190, p.y - 40); showBanner(L('빙하용과 다시 싸운다!', 'Fighting the Glacier Dragon again!'), 2.5); }
   else if (kind === 'tdemon'){ spawnTdemon(p.x + 170, p.y - 40); showBanner(L('천마용과 다시 싸운다!', 'Fighting the Sky-Demon Dragon again!'), 2.5); }
   else if (kind === 'demon'){ spawnDemon(p.x + 170, p.y - 40); showBanner(L('마용과 다시 싸운다!', 'Fighting the Demon Dragon again!'), 2.5); }
@@ -2480,6 +2860,7 @@ function drawCreature(e){
       ctx.lineCap = 'butt';
     }
   }
+  if (e.type === 'boss' && e.kind === 'king') drawKingFx(e);   // 킹 빙화용 예고·빔·브레스
   ctx.save(); ctx.translate(e.x, e.y - (e.alt || 0) * RED.height); ctx.scale(e.face, 1);
   if (e.type === 'boss' && e.mode === 'dive') ctx.rotate(0.45);                // 머리부터 내리꽂기
   else if (e.type === 'boss' && (e.mode === 'up' || e.mode === 'loop' || e.mode === 'aim' || e.mode === 'zup' || e.mode === 'zap' || e.mode === 'sword' || e.mode === 'rain' || e.mode === 'icerain' || e.mode === 'rocks' || e.mode === 'throw' || e.mode === 'msum' || e.mode === 'mshoot' || e.mode === 'wing')) ctx.rotate(-0.12);
@@ -2503,7 +2884,7 @@ function drawCreature(e){
     case 'raptor': drawRaptor(t, C, e); break;
     case 'trike':  drawTrike(t, C); break;
     case 'trex':   drawTrex(t, C); break;
-    case 'boss':   if (e.kind === 'white') drawWhite(e, t); else if (e.kind === 'demon') drawDemon(e, t); else if (e.kind === 'tdemon') drawTdemon(e, t); else if (e.kind === 'ice') drawIce(e, t); else if (e.kind === 'evo') drawEvo(e, t, C); else drawBoss(e, t, C); break;
+    case 'boss':   if (e.kind === 'white') drawWhite(e, t); else if (e.kind === 'demon') drawDemon(e, t); else if (e.kind === 'tdemon') drawTdemon(e, t); else if (e.kind === 'ice') drawIce(e, t); else if (e.kind === 'evo') drawEvo(e, t, C); else if (e.kind === 'king') drawKing(e, t); else drawBoss(e, t, C); break;
   }
   ctx.restore();
   if (e.type === 'trike' && e.mode === 'rest'){            // 어질어질 별
@@ -2568,7 +2949,7 @@ function drawPlayer(){
     ctx.restore();
   }
   if (p.frozen > 0){                               // 얼음이 됨
-    ctx.fillStyle = 'rgba(170,220,255,.55)'; ctx.strokeStyle = 'rgba(230,248,255,.95)'; ctx.lineWidth = 2;
+    ctx.fillStyle = p.pfz ? 'rgba(185,125,255,.6)' : 'rgba(170,220,255,.55)'; ctx.strokeStyle = p.pfz ? 'rgba(242,224,255,.95)' : 'rgba(230,248,255,.95)'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(p.x - 18, p.y + 14); ctx.lineTo(p.x - 20, p.y - 16); ctx.lineTo(p.x - 6, p.y - 26);
     ctx.lineTo(p.x + 14, p.y - 22); ctx.lineTo(p.x + 22, p.y - 4); ctx.lineTo(p.x + 18, p.y + 14); ctx.closePath(); ctx.fill(); ctx.stroke();
   }
@@ -2598,9 +2979,9 @@ function draw(){
     }
 
   if (G.end){                                      // 하얀 풍경
-    const a = Math.min(0.82, G.end.t / 2.5), dm = G.end.kind === 'demon' || G.end.kind === 'merge' || G.end.kind === 'evo', ic = G.end.kind === 'ice';   // 마용은 어두운 빨간 하늘
-    ctx.fillStyle = dm ? `rgba(70,8,14,${a * 0.85})` : ic ? `rgba(200,232,255,${a * 0.9})` : `rgba(250,250,255,${a})`; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = dm ? `rgba(30,0,4,${a * 0.6})` : `rgba(255,255,255,${a * 0.9})`;
+    const a = Math.min(0.82, G.end.t / 2.5), dm = G.end.kind === 'demon' || G.end.kind === 'merge' || G.end.kind === 'evo', ic = G.end.kind === 'ice', pk = G.end.kind === 'kmerge';   // 마용은 어두운 빨간 하늘
+    ctx.fillStyle = pk ? `rgba(40,16,70,${a * 0.85})` : dm ? `rgba(70,8,14,${a * 0.85})` : ic ? `rgba(200,232,255,${a * 0.9})` : `rgba(250,250,255,${a})`; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = pk ? `rgba(20,6,40,${a * 0.6})` : dm ? `rgba(30,0,4,${a * 0.6})` : `rgba(255,255,255,${a * 0.9})`;
     for (let i = 0; i < 6; i++){                   // 구름
       const x = ((i * 173 + G.total * 12) % (W + 200)) - 100, y = H * (0.12 + 0.14 * (i % 4));
       ell(x, y, 60 + (i % 3) * 20, 18 + (i % 2) * 6); ell(x + 40, y - 8, 40, 16);
@@ -2680,9 +3061,10 @@ function draw(){
   // 바위가 떨어질 곳
   for (const r of G.rocks){
     const k = clamp(r.t / ICE.rockFly, 0, 1);
-    ctx.fillStyle = `rgba(0,0,0,${0.15 + 0.3 * k})`; ell(r.tx, r.ty, ICE.rockR * (0.5 + 0.5 * k), ICE.rockR * 0.4 * (0.5 + 0.5 * k));
+    const rr = r.rr || ICE.rockR;
+    ctx.fillStyle = `rgba(0,0,0,${0.15 + 0.3 * k})`; ell(r.tx, r.ty, rr * (0.5 + 0.5 * k), rr * 0.4 * (0.5 + 0.5 * k));
     ctx.strokeStyle = 'rgba(255,80,60,.6)'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.ellipse(r.tx, r.ty, ICE.rockR, ICE.rockR * 0.55, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(r.tx, r.ty, rr, rr * 0.55, 0, 0, Math.PI * 2); ctx.stroke();
   }
   // 얼어붙은 땅 (고드름이 꽂힌 곳)
   for (const f of G.ipatches){
@@ -2766,6 +3148,16 @@ function draw(){
     const hk = clamp((t - 2.4) / 0.8, 0, 1);       // 흑룡이 맞고 날아감
     drawBossAt('black', E.x + 95 + 260 * hk, wy + 6 - 160 * hk, -1);
   }
+  if (G.end && G.end.kind === 'kmerge' && !G.end.shown){   // 빙하용 + 진화 화염용 = 킹 빙화용
+    const E = G.end, t = E.t, k = clamp(t / 1.2, 0, 1);
+    if (t < 1.2){
+      drawBossAt('ice', E.x - 160 * (1 - k), E.y, 1);
+      drawBossAt('evo', E.x + 160 * (1 - k), E.y - 10, -1);
+    } else {
+      drawBossAt('king', E.x, E.y, 1);
+      if (t < 1.8){ ctx.fillStyle = `rgba(255,255,255,${1 - (t - 1.2) / 0.6})`; circ(E.x, E.y - 20, 170); }   // 번쩍! 합체
+    }
+  }
   for (const b of G.eshots){                       // 보라색 불꽃 전기
     const l = Math.hypot(b.vx, b.vy) || 1, ux = b.vx / l, uy = b.vy / l, nx = -uy, ny = ux;
     ctx.strokeStyle = b.wht ? 'rgba(110,160,255,.9)' : b.red ? 'rgba(255,210,70,.9)' : 'rgba(200,140,255,.85)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(b.x, b.y);
@@ -2809,16 +3201,17 @@ function draw(){
       ctx.fillStyle = '#b0262e'; poly([s.x + ux * 14, s.y + uy * 14, s.x - ux * 12, s.y - uy * 12, s.x - ux * 12 - nx * 6, s.y - uy * 12 - ny * 6]);
     }
   }
-  for (const c of G.icicles){                      // 고드름·얼음 조각
+  for (const c of G.icicles){                      // 고드름·얼음 조각 (보라 얼음·철퇴 가시)
+    const c1 = c.col === 'pur' ? '#efdcff' : c.col === 'steel' ? '#e4e4ec' : '#eaf7ff', c2 = c.col === 'pur' ? '#8a4fd8' : c.col === 'steel' ? '#5f5f6e' : '#7fb4e0';
     if (c.warn > 0){
       const hh = 30 * (c.grow || 0);
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ell(c.x, c.y, 8, 3);
-      ctx.fillStyle = '#eaf7ff'; poly([c.x - 7, c.y, c.x, c.y - hh, c.x + 7, c.y]);
-      ctx.fillStyle = '#7fb4e0'; poly([c.x, c.y, c.x, c.y - hh, c.x + 7, c.y]);
+      ctx.fillStyle = c1; poly([c.x - 7, c.y, c.x, c.y - hh, c.x + 7, c.y]);
+      ctx.fillStyle = c2; poly([c.x, c.y, c.x, c.y - hh, c.x + 7, c.y]);
     } else {
       const l = Math.hypot(c.vx, c.vy) || 1, ux = c.vx / l, uy = c.vy / l, nx = -uy, ny = ux;
-      ctx.fillStyle = '#eaf7ff'; poly([c.x + ux * 16, c.y + uy * 16, c.x - ux * 12 + nx * 6, c.y - uy * 12 + ny * 6, c.x - ux * 12 - nx * 6, c.y - uy * 12 - ny * 6]);
-      ctx.fillStyle = '#7fb4e0'; poly([c.x + ux * 16, c.y + uy * 16, c.x - ux * 12, c.y - uy * 12, c.x - ux * 12 - nx * 6, c.y - uy * 12 - ny * 6]);
+      ctx.fillStyle = c1; poly([c.x + ux * 16, c.y + uy * 16, c.x - ux * 12 + nx * 6, c.y - uy * 12 + ny * 6, c.x - ux * 12 - nx * 6, c.y - uy * 12 - ny * 6]);
+      ctx.fillStyle = c2; poly([c.x + ux * 16, c.y + uy * 16, c.x - ux * 12, c.y - uy * 12, c.x - ux * 12 - nx * 6, c.y - uy * 12 - ny * 6]);
     }
   }
   for (const b of G.icebolts){                     // 하늘에서 날아오는 고드름
@@ -2828,6 +3221,13 @@ function draw(){
   }
   for (const r of G.rocks){                        // 날아오는 바위 (포물선)
     const k = clamp(r.t / ICE.rockFly, 0, 1), rx = r.sx + (r.tx - r.sx) * k, ry = r.sy + (r.ty - r.sy) * k - Math.sin(k * Math.PI) * 120, s = r.size;
+    if (r.mace){                                   // 꼬리 철퇴: 가시 달린 쇠공
+      ctx.save(); ctx.translate(rx, ry); ctx.rotate(r.t * r.spin);
+      ctx.fillStyle = '#55555f';
+      for (let i = 0; i < 8; i++){ const a = i / 8 * Math.PI * 2; poly([Math.cos(a - 0.3) * s * 0.8, Math.sin(a - 0.3) * s * 0.8, Math.cos(a) * s * 1.5, Math.sin(a) * s * 1.5, Math.cos(a + 0.3) * s * 0.8, Math.sin(a + 0.3) * s * 0.8]); }
+      ctx.fillStyle = '#8a8a98'; circ(0, 0, s); ctx.fillStyle = '#d0d0dc'; circ(-s * 0.3, -s * 0.3, s * 0.35);
+      ctx.restore(); continue;
+    }
     if (r.fire){                                   // 불덩이
       ctx.fillStyle = 'rgba(255,120,30,.45)'; circ(rx, ry, s + 8);
       ctx.fillStyle = '#ff7a2e'; circ(rx, ry, s * 0.8); ctx.fillStyle = '#fff3a0'; circ(rx, ry, s * 0.4);
@@ -2893,7 +3293,7 @@ function draw(){
     } else if (f.type === 'debris'){            // 바위 부스러기
       ctx.globalAlpha = k; ctx.fillStyle = '#9a9284'; ctx.fillRect(f.x - f.s / 2, f.y - f.s / 2, f.s, f.s);
     } else if (f.type === 'frost'){             // 얼음 가루
-      ctx.globalAlpha = k; ctx.fillStyle = '#dff6ff'; circ(f.x, f.y, f.r);
+      ctx.globalAlpha = k; ctx.fillStyle = f.pur ? '#e2c6ff' : '#dff6ff'; circ(f.x, f.y, f.r);
     } else if (f.type === 'lbolt'){             // 하늘에서 떨어지는 번개
       ctx.globalAlpha = k; ctx.strokeStyle = '#fff6b0'; ctx.lineWidth = 4; ctx.beginPath();
       let x = f.x, y = f.y - 420; ctx.moveTo(x, y);
