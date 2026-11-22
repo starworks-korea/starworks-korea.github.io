@@ -50,6 +50,41 @@ def card(name, color, v, L):
 </div>
 </a>'''
 
+def features(P, L):
+    """이야기 페이지 위쪽 특집: 영상 + 옆에 '게임 해 보기' (2026-11-22 대표 지시)"""
+    A = i18n.asset(L); out = []
+    for f in P.get("features", []):
+        title, desc, note = tr(f, "title", L), tr(f, "desc", L), tr(f, "note", L)
+        vid = f.get("video_id", "")
+        if vid:
+            media = (f'<iframe src="https://www.youtube-nocookie.com/embed/{vid}" title="{e(title)}" loading="lazy" '
+                     f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen '
+                     f'style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe>')
+            yt = f'<a href="https://youtu.be/{vid}" target="_blank" rel="noopener" style="font-size: 14px; font-weight: 700; color: #0070C0">{t(L, "유튜브에서 보기", "Watch on YouTube")} ↗</a>'
+        else:
+            media = (f'<img src="{A}{f["image"]}" alt="{e(title)}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">'
+                     f'<span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">{t(L, "영상 준비 중", "Video coming soon")}</span>')
+            yt = ""
+        game = f'{A}{f["game"]}?lang={L}'
+        out.append(f"""<article id="{f["key"]}" class="feat" style="scroll-margin-top: 16px; background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr)">
+<div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">{media}</div>
+<div style="padding: 24px 26px; display: flex; flex-direction: column; gap: 12px; justify-content: center">
+<span style="align-self: flex-start; padding: 3px 10px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">{t(L, "아들이 만든 게임", "A game my son made")}</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; line-height: 1.35; color: #1E3252">{e(title)}</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.7; color: #3A4558">{e(desc)}</p>
+<p style="margin: 0; font-size: 13px; line-height: 1.6; color: #5A6478">💻 {e(note)}</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 4px">
+<a class="playbtn" href="{game}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 12px 24px; font-size: 17px; font-weight: 900; color: #FFFFFF; background: #0070C0; border-radius: 6px">▶ {t(L, "게임 해 보기", "Play the Game")}</a>
+{yt}
+</div>
+</div>
+</article>""")
+    if not out: return ""
+    return f"""<section aria-label="{t(L, "특집", "Featured")}" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 0">
+{chr(10).join(out)}
+</section>
+"""
+
 CSS = '''body{margin:0;background:#F4F6F9;word-break:keep-all;overflow-wrap:anywhere}
 a{color:inherit;text-decoration:none}a:hover{color:#0070C0}
 html{scroll-behavior:smooth}
@@ -68,6 +103,9 @@ html{scroll-behavior:smooth}
 .vrow .t{color:#1E3252}
 .vrow .d{font-size:13px;color:#5A6478;white-space:nowrap}
 .vrow:hover .t{color:#0070C0}
+.playbtn:hover{background:#005a9c !important;color:#FFFFFF}
+.playbtn:focus-visible{outline:3px solid #1E3252;outline-offset:2px}
+@media (max-width:820px){.feat{grid-template-columns:1fr !important}}
 @media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}h1{font-size:34px !important}}'''
 
 def build(P, L):
@@ -183,7 +221,7 @@ def build(P, L):
 </div>
 </section>
 
-<section aria-label="{t(L, "언어 버전", "Language versions")}" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
+{features(P, L)}<section aria-label="{t(L, "언어 버전", "Language versions")}" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
 {lang_html}
 </section>
 

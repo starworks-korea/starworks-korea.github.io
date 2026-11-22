@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20 16:10",
+ "updated": "2026-11-22 13:50",
  "pages": [
   {
    "key": "tech",
@@ -489,7 +489,21 @@
    ],
    "nav_en": "Stories",
    "title_en": "Story Videos",
-   "sub_en": "Old stories and essays made solo by CEO Dong-Woo Shin"
+   "sub_en": "Old stories and essays made solo by CEO Dong-Woo Shin",
+   "features": [
+    {
+     "key": "baby-dino",
+     "video_id": "",
+     "game": "games/baby-dino-survival/",
+     "image": "images/baby-dino-survival.jpg",
+     "title": "아기공룡 서바이벌 개발기",
+     "title_en": "Baby Dino Survival — How It Was Made",
+     "desc": "10살 아들이 AI와 말로 만든 게임입니다. 사흘 동안 43번 고쳐 보스 용 일곱 마리와 엔딩까지 만들었어요. 주말엔 친구들에게 문자로 보내 같이 하며 난이도를 맞췄습니다.",
+     "desc_en": "A game my 10-year-old son made just by talking with AI. In three days and 43 requests he added seven boss dragons and an ending. On weekends he texted it to friends and tuned the difficulty together.",
+     "note": "태블릿·PC로 해 보세요 — 폰은 주변이 잘 안 보여요",
+     "note_en": "Play on a tablet or PC — a phone shows less of the area around you"
+    }
+   ]
   }
  ]
 }
