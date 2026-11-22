@@ -55,7 +55,7 @@ def features(P, L):
     A = i18n.asset(L); out = []
     for f in P.get("features", []):
         title, desc, note = tr(f, "title", L), tr(f, "desc", L), tr(f, "note", L)
-        vid = f.get("video_id", "")
+        vid = (f.get("video_id_ko") if L == "ko" else "") or f.get("video_id", "")   # 한국어 페이지는 한국어판 영상 (2026-11-22)
         if vid:
             media = (f'<iframe src="https://www.youtube-nocookie.com/embed/{vid}" title="{e(title)}" loading="lazy" '
                      f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen '
