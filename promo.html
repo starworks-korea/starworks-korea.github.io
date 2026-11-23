@@ -32,15 +32,11 @@ html{scroll-behavior:smooth}
 .lg-a{background:#FFFFFF;color:#0070C0;border-color:#0070C0}
 .lg-n{background:#FFFFFF;color:#A0AEC0;border:1px dashed #CBD5E0}
 .lg-x{background:#EDF2F7;color:#4A5568;border-color:#CBD5E0}
-.vrow{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}
-.vrow .b{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}
-.vrow .t{color:#1E3252}
-.vrow .d{font-size:13px;color:#5A6478;white-space:nowrap}
-.vrow:hover .t{color:#0070C0}
 .playbtn:hover{background:#005a9c !important;color:#FFFFFF}
 .playbtn:focus-visible{outline:3px solid #1E3252;outline-offset:2px}
 @media (max-width:820px){.feat{grid-template-columns:1fr !important}}
-@media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}h1{font-size:34px !important}}
+@media (max-width:600px){h1{font-size:34px !important}}
+.latest{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.ltbtn:hover{background:#005a9c !important;color:#FFFFFF}.ltbtn:focus-visible{outline:3px solid #1E3252;outline-offset:2px}@media (max-width:820px){.latest{grid-template-columns:1fr !important}}
 </style>
 </head>
 <body>
@@ -75,27 +71,19 @@ html{scroll-behavior:smooth}
 </div>
 </section>
 
-<section aria-label="Language versions" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
-<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
-<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">Language Versions</h2>
-<span style="font-size: 14px; color: #5A6478">Korean · English · Japanese · Spanish · other — number of videos</span>
+<section aria-label="Latest video" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 0">
+<article class="latest" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden">
+<div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252"><iframe src="https://www.youtube-nocookie.com/embed/XtEmQjq3is4" title="E-Rang Industry | From Automotive Interiors to Aerospace and AI Robotics — 2026 Company Profile" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></div>
+<div style="padding: 24px 26px; display: flex; flex-direction: column; gap: 12px; justify-content: center">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 900; color: #FFFFFF; background: #0070C0; border-radius: 4px">LATEST</span>
+<span style="padding: 3px 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #1f5fa8; border-radius: 999px">E-Rang Industry</span>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
-<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Korean</p><div class="lgrow"><span class="lg lg-o">Original 3</span><span class="lg lg-a">Auto dub 1</span></div></div>
-<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">English</p><div class="lgrow"><span class="lg lg-o">Original 1</span><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 2</span></div></div>
-<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Japanese</p><div class="lgrow"><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 3</span></div></div>
-<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Spanish</p><div class="lgrow"><span class="lg lg-a">Auto dub 1</span><span class="lg lg-n">Coming soon 3</span></div></div>
-<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">Other languages</p><div class="lgrow"><span class="lg lg-a">Auto dub 2</span><span class="lg lg-n">Coming soon 2</span></div><p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">Indonesian 2 videos · <span title="Arabic · Bengali · German · French · Hindi · Italian · Hebrew · Malayalam · Dutch · Punjabi · Polish · Portuguese · Russian · Tamil · Telugu · Ukrainian" style="text-decoration: underline dotted">16 more languages in 1 video</span></p></div>
+<h2 style="margin: 0; font-size: 24px; font-weight: 900; line-height: 1.35; color: #1E3252">E-Rang Industry | From Automotive Interiors to Aerospace and AI Robotics — 2026 Company Profile</h2>
+<p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 14px; color: #5A6478"><time datetime="2026-11-06">Uploaded Nov 6, 2026</time><span style="display: inline-flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block"></span>Public</span><span>2:59</span></p>
+<a class="ltbtn" href="https://youtu.be/XtEmQjq3is4" target="_blank" rel="noopener" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 12px 22px; font-size: 16px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 6px">Watch on YouTube ↗</a>
 </div>
-<div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
-<span><span class="lg lg-o">Original</span> original audio</span>
-<span><span class="lg lg-d">Our dub</span> our own dub & subtitles</span>
-<span><span class="lg lg-a">Auto dub</span> YouTube auto-dub</span>
-<span><span class="lg lg-n">Coming soon</span> in production</span>
-<span>Change audio language: YouTube ⚙ Settings → Audio track</span>
-</div>
-</div>
+</article>
 </section>
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">

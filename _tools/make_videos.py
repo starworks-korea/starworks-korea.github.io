@@ -1,11 +1,10 @@
 # 기술 영상(tech.html) · 홍보 영상(promo.html) · 이야기(stories.html) 페이지 만들기
 # 사용: python3 _tools/make_videos.py   (videos.json → 세 페이지 × 영어(루트, 기본)·한국어(ko/) 다시 생성)
 import html, json, os, sys
-from collections import Counter
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
-import i18n
+import i18n, latest_ui
 from i18n import t, tr
 D = json.load(open(os.path.join(HERE, "videos.json"), encoding="utf-8"))
 F = "font-family: 'Noto Sans KR', sans-serif"
@@ -98,15 +97,11 @@ html{scroll-behavior:smooth}
 .lg-a{background:#FFFFFF;color:#0070C0;border-color:#0070C0}
 .lg-n{background:#FFFFFF;color:#A0AEC0;border:1px dashed #CBD5E0}
 .lg-x{background:#EDF2F7;color:#4A5568;border-color:#CBD5E0}
-.vrow{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}
-.vrow .b{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}
-.vrow .t{color:#1E3252}
-.vrow .d{font-size:13px;color:#5A6478;white-space:nowrap}
-.vrow:hover .t{color:#0070C0}
 .playbtn:hover{background:#005a9c !important;color:#FFFFFF}
 .playbtn:focus-visible{outline:3px solid #1E3252;outline-offset:2px}
 @media (max-width:820px){.feat{grid-template-columns:1fr !important}}
-@media (max-width:600px){.vrow{grid-template-columns:auto 1fr}.vrow .d{justify-self:end}.vrow .t{grid-column:1 / -1;grid-row:2}h1{font-size:34px !important}}'''
+@media (max-width:600px){h1{font-size:34px !important}}
+''' + latest_ui.CSS
 
 def build(P, L):
     FIELDS = [(f["key"], tr(f, "name", L), f["color"], tr(f, "desc", L)) for f in P["fields"]]
@@ -115,7 +110,7 @@ def build(P, L):
         V[v["field"]].append(v)
     ALLV = [v for k,*_ in FIELDS for v in V[k]]
     total = len(ALLV)
-    SH = i18n.LSHORT[L]; LS = i18n.LSTATE[L]; A = i18n.asset(L)
+    A = i18n.asset(L)
     cnt = lambda n: t(L, f"{n}편", f"{n} video" + ("" if n == 1 else "s"))
     chips = "\n".join(
      f'<a href="#{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{e(n)} <span style="font-weight: 500; color: #5A6478">{len(V[k])}</span></a>'
@@ -134,44 +129,12 @@ def build(P, L):
 {cards}
 </div>
 </section>""")
-    # 공개·회원 공개 목록은 강의 페이지에만 둠 (대표 지시 2026-11-15)
-    # 언어 버전 요약
-    LV = [v.get("lang", {}) for v in ALLV]
-    SP = [lg for lg in LV if not lg.get("none")]
-    BOX = '<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC"><p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">{0}</p><div class="lgrow">{1}</div>{2}</div>'
-    NOTE = '<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">{0}</p>'
-    boxes=[]
-    for k, n in i18n.LANG_NAMES[L]:
-        parts=[f'<span class="lg {LCLASS[st]}">{SH[st]} {c}</span>' for st in ("원본","더빙","자동","") if (c:=sum(1 for lg in SP if lg.get(k,"")==st))]
-        boxes.append(BOX.format(n, "".join(parts), ""))
-    etc_cnt = Counter(i18n.lang_name(L, nm) for lg in SP for nm in etc_names(lg))
-    parts=[f'<span class="lg {LCLASS[st]}">{SH[st]} {c}</span>' for st in ("원본","더빙","자동","") if (c:=sum(1 for lg in SP if etc_state(lg)==st))]
-    top = etc_cnt.most_common()
-    note = e(" · ".join(f"{nm} {cnt(c)}" for nm, c in top if c > 1))
-    rest = [nm for nm, c in top if c == 1]
-    if rest:
-        more = t(L, f"그 밖의 {len(rest)}개 언어 1편", f"{len(rest)} more languages in 1 video")
-        note += (" · " if note else "") + f'<span title="{e(" · ".join(rest))}" style="text-decoration: underline dotted">{more}</span>'
-    boxes.append(BOX.format(t(L, "기타 언어", "Other languages"), "".join(parts), NOTE.format(note) if note else ""))
-    nnone = len(LV) - len(SP)
-    if nnone:
-        boxes.append(BOX.format(t(L, "음성 없음", "No speech"), f'<span class="lg lg-x">{cnt(nnone)}</span>', NOTE.format(t(L, "말소리·자막 없이 화면만 있는 영상", "Picture only — no speech or subtitles"))))
-    lang_html = f"""<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
-<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{t(L, "언어 버전", "Language Versions")}</h2>
-<span style="font-size: 14px; color: #5A6478">{t(L, "한국어 · 영어 · 일본어 · 스페인어 · 기타 — 영상 수", "Korean · English · Japanese · Spanish · other — number of videos")}</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
-{chr(10).join(boxes)}
-</div>
-<div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
-<span><span class="lg lg-o">{SH["원본"]}</span> {LS["원본"]}</span>
-<span><span class="lg lg-d">{SH["더빙"]}</span> {LS["더빙"]}</span>
-<span><span class="lg lg-a">{SH["자동"]}</span> {LS["자동"]}</span>
-<span><span class="lg lg-n">{SH[""]}</span> {t(L, "제작 예정", "in production")}</span>
-<span>{t(L, "음성 언어 바꾸기: 유튜브 ⚙ 설정 → 오디오 트랙", "Change audio language: YouTube ⚙ Settings → Audio track")}</span>
-</div>
-</div>"""
+    # 위쪽 공개·회원 공개 목록과 언어 버전 요약은 없앰 (대표 지시 2026-11-24) — 카드마다 붙은 표기는 그대로
+    # 맨 위 최신 영상 1편 (특집에 이미 있는 영상이면 넣지 않음)
+    NAME = {k: (n, c) for k, n, c, _ in FIELDS}
+    lv = latest_ui.pick(P["videos"])   # json 순서 그대로 (같은 날짜면 나중에 넣은 것)
+    feat_ids = {x for f in P.get("features", []) for x in (f.get("video_id"), f.get("video_id_ko")) if x}
+    latest_html = latest_ui.block(L, lv, *NAME[lv["field"]]) if lv and lv["id"] not in feat_ids else ""
     ptitle = tr(P, "title", L); sub = tr(P, "sub", L)
     title = t(L, f"스타웍스 {ptitle}", f"STAR Works — {ptitle}")
     desc = t(L, f"{sub} — 영상 {total}편 바로 가기", f"{sub} — {cnt(total)}")
@@ -221,10 +184,7 @@ def build(P, L):
 </div>
 </section>
 
-{features(P, L)}<section aria-label="{t(L, "언어 버전", "Language versions")}" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
-{lang_html}
-</section>
-
+{features(P, L)}{latest_html}
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
 <nav aria-label="{t(L, "분류 바로 가기", "Jump to a category")}" style="display: flex; flex-wrap: wrap; gap: 8px">
 {chips}

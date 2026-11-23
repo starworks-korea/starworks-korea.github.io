@@ -1,11 +1,10 @@
 # 강의 영상 페이지 — 영어(lectures.html, 기본) + 한국어(ko/lectures.html)
 # 사용: python3 _tools/make_lectures.py   (lectures.json → 두 언어 페이지 다시 생성)
 import html, sys, os, json
-from collections import Counter
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
-import i18n, reviews_ui
+import i18n, reviews_ui, latest_ui
 from i18n import t, tr
 
 D = json.load(open(os.path.join(HERE, "lectures.json"), encoding="utf-8"))
@@ -38,7 +37,7 @@ def build(L):
         EV[v["field"]].append((v["id"], tr(v, "title", L), v["dur"], v["date"], v.get("vis", "공개"), v.get("lang", {"ko": "원본"})))
     total = sum(len(v) for v in V.values())
     extotal = sum(len(v) for v in EV.values())
-    VL = i18n.VISLABEL[L]; LS = i18n.LSTATE[L]; SH = i18n.LSHORT[L]; LN = i18n.LANG_NAMES[L]
+    VL = i18n.VISLABEL[L]; LS = i18n.LSTATE[L]; LN = i18n.LANG_NAMES[L]
     A = i18n.asset(L)
     ln = lambda n: i18n.lang_name(L, n)
     cnt = lambda n: t(L, f"{n}편", f"{n} video" + ("" if n == 1 else "s"))
@@ -100,69 +99,11 @@ def build(L):
     sections = section_list(FIELDS, V)
     ex_sections = section_list(EXF, EV)
 
-    # 공개 범위 목록 (페이지 위쪽 — 강의 페이지에만)
-    def vis_rows(vis):
-        rows = []
-        for fields, vids in ((FIELDS, V), (EXF, EV)):
-            for k, n, c, _ in fields:
-                for i, (vid, title, dur, date, vv, _lg) in enumerate(vids[k]):
-                    if vv != vis: continue
-                    rows.append(f'''<li style="border-top: 1px solid #DCE1E8"><a class="vrow" href="https://youtu.be/{vid}" target="_blank" rel="noopener"><span class="b" style="background: {c}">{e(n)} {i+1}</span><span class="t">{e(title)}</span><span class="d">{i18n.date_fmt(L, date)}</span></a></li>''')
-        return rows
-    VIS_INFO = [("공개", t(L, "누구나 검색해서 볼 수 있는 영상", "Anyone can find and watch these")),
-                ("일부 공개", t(L, "링크를 받은 분께만 공개하는 영상", "Shared by link only"))]
-    vis_panels = []
-    for vis, note in VIS_INFO:
-        rows = vis_rows(vis)
-        if not rows: continue
-        vis_panels.append(f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px 12px">
-<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px">
-<span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: {VISC[vis]}; display: inline-block"></span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{t(L, VL[vis] + " 영상", VL[vis] + " Videos")}</h2>
-<span style="font-size: 15px; font-weight: 700; color: #0070C0">{cnt(len(rows))}</span>
-<span style="font-size: 14px; color: #5A6478">{note}</span>
-</div>
-<ul style="margin: 0; padding: 0; list-style: none">
-{chr(10).join(rows)}
-</ul>
-</div>''')
-    vis_html = "\n".join(vis_panels)
-
-    # 언어 버전 요약
-    ALLV = [v for fv in (V, EV) for lst in fv.values() for v in lst]
-    box = lambda title, parts, note="": f'''<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid #DCE1E8; border-radius: 8px; background: #F8FAFC">
-<p style="margin: 0; font-size: 17px; font-weight: 900; color: #1E3252">{title}</p>
-<div class="lgrow">{"".join(parts)}</div>{f'{chr(10)}<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A6478">{note}</p>' if note else ""}
-</div>'''
-    lang_boxes = []
-    for k, n in LN:
-        parts = [f'<span class="lg {LCLASS[st]}">{SH[st]} {c}</span>' for st in ("원본", "더빙", "자동", "") if (c := sum(1 for v in ALLV if v[5].get(k, "") == st))]
-        lang_boxes.append(box(n, parts))
-    etc_cnt = Counter(ln(n) for v in ALLV for n in etc_names(v[5]))
-    parts = [f'<span class="lg {LCLASS[st]}">{SH[st]} {c}</span>' for st in ("원본", "더빙", "자동", "") if (c := sum(1 for v in ALLV if etc_state(v[5]) == st))]
-    top = etc_cnt.most_common()
-    note = e(" · ".join(f"{n} {cnt(c)}" for n, c in top if c > 1))
-    rest = [n for n, c in top if c == 1]
-    if rest:
-        more = t(L, f"그 밖의 {len(rest)}개 언어 1편", f"{len(rest)} more languages in 1 video")
-        note += (" · " if note else "") + f'<span title="{e(" · ".join(rest))}" style="text-decoration: underline dotted">{more}</span>'
-    lang_boxes.append(box(t(L, "기타 언어", "Other languages"), parts, note))
-    lang_html = f'''<div style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; padding: 20px 22px">
-<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px">
-<h2 style="margin: 0; font-size: 20px; font-weight: 900; color: #1E3252">{t(L, "언어 버전", "Language Versions")}</h2>
-<span style="font-size: 14px; color: #5A6478">{t(L, "한국어 · 영어 · 일본어 · 스페인어 · 기타 — 영상 수", "Korean · English · Japanese · Spanish · other — number of videos")}</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
-{chr(10).join(lang_boxes)}
-</div>
-<div class="lgrow" style="margin-top: 14px; align-items: center; font-size: 13px; color: #5A6478; gap: 6px 14px">
-<span><span class="lg lg-o">{SH["원본"]}</span> {LS["원본"]}</span>
-<span><span class="lg lg-d">{SH["더빙"]}</span> {LS["더빙"]}</span>
-<span><span class="lg lg-a">{SH["자동"]}</span> {LS["자동"]}</span>
-<span><span class="lg lg-n">{SH[""]}</span> {t(L, "제작 예정", "in production")}</span>
-<span>{t(L, "음성 언어 바꾸기: 유튜브 ⚙ 설정 → 오디오 트랙", "Change audio language: YouTube ⚙ Settings → Audio track")}</span>
-</div>
-</div>'''
+    # 위쪽 공개·회원 공개 목록과 언어 버전 요약은 없앰 (대표 지시 2026-11-24) — 카드마다 붙은 표기는 그대로
+    # 맨 위 최신 영상 1편 (강의 + 해석 기초 예제 중 가장 최근 업로드)
+    NAME = {k: (n, c) for k, n, c, _ in FIELDS + EXF}
+    lv = latest_ui.pick(D["videos"] + EX["videos"])
+    latest_html = latest_ui.block(L, lv, f'{NAME[lv["field"]][0]} {lv["num"]}', NAME[lv["field"]][1]) if lv else ""
 
     series = t(L, SERIES_KO, SERIES_EN)
     desc_meta = t(L, f"김영석 교수(경북대학교)와 함께하는 「{SERIES_KO}」 강의 영상 {total}편 바로 가기 — 스타웍스",
@@ -205,12 +146,8 @@ html{{scroll-behavior:smooth}}
 .lg-d{{background:#0070C0;color:#FFFFFF;border-color:#0070C0}}
 .lg-a{{background:#FFFFFF;color:#0070C0;border-color:#0070C0}}
 .lg-n{{background:#FFFFFF;color:#A0AEC0;border:1px dashed #CBD5E0}}
-.vrow{{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:baseline;padding:10px 2px;font-size:15px;line-height:1.45}}
-.vrow .b{{padding:2px 9px;font-size:12px;font-weight:700;color:#FFFFFF;border-radius:999px;white-space:nowrap}}
-.vrow .t{{color:#1E3252}}
-.vrow .d{{font-size:13px;color:#5A6478;white-space:nowrap}}
-.vrow:hover .t{{color:#0070C0}}
-@media (max-width:600px){{.vrow{{grid-template-columns:auto 1fr}}.vrow .d{{justify-self:end}}.vrow .t{{grid-column:1 / -1;grid-row:2}}h1{{font-size:34px !important}}}}{rv_css}
+@media (max-width:600px){{h1{{font-size:34px !important}}}}
+{latest_ui.CSS}{rv_css}
 </style>
 </head>
 <body>
@@ -236,15 +173,7 @@ html{{scroll-behavior:smooth}}
 </div>
 </section>
 
-<section id="visibility" aria-label="{t(L, "공개 범위", "Visibility")}" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 8px">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; align-items: start">
-{vis_html}
-</div>
-<div style="margin-top: 20px">
-{lang_html}
-</div>
-</section>
-
+{latest_html}
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
 <nav aria-label="{t(L, "분야 바로 가기", "Jump to a field")}" style="display: flex; flex-wrap: wrap; gap: 8px">
 {chips}
