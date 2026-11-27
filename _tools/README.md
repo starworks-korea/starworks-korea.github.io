@@ -17,6 +17,7 @@
 - CAD: CAD 뷰어(`tools/sw_viewer.html`) — 2D DWG·DXF + 3D STEP·IGES·STL 통합 (2026-11-27, 옛 DXF 뷰어·3D CAD 뷰어를 합침)
   - 파일 열기 버튼: 다운로드 · 카카오톡(폴더 기억) · 다른 위치, 여러 파일 ◀ ▶, 한 파일의 여러 시트 ◀ ▶
   - 겹친 선은 한 개만 표시(도면 겹쳐 열기 기능 없음)
+  - 휴대폰: `tools/manifest.webmanifest` + `tools/sw_viewer_sw.js` + `tools/icons/` — 앱으로 설치하면 카카오톡 파일 › 공유 › CAD 뷰어로 바로 열림(서비스 워커는 공유 받기만 처리, 화면은 저장해 두지 않음)
   - DWG: `tools/dwg/`의 LibreDWG WebAssembly(GPL-3.0, `@mlightcad/libredwg-web` 0.9.4 그대로)로 기기 안에서 DXF로 바꿔 엶 — R14 ~ 2018 형식(AutoCAD R14 ~ 2026), 범위는 뷰어 처음 화면에 표기
   - 옛 `tools/dxf_viewer.html` · `tools/cad_viewer.html` 은 이동 페이지
 - CAM: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) · 조각기 CAM(`coupon-tool/cam.html`)

@@ -10,6 +10,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1120" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/viewer-192.png" />
+  <link rel="apple-touch-icon" href="icons/viewer-192.png" />
   <title>STAR Works CAD 뷰어 — DWG · DXF · STEP · IGES · STL</title>
   <style>
 /* ============================================================================
@@ -74,7 +77,7 @@ button, select, input { font-family: inherit; }
 .sw-file-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sw-file-sub { font-size: 11.5px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sw-open-wide { display: flex; gap: 6px; flex: none; }
-.sw-head .sw-open-narrow { display: none; }
+.sw-head .sw-open-narrow, .sw-head .sw-kakao-narrow { display: none; }
 .sw-count:empty { display: none; }
 .sw-count { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent-strong); color: #fff; font-size: 11px; line-height: 17px; text-align: center; }
 
@@ -174,6 +177,9 @@ body.theme-light .btn-dim-active { color: #b45309; border-color: #d97706; backgr
 .sw-bigbtn-primary:hover { background: var(--accent); }
 .sw-open-big-sm .sw-bigbtn { min-height: 62px; }
 .sw-open-big-sm .sw-bigbtn b { font-size: 14px; }
+.sw-install { margin-top: 14px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--accent); background: rgba(14, 165, 233, .1); font-size: 12.5px; line-height: 1.65; }
+.sw-install b.t { display: block; font-size: 14px; margin-bottom: 4px; }
+.sw-install .btn { margin-top: 8px; }
 .sw-home-list { margin-top: 18px; }
 .sw-support { margin-top: 22px; }
 .sw-support-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 1.6; }
@@ -235,7 +241,7 @@ body.theme-light .sw-nav { background: rgba(255, 255, 255, .94); color: #0f172a;
 }
 .sw-nav-b:hover { border-color: var(--accent); }
 .sw-nav-all { padding: 0 10px; white-space: nowrap; }
-.sw-nav-pos { min-width: 52px; text-align: center; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.sw-nav-pos { min-width: 52px; white-space: nowrap; text-align: center; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .sw-nav-posbtn { min-height: 36px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: inherit; cursor: pointer; }
 .sw-nav-posbtn:hover { border-color: var(--accent); }
 .sw-sheet-pop {
@@ -267,7 +273,8 @@ body.theme-light .sw-nav { background: rgba(255, 255, 255, .94); color: #0f172a;
 @media (max-width: 860px) {
   :root { --tap: 40px; }
   .sw-brand-txt, .sw-open-wide, .sw-hide-narrow, .sw-hint-pc { display: none !important; }
-  .sw-head .sw-open-narrow { display: inline-flex; }
+  .sw-head .sw-open-narrow, .sw-head .sw-kakao-narrow { display: inline-flex; }
+  .sw-head #sw-files-btn { display: none; }
   .sw-head { gap: 6px; padding-left: 8px; padding-right: 8px; }
   .sw-tools { padding: 5px 8px; }
   .sw-pane, .side-hidden .sw-pane { grid-template-columns: minmax(0, 1fr); }
@@ -642,7 +649,8 @@ body.theme-light #m2 .dim-val {
       <button class="btn" data-open="kakao" title="카카오톡으로 받은 파일 폴더">카카오톡</button>
       <button class="btn" data-open="other" title="다른 위치에서 파일 고르기">다른 위치</button>
     </div>
-    <button id="sw-open-narrow" class="btn btn-primary sw-open-narrow">열기</button>
+    <button class="btn btn-primary sw-kakao-narrow" data-open="kakao" title="카카오톡으로 받은 최신 파일 열기">카카오톡</button>
+    <button id="sw-open-narrow" class="btn sw-open-narrow">열기</button>
     <button id="sw-files-btn" class="btn" title="열어 둔 파일 · 폴더 파일 목록">목록 <span id="sw-files-count" class="sw-count"></span></button>
     <button id="sw-panel-btn" class="btn" title="오른쪽 패널 보이기 / 숨기기">패널</button>
   </header>
@@ -687,6 +695,7 @@ body.theme-light #m2 .dim-val {
           <button class="sw-bigbtn" data-open="kakao"><b>카카오톡</b><small id="sw-kakao-hint">받은 파일 폴더</small></button>
           <button class="sw-bigbtn" data-open="other"><b>다른 위치</b><small>직접 고르기</small></button>
         </div>
+        <div id="sw-install" class="sw-install" hidden></div>
         <p class="sw-home-tip sw-hide-narrow">PC: 파일을 이 화면에 끌어다 놓아도 됩니다. 여러 개를 한꺼번에 열 수 있습니다.</p>
         <div id="sw-home-list" class="sw-home-list"></div>
         <div class="sw-support">
@@ -8468,7 +8477,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
         const dir = await window.showDirectoryPicker(opts);
         await kvSet('kakaoDir', dir);
         SW.folderName = dir.name;
-        await showFolder(dir);
+        await showFolder(dir, IS_MOBILE);
         return;
       } catch (err) {
         if (err && err.name === 'AbortError') return;
@@ -8479,7 +8488,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     SW.dirPickerFailed = true;
     renderFilesBody();
   }
-  async function showFolder(dir) {
+  async function showFolder(dir, autoOpen) {
     SW.folderItems = null;
     openFiles();
     renderFilesBody('폴더를 읽는 중...');
@@ -8491,6 +8500,12 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     }
     renderFilesBody();
     renderHomeList();
+    if (autoOpen && SW.folderItems && SW.folderItems.length) {
+      // 휴대폰: 방금 받은(가장 최근) 파일을 바로 엶. 다른 파일은 ◀ ▶ 또는 [열기] 목록에서
+      const n = SW.folderItems.length;
+      await openItems(SW.folderItems.slice(), 0);
+      if (n > 1) toast('카카오톡 폴더의 가장 최근 파일을 열었습니다. 아래 ◀ ▶ 로 다른 파일(' + n + '개)을 넘겨 봅니다.', 4500);
+    }
   }
   async function openKakao() {
     if (!HAS_DIR_PICKER) { openFiles(); renderFilesBody(); return; }   // 폴더 지정이 안 되는 브라우저: 안내 + 일반 선택창 버튼
@@ -8501,7 +8516,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       if (perm !== 'granted') perm = await dir.requestPermission({ mode: 'read' });
       if (perm !== 'granted') { toast('폴더 읽기를 허용해야 목록을 볼 수 있습니다.'); return; }
       SW.folderName = dir.name;
-      await showFolder(dir);
+      await showFolder(dir, IS_MOBILE);
     } catch (_err) {
       await kvSet('kakaoDir', undefined);
       openFiles(); renderFilesBody();
@@ -8869,6 +8884,75 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   window.addEventListener('resize', relayout);
   window.addEventListener('orientationchange', () => setTimeout(relayout, 250));
 
+  // ==================== 휴대폰: 카카오톡 먼저 · 앱 설치 · '공유'로 받기 ====================
+  if (IS_MOBILE) {
+    document.querySelectorAll('.sw-open-big').forEach((box) => {
+      const k = box.querySelector('[data-open="kakao"]'), d = box.querySelector('[data-open="downloads"]');
+      if (!k || !d) return;
+      box.insertBefore(k, d);
+      k.classList.add('sw-bigbtn-primary'); d.classList.remove('sw-bigbtn-primary');
+    });
+  }
+  const IS_WEB = /^https:$/.test(location.protocol) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const STANDALONE = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  let installEvt = null;
+  function renderInstall() {
+    const el = $('sw-install');
+    if (!el || !IS_MOBILE || !IS_WEB || window.top !== window) { if (el) el.hidden = true; return; }
+    let h = '';
+    if (STANDALONE) {
+      h = '<b class="t">카카오톡에서 바로 열기</b>카카오톡 대화의 파일을 길게 눌러 <b>공유</b>(다른 앱으로 열기) › <b>CAD 뷰어</b>를 고르면 이 앱에서 바로 열립니다.';
+    } else if (IS_IOS) {
+      h = '<b class="t">아이폰</b>아이폰은 다른 앱의 파일을 바로 넘겨받지 못합니다. [다른 위치]로 파일 앱에서 골라 주세요.';
+    } else {
+      h = '<b class="t">카카오톡에서 한 번에 열기 (앱으로 설치)</b>' +
+        '설치해 두면 카카오톡 대화의 파일을 길게 눌러 <b>공유</b> › <b>CAD 뷰어</b>로 바로 열 수 있습니다. 폴더를 찾아 들어갈 필요가 없습니다.<br />' +
+        (installEvt ? '<button class="btn btn-primary" data-act="install">앱으로 설치</button>'
+          : (IN_KAKAO || IS_SAMSUNG ? '먼저 크롬에서 이 화면을 열어 주세요. ' + (CHROME_LINK ? '<br /><a class="btn btn-primary" href="' + CHROME_LINK + '">크롬으로 열기</a>' : '')
+            : '크롬 오른쪽 위 <b>⋮</b> › <b>홈 화면에 추가</b>(앱 설치)를 눌러 주세요.'));
+    }
+    el.innerHTML = h; el.hidden = false;
+  }
+  window.addEventListener('beforeinstallprompt', (ev) => { ev.preventDefault(); installEvt = ev; renderInstall(); });
+  window.addEventListener('appinstalled', () => { installEvt = null; toast('설치했습니다. 이제 카카오톡에서 파일 › 공유 › CAD 뷰어 로 바로 열 수 있습니다.', 6000); renderInstall(); });
+  document.addEventListener('click', async (ev) => {
+    const b = ev.target.closest && ev.target.closest('[data-act="install"]');
+    if (!b || !installEvt) return;
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (_e) { /* 무시 */ }
+    installEvt = null; renderInstall();
+  });
+  if (IS_WEB && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw_viewer_sw.js').catch(() => { /* 받기 기능만 빠짐 */ });
+  }
+  /** 다른 앱이 '공유'로 보낸 파일(서비스 워커가 잠시 보관)을 엽니다 */
+  async function loadShared() {
+    const m = /[?&]shared=(\d+)/.exec(location.search);
+    if (!m || !window.caches) return false;
+    const items = [];
+    try {
+      const cache = await caches.open('sw-viewer-share');
+      for (const key of await cache.keys()) {
+        const res = await cache.match(key);
+        if (!res) continue;
+        const name = decodeURIComponent(res.headers.get('X-Name') || 'file');
+        const blob = await res.blob();
+        items.push(itemFromFile(new File([blob], name, { lastModified: Number(res.headers.get('X-Time')) || Date.now() })));
+        await cache.delete(key);
+      }
+    } catch (_e) { /* 무시 */ }
+    try { history.replaceState(null, '', location.pathname); } catch (_e) { /* 무시 */ }
+    if (items.length) { await openItems(items, 0); return true; }
+    toast('받은 파일이 없습니다. 카카오톡에서 파일을 다시 공유해 주세요.', 5000);
+    return false;
+  }
+  // PC에 앱으로 설치한 경우: 파일을 "연결 프로그램"으로 열면 바로 받음
+  if ('launchQueue' in window && window.launchQueue.setConsumer) {
+    window.launchQueue.setConsumer((params) => {
+      if (params && params.files && params.files.length) openItems(params.files.map((h) => itemFromHandle(h, null)), 0);
+    });
+  }
+
   // ==================== 시작 ====================
   (async function init() {
     if (HAS_DIR_PICKER) {
@@ -8883,7 +8967,9 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     }
     renderHomeList();
     renderFilesBody();
+    renderInstall();
     updateNav();
+    await loadShared();
   })();
 
   // 검사·연동용
