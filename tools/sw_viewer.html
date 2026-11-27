@@ -314,6 +314,9 @@ body.theme-light .sw-nav { background: rgba(255, 255, 255, .94); color: #0f172a;
   .sw-coords { display: none !important; }
   .sw-nav { bottom: 8px; gap: 6px; }
   .sw-nav-lbl { display: none; }
+  .sw-nav.both .sw-nav-lbl { display: inline; font-size: 12px; opacity: .9; }
+  .sw-nav.both .sw-nav-b { min-width: 36px; }
+  .sw-nav.both .sw-nav-pos { min-width: 34px; }
   .sw-nav-b { min-width: 40px; min-height: 40px; }
   .sw-nav-pos { min-width: 40px; font-size: 12.5px; }
   .sw-nav-grp + .sw-nav-grp.show { padding-left: 6px; }
@@ -1388,6 +1391,8 @@ body.theme-light #m2 .dim-val {
     [/이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다\. 일러스트에서 \[다른 이름으로 저장\] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요\./g, 'This AI file was saved without "Create PDF Compatible File", so its content cannot be read. In Illustrator, use Save As with "Create PDF Compatible File" turned on.'],
     [/이 AI 파일\(옛 포스트스크립트 형식\)에서 선을 찾지 못했습니다\. 일러스트에서 PDF 호환으로 다시 저장하거나 SVG로 내보내 주세요\./g, 'No lines were found in this legacy (PostScript) AI file. Save it again as PDF-compatible, or export it as SVG.'],
     [/AI 파일 형식을 알아보지 못했습니다\. \(PDF 호환 저장본 또는 SVG로 내보낸 파일을 열어 주세요\)/g, 'Unknown AI file format. (Open a PDF-compatible AI file or an exported SVG.)'],
+    [/쪽 (\d+)개 · 아래 쪽 ◀ ▶ 로 한 쪽씩 넘깁니다\./g, '$1 pages · use Page ◀ ▶ below to turn one page at a time.'], [/대지 (\d+)개 · 아래 대지 ◀ ▶ 로 한 장씩 넘깁니다\./g, '$1 artboards · use Artboard ◀ ▶ below to step through them.'],
+    [/ · 쪽 (\d+)개/g, ' · $1 pages'], [/ · 대지 (\d+)개/g, ' · $1 artboards'], [/^쪽$/g, 'Page'], [/^대지$/g, 'Artboard'],
     [/시트 (\d+)장을 찾았습니다\. 번호가 붙은 틀을 누르면 그 장이 크게 보입니다\./g, 'Found $1 sheets. Tap a numbered frame to zoom to that sheet.'],
     [/ — STAR Works CAD 뷰어/g, ' — STAR Works CAD Viewer'], [/폭 ([\d.,]+) × 높이 ([\d.,]+)/g, 'W $1 × H $2'], [/ · 레이어 /g, ' · layer '],
     [/선형 치수/g, 'Linear'], [/정렬 치수/g, 'Aligned'], [/반지름 치수/g, 'Radius'], [/지름 치수/g, 'Diameter'], [/각도 치수/g, 'Angular'], [/좌표 치수/g, 'Ordinate'],
@@ -6731,6 +6736,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     try { doc = await lib.getDocument({ data: new Uint8Array(buf.slice(0)), isEvalSupported: false, disableFontFace: true, stopAtErrors: false }).promise; }
     catch (e) { throw new Error(/password/i.test(String(e && e.name) + String(e && e.message)) ? '암호가 걸린 파일은 열 수 없습니다.' : (opt.kind === 'PDF' ? 'PDF 내용을 읽지 못했습니다. (' : 'AI 파일 안의 PDF 내용을 읽지 못했습니다. (') + (e && e.message ? e.message : e) + ')'); }
     const w = new Writer(); let images = 0, offX = 0, noPdf = false, shaded = 0;
+    const rects = [];                                              // 쪽(대지)마다 사각형(mm) — 화면에서 한 쪽씩 넘겨 봄
     let ocNames = null;
     try { const cfg = await doc.getOptionalContentConfig(); ocNames = (id) => { try { const g = cfg.getGroup(id); return g && g.name ? g.name : null; } catch (_e) { return null; } }; } catch (_e) { ocNames = () => null; }
     const boardLayer = w.layer(opt.boardLayer || '대지', 8);
@@ -6748,6 +6754,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       else if (rot === 180) { P = mul([-1, 0, 0, -1, offX + pw, ph], [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT, -v[1] * MM_PER_PT]); }
       else if (rot === 270) { P = mul([0, 1, -1, 0, offX + ph, 0], [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT, -v[1] * MM_PER_PT]); bw = ph; bh = pw; }
       w.poly([[offX, 0], [offX + bw, 0], [offX + bw, bh], [offX, bh]], true, boardLayer, { aci: 8 });
+      rects.push({ minX: offX, minY: 0, maxX: offX + bw, maxY: bh });
       const ops = await page.getOperatorList();
       let st = { ctm: I, stroke: [0, 0, 0], fill: [0, 0, 0] }; const stack = []; const mc = []; let layer = '0';
       let pb = null;
@@ -6801,7 +6808,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     const pages = doc.numPages; try { await doc.destroy(); } catch (_e) {}
     if (noPdf && opt.kind !== 'PDF' && w.n.seg <= maxPages * 4 + 8) throw new Error('이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다. 일러스트에서 [다른 이름으로 저장] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요.');
     const b = w.box;
-    return { buffer: w.build(), kind: opt.kind || 'AI', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: images, shaded: shaded, pages: pages, shownPages: maxPages,
+    return { buffer: w.build(), kind: opt.kind || 'AI', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: images, shaded: shaded, pages: pages, shownPages: maxPages, rects: rects,
       size: isFinite(b[0]) ? [b[2] - b[0], b[3] - b[1]] : [0, 0], empty: w.n.seg + w.n.arc + w.n.circle + w.n.text <= maxPages * 4 };
   }
 
@@ -10026,7 +10033,8 @@ earcut.flatten = function (data) {
       if (it.size === undefined) { it.size = file.size; it.mtime = file.lastModified; }
       const buf = await file.arrayBuffer();
       SW.cur = i;
-      SW.sheets = []; SW.sheetIdx = -1;
+      SW.sheets = []; SW.sheetIdx = -1; SW.pageKind = '';
+      let pageRects = null;
       if (EXT2D.indexOf(it.ext) >= 0) {
         setMode('2d');
         let dxfBuf = buf, kind = '2D 도면';
@@ -10055,7 +10063,8 @@ earcut.flatten = function (data) {
           if (vr.assumed) notes.push(vr.unitNote + '. 치수는 이 가정으로 잰 값입니다.');
           if (vr.images) notes.push('그림(사진) ' + vr.images + '개는 보이지 않습니다.');
           if (isPdf) notes.push('PDF는 종이에 그려진 크기로 잽니다. 축척 도면은 실제 치수와 다릅니다.');
-          if (vr.pages > 1) notes.push((isPdf ? '쪽 ' : '대지 ') + vr.pages + '개를 가로로 늘어놓았습니다.');
+          if (vr.rects && vr.rects.length > 1) { pageRects = vr.rects; SW.pageKind = isPdf ? '쪽' : '대지'; notes.unshift(SW.pageKind + ' ' + vr.rects.length + '개 · 아래 ' + SW.pageKind + ' ◀ ▶ 로 한 ' + (isPdf ? '쪽' : '장') + '씩 넘깁니다.'); }
+          else if (vr.pages > 1) notes.push((isPdf ? '쪽 ' : '대지 ') + vr.pages + '개를 가로로 늘어놓았습니다.');
           if (vr.shownPages && vr.pages > vr.shownPages) notes.push('앞의 ' + vr.shownPages + '쪽만 열었습니다.');
           if (vr.legacy) notes.push('옛 형식 AI는 선·곡선만 읽습니다.');
           if (vr.empty) notes.push(vr.images ? '선으로 된 내용이 없습니다. 스캔한(그림으로 된) 파일은 볼 수 없습니다.' : '선으로 된 내용을 찾지 못했습니다.');
@@ -10068,15 +10077,20 @@ earcut.flatten = function (data) {
         window.Cad2D.handleResize();
         const res = await window.Cad2D.load(dxfBuf, it.name);
         if (res) {
-          SW.sheets = res.sheets || [];
+          if (pageRects) {   // 쪽 사각형(파일 좌표 mm) → 화면 좌표(도면 중심을 원점으로 옮긴 좌표)
+            const g = window.Cad2D.layerManager.globalOrigin || { x: 0, y: 0 };
+            pageRects = pageRects.map((r) => ({ minX: r.minX - g.x, minY: r.minY - g.y, maxX: r.maxX - g.x, maxY: r.maxY - g.y }));
+          }
+          SW.sheets = pageRects || res.sheets || [];
           const parts = [kind, '선분 ' + res.segments.toLocaleString()];
-          if (SW.sheets.length > 1) parts.push('시트 ' + SW.sheets.length + '장');
+          if (pageRects) parts.push(SW.pageKind + ' ' + pageRects.length + '개'); else if (SW.sheets.length > 1) parts.push('시트 ' + SW.sheets.length + '장');
           if (res.merged) parts.push('겹친 선 ' + res.merged.toLocaleString() + '개 정리');
           setTitle(it.name, parts.join(' · '));
           const hm = $('hud-merged');
           hm.style.display = res.merged ? '' : 'none';
           hm.textContent = '겹친 선 정리: ' + res.merged.toLocaleString();
           if (!res.segments) toast('도면에서 선을 찾지 못했습니다. 파일이 비었거나 지원하지 않는 개체만 들어 있습니다.', 6000);
+          else if (pageRects) { setTimeout(() => { if (SW.cur === i && SW.sheets === pageRects) gotoSheet(0); }, 60); }
           else if (SW.sheets.length > 1) toast('시트 ' + SW.sheets.length + '장을 찾았습니다. 번호가 붙은 틀을 누르면 그 장이 크게 보입니다.', 4200);
         } else {
           setTitle(it.name, '읽지 못했습니다');
@@ -10562,6 +10576,8 @@ earcut.flatten = function (data) {
     app.classList.toggle('has-nav', multiFile || multiSheet);
     $('sw-nav-file').classList.toggle('show', multiFile);
     $('sw-nav-sheet').classList.toggle('show', multiSheet);
+    $('sw-nav').classList.toggle('both', multiFile && multiSheet);
+    const sl = $('sw-nav-sheet').querySelector('.sw-nav-lbl'); if (sl) sl.textContent = (SW.mode === '2d' && SW.pageKind) || '시트';
     $('sw-file-pos').textContent = (SW.cur + 1) + '/' + SW.files.length;
     $('sw-sheet-pos').textContent = SW.sheetIdx < 0 ? ('전체 ' + SW.sheets.length) : ((SW.sheetIdx + 1) + '/' + SW.sheets.length);
     $('sw-files-count').textContent = SW.files.length > 1 ? String(SW.files.length) : '';
