@@ -8138,6 +8138,12 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
   const HAS_FILE_PICKER = typeof window.showOpenFilePicker === 'function';
   const HAS_DIR_PICKER = typeof window.showDirectoryPicker === 'function';
+  const UA = navigator.userAgent;
+  const IS_ANDROID = /Android/i.test(UA), IS_IOS = /iPhone|iPad|iPod/i.test(UA);
+  const IN_KAKAO = /KAKAOTALK/i.test(UA), IS_SAMSUNG = /SamsungBrowser/i.test(UA);
+  // 안드로이드의 다른 브라우저·앱 안 화면에서 이 페이지를 크롬으로 다시 여는 주소
+  const CHROME_LINK = (IS_ANDROID && /^https:$/.test(location.protocol))
+    ? 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;end' : '';
 
   const SW = window.SW = {
     mode: 'home',        // 'home' | '2d' | '3d'
@@ -8411,21 +8417,25 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
 
   async function pickFiles(startIn, id) {
     if (!HAS_FILE_PICKER) { pickWithInput(); return; }
-    const opts = { id: id, multiple: true };
-    if (startIn) opts.startIn = startIn;
+    const base = { id: id, multiple: true };
     if (!IS_MOBILE) {
       // PC: 선택창에 CAD 파일만 보이게 (휴대폰은 파일 종류를 못 알아봐 가려질 수 있어 걸지 않음)
-      opts.types = [{ description: 'CAD 파일 (DWG · DXF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
+      base.types = [{ description: 'CAD 파일 (DWG · DXF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
     }
-    try {
-      const handles = await window.showOpenFilePicker(opts);
-      const items = [];
-      for (const h of handles) items.push(itemFromHandle(h, null));
-      if (items.length) openItems(items, 0);
-    } catch (err) {
-      if (err && err.name === 'AbortError') return;      // 사용자가 닫음
-      pickWithInput();                                    // 막힌 환경이면 일반 선택창
+    // 시작 위치(다운로드 · 기억해 둔 폴더)를 못 받는 기기가 있어, 실패하면 위치 지정 없이 한 번 더
+    const tries = startIn ? [Object.assign({ startIn: startIn }, base), base] : [base];
+    for (const opts of tries) {
+      try {
+        const handles = await window.showOpenFilePicker(opts);
+        const items = [];
+        for (const h of handles) items.push(itemFromHandle(h, null));
+        if (items.length) openItems(items, 0);
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;      // 사용자가 닫음
+      }
     }
+    pickWithInput();                                        // 막힌 환경이면 일반 선택창
   }
 
   /** 기억해 둔 카카오톡 폴더 → 파일 목록(최신순) */
@@ -8450,15 +8460,24 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   }
 
   async function chooseKakaoFolder() {
-    try {
-      const dir = await window.showDirectoryPicker({ id: 'swkakao', mode: 'read', startIn: 'downloads' });
-      await kvSet('kakaoDir', dir);
-      SW.folderName = dir.name;
-      await showFolder(dir);
-    } catch (err) {
-      if (err && err.name === 'AbortError') return;
-      toast('이 폴더는 브라우저가 열어 주지 않습니다. 다운로드 폴더 "안의" KakaoTalk 폴더처럼 한 단계 안쪽 폴더를 골라 주세요.', 6000);
+    // 휴대폰은 시작 위치 지정을 못 받는 경우가 있어, 실패하면 조건을 줄여 다시 시도
+    const tries = [{ id: 'swkakao', mode: 'read', startIn: 'downloads' }, { id: 'swkakao', mode: 'read' }, {}];
+    let lastErr = null;
+    for (const opts of tries) {
+      try {
+        const dir = await window.showDirectoryPicker(opts);
+        await kvSet('kakaoDir', dir);
+        SW.folderName = dir.name;
+        await showFolder(dir);
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+        lastErr = err;
+      }
     }
+    toast('폴더 선택창을 열지 못했습니다' + (lastErr && lastErr.message ? ' (' + lastErr.message + ')' : '') + '. 아래 "파일 선택창 열기"를 써 주세요.', 7000);
+    SW.dirPickerFailed = true;
+    renderFilesBody();
   }
   async function showFolder(dir) {
     SW.folderItems = null;
@@ -8474,11 +8493,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     renderHomeList();
   }
   async function openKakao() {
-    if (!HAS_DIR_PICKER) {
-      toast('이 브라우저는 폴더를 기억하지 못합니다. 일반 선택창을 엽니다. (크롬·엣지에서는 폴더를 한 번만 지정하면 됩니다)', 5000);
-      pickFiles('downloads', 'swkakao');
-      return;
-    }
+    if (!HAS_DIR_PICKER) { openFiles(); renderFilesBody(); return; }   // 폴더 지정이 안 되는 브라우저: 안내 + 일반 선택창 버튼
     const dir = await kvGet('kakaoDir');
     if (!dir) { openFiles(); renderFilesBody(); return; }      // 처음: 안내 + [폴더 고르기]
     try {
@@ -8520,20 +8535,35 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   }
   function folderSection(limit) {
     let h = '';
-    if (!HAS_DIR_PICKER) return h;
+    if (!HAS_DIR_PICKER || SW.dirPickerFailed) {
+      // 폴더를 지정·기억할 수 없는 브라우저 (삼성 인터넷, 카카오톡 안 화면, 아이폰 등)
+      const who = IN_KAKAO ? '카카오톡 안에서 연 화면' : IS_SAMSUNG ? '삼성 인터넷' : IS_IOS ? '아이폰·아이패드' : '이 브라우저';
+      h += '<div class="sw-list-title"><span>카카오톡 폴더</span></div><div class="sw-empty">' +
+        '<b>' + who + '</b>에서는 폴더를 지정해 둘 수 없습니다.<br />' +
+        (IS_IOS ? '파일 선택창에서 직접 골라 주세요.' :
+          (IS_ANDROID ? '<b>크롬</b>으로 열면 카카오톡 폴더를 한 번만 지정하고, 다음부터 최신 파일 목록이 바로 나옵니다.' : '크롬·엣지에서는 폴더를 한 번만 지정하면 됩니다.')) +
+        '<div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px;">' +
+        (CHROME_LINK && !SW.dirPickerFailed ? '<a class="btn btn-primary" href="' + CHROME_LINK + '">크롬으로 열기</a>' : '') +
+        '<button class="btn" data-open="other">파일 선택창 열기</button></div>' +
+        (IS_ANDROID ? '<div style="margin-top:8px;">선택창에서: ☰ › 내장 저장공간 › Download › KakaoTalk</div>' : '') + '</div>';
+      return h;
+    }
     if (SW.folderItems) {
       h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + ' · 최신순 ' + SW.folderItems.length + '개</small></span>' +
         '<button class="sw-link" data-act="rechoose">폴더 바꾸기</button></div>';
-      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.</div>';
+      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.<br />(DWG · DXF · STEP · IGES · STL 만 보입니다)</div>';
       else h += '<div class="sw-list">' + SW.folderItems.slice(0, limit || 80).map((it, i) => fileRow(it, i, 'folder', false)).join('') + '</div>';
     } else if (SW.folderName) {
-      h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + '</small></span></div>' +
-        '<button class="btn" data-open="kakao" style="width:100%;">폴더의 최신 파일 보기</button>';
+      h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + '</small></span>' +
+        '<button class="sw-link" data-act="rechoose">폴더 바꾸기</button></div>' +
+        '<button class="btn btn-primary" data-open="kakao" style="width:100%;">폴더의 최신 파일 보기</button>';
     } else {
       h += '<div class="sw-list-title"><span>카카오톡 폴더</span></div>' +
-        '<div class="sw-empty">처음 한 번만 카카오톡으로 받은 파일 폴더를 골라 주세요.<br />' +
-        '휴대폰: 내장 저장공간 › Download › KakaoTalk<br />PC: 문서 › 카카오톡 받은 파일<br />' +
-        '<button class="btn btn-primary" data-act="choose" style="margin-top:8px;">폴더 고르기</button></div>';
+        '<div class="sw-empty" style="text-align:left;">브라우저는 폴더를 스스로 찾아 들어갈 수 없어, <b>처음 한 번만</b> 직접 골라 주셔야 합니다. 다음부터는 최신 파일 목록이 바로 나옵니다.<br />' +
+        (IS_MOBILE
+          ? '① 아래 [폴더 고르기]<br />② 왼쪽 위 ☰ › 휴대폰 이름(내장 저장공간)<br />③ Download › KakaoTalk 폴더로 들어감<br />④ 아래 [이 폴더 사용] › [허용]<br /><small>Download 폴더 자체는 휴대폰이 막아 둡니다. 그 안의 KakaoTalk 폴더는 됩니다.</small>'
+          : 'PC: 문서 › 카카오톡 받은 파일 (휴대폰: Download › KakaoTalk)') +
+        '<div style="text-align:center; margin-top:10px;"><button class="btn btn-primary" data-act="choose">폴더 고르기</button></div></div>';
     }
     return h;
   }
