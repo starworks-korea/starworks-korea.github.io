@@ -177,7 +177,8 @@ HANGUL = re.compile(r"[가-힣]")
 def chrome(s, lang, file):
     s = re.sub(r'<html lang="[^"]*">', f'<html lang="{lang}">', s, count=1)
     s = re.sub(r'\n?<link rel="alternate" hreflang[^>]*>', "", s)
-    s = re.sub(r'(<link rel="icon"[^>]*>)', lambda m: m.group(1) + "\n" + i18n.hreflang(file), s, count=1)
+    s = i18n.set_icons(s, lang)   # 아이콘·매니페스트 줄 (공통)
+    s = re.sub(r'(<meta name="theme-color"[^>]*>)', lambda m: m.group(1) + "\n" + i18n.hreflang(file), s, count=1)
     s = re.sub(r'<meta property="og:url" content="[^"]*">', f'<meta property="og:url" content="{i18n.page_url(lang, file)}">', s, count=1)
     s = re.sub(r'(<nav aria-label=")[^"]*("[^>]*>).*?(</nav>)',
                lambda m: m.group(1) + i18n.t(lang, "주 메뉴", "Main menu") + m.group(2) + "\n" + i18n.nav(lang, file) + "\n" + m.group(3),

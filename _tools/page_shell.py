@@ -25,7 +25,7 @@ def head(L, file, title, desc, css, robots="noindex, nofollow", early_js=""):
 <meta property="og:url" content="{i18n.page_url(L, file)}">
 <meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="{A}images/logo.svg" type="image/svg+xml">
+{i18n.icon_links(L)}
 {i18n.hreflang(file)}
 {FONT}
 {early_js}<style>

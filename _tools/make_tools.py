@@ -199,6 +199,7 @@ def fix_coupon(L):
     s = re.sub(r'(<nav aria-label=")[^"]*("[^>]*>).*?(</nav>)',
                lambda m: m.group(1) + t(L, "주 메뉴", "Main menu") + m.group(2) + "\n" + i18n.nav(L, FILE, "coupon-tool.html") + "\n" + m.group(3),
                s, count=1, flags=re.S)
+    s = i18n.set_icons(s, L)   # 아이콘·매니페스트 줄 (공통)
     if 'classList.add("embed")' not in s:
         s = s.replace("</head>", EMBED + "</head>", 1)
     open(p, "w", encoding="utf-8").write(s)

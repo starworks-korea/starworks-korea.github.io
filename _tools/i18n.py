@@ -1,3 +1,4 @@
+import re
 # 홈페이지 두 언어 공통 — 영어(루트, 기본) / 한국어(ko/)
 # 2026-11-15 대표 지시: 홈페이지도 영어 기본
 SITE = "https://starworks-korea.github.io/"
@@ -18,6 +19,30 @@ def t(lang, ko, en):
 def asset(lang):
     """이미지 등 루트 자원 앞에 붙일 경로"""
     return "" if lang == "en" else "../"
+
+THEME = "#1E3252"
+
+def icon_links(lang):
+    """아이콘·매니페스트·테마 색 — 바탕화면 바로가기·탭·휴대폰 홈 화면에 스타웍스 로고 (그림은 make_icons.py)"""
+    A = asset(lang)
+    return "\n".join([
+        f'<link rel="icon" href="{A}favicon.ico" sizes="48x48">',
+        f'<link rel="icon" href="{A}images/icons/icon.svg" type="image/svg+xml">',
+        f'<link rel="apple-touch-icon" href="{A}images/icons/apple-touch-icon.png">',
+        '<link rel="manifest" href="manifest.webmanifest">',   # 영어 = /manifest.webmanifest, 한국어 = /ko/manifest.webmanifest
+        f'<meta name="theme-color" content="{THEME}">',
+    ])
+
+ICON_TAGS = re.compile(r'\n?<(?:link rel="(?:icon|shortcut icon|apple-touch-icon|manifest)"|meta name="theme-color")[^>]*>')
+
+def set_icons(s, lang):
+    """손으로 고치는 페이지의 아이콘 줄을 공통 줄로 바꿈 (몇 번 돌려도 같은 결과)"""
+    m = ICON_TAGS.search(s)
+    if not m:
+        return s.replace("</head>", icon_links(lang) + "\n</head>", 1)
+    at = m.start()
+    s = ICON_TAGS.sub("", s)
+    return s[:at] + "\n" + icon_links(lang) + s[at:]
 
 def page_url(lang, file):
     f = "" if file == "index.html" else file
