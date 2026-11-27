@@ -9829,12 +9829,12 @@ earcut.flatten = function (data) {
     if (!el || !IS_MOBILE || !IS_WEB || window.top !== window) { if (el) el.hidden = true; return; }
     let h = '';
     if (STANDALONE) {
-      h = '<b class="t">카카오톡에서 바로 열기</b>카카오톡 대화의 파일을 길게 눌러 <b>공유</b>(다른 앱으로 열기) › <b>CAD 뷰어</b>를 고르면 이 앱에서 바로 열립니다.';
+      h = '<b class="t">카카오톡에서 바로 열기</b>카카오톡 대화의 파일을 길게 눌러 <b>공유</b>(다른 앱으로 열기) › <b>스타웍스 CAD</b>를 고르면 이 앱에서 바로 열립니다.';
     } else if (IS_IOS) {
       h = '<b class="t">아이폰</b>아이폰은 다른 앱의 파일을 바로 넘겨받지 못합니다. [다른 위치]로 파일 앱에서 골라 주세요.';
     } else {
       h = '<b class="t">카카오톡에서 한 번에 열기 (앱으로 설치)</b>' +
-        '설치해 두면 카카오톡 대화의 파일을 길게 눌러 <b>공유</b> › <b>CAD 뷰어</b>로 바로 열 수 있습니다. 폴더를 찾아 들어갈 필요가 없습니다.<br />' +
+        '설치해 두면 카카오톡 대화의 파일을 길게 눌러 <b>공유</b> › <b>스타웍스 CAD</b>로 바로 열 수 있습니다. 폴더를 찾아 들어갈 필요가 없습니다.<br />' +
         (installEvt ? '<button class="btn btn-primary" data-act="install">앱으로 설치</button>'
           : (IN_KAKAO || IS_SAMSUNG ? '먼저 크롬에서 이 화면을 열어 주세요. ' + (CHROME_LINK ? '<br /><a class="btn btn-primary" href="' + CHROME_LINK + '">크롬으로 열기</a>' : '')
             : '크롬 오른쪽 위 <b>⋮</b> › <b>홈 화면에 추가</b>(앱 설치)를 눌러 주세요.'));
@@ -9842,7 +9842,7 @@ earcut.flatten = function (data) {
     el.innerHTML = h; el.hidden = false;
   }
   window.addEventListener('beforeinstallprompt', (ev) => { ev.preventDefault(); installEvt = ev; renderInstall(); });
-  window.addEventListener('appinstalled', () => { installEvt = null; toast('설치했습니다. 이제 카카오톡에서 파일 › 공유 › CAD 뷰어 로 바로 열 수 있습니다.', 6000); renderInstall(); });
+  window.addEventListener('appinstalled', () => { installEvt = null; toast('설치했습니다. 이제 카카오톡에서 파일 › 공유 › 스타웍스 CAD 로 바로 열 수 있습니다.', 6000); renderInstall(); });
   document.addEventListener('click', async (ev) => {
     const b = ev.target.closest && ev.target.closest('[data-act="install"]');
     if (!b || !installEvt) return;
