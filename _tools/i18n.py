@@ -2,14 +2,12 @@
 # 2026-11-15 대표 지시: 홈페이지도 영어 기본
 SITE = "https://starworks-korea.github.io/"
 
+# 2026-11-27 대표 지시: 영상 4개 → 「플레이리스트」 1개(강의·기술·이야기·홍보 탭), 툴 → 「툴」 1개(CAD·CAM)
 NAV = [
     ("index.html", "회사소개", "About"),
     ("projects.html", "프로젝트", "Projects"),
-    ("lectures.html", "강의 영상", "Lectures"),
-    ("tech.html", "기술 영상", "Tech"),
-    ("promo.html", "홍보 영상", "Promo"),
-    ("stories.html", "이야기", "Stories"),
-    ("coupon-tool.html", "통합 툴", "Tool"),
+    ("playlist.html", "플레이리스트", "Playlist"),
+    ("tools.html", "툴", "Tools"),
     ("contact.html", "연락처", "Contact"),
 ]
 CTA = {"ko": "제작 문의", "en": "Request a Quote"}
@@ -40,7 +38,8 @@ def switch_link(lang, file):
             f'style="margin-left: 4px; padding: 8px 12px; font-size: 13px; font-weight: 700; color: #FFFFFF; '
             f'border: 1px solid rgba(255,255,255,0.45); border-radius: 999px">🌐 {label}</a>')
 
-def nav(lang, active):
+def nav(lang, active, file=None):
+    """active: 메뉴에서 굵게 보일 항목, file: 이 페이지 파일(언어 버튼용 — 없으면 active)"""
     s = []
     for href, ko, en in NAV:
         label = t(lang, ko, en)
@@ -49,7 +48,7 @@ def nav(lang, active):
         else:
             s.append(f'<a href="{href}" style="padding: 12px 14px; font-size: 15px; color: #C9D3E0">{label}</a>')
     s.append(f'<a href="contact.html" style="margin-left: 8px; padding: 12px 18px; font-size: 14px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">{CTA[lang]}</a>')
-    s.append(switch_link(lang, active))
+    s.append(switch_link(lang, file or active))
     return "\n".join(s)
 
 def footer_lines(lang):

@@ -1,5 +1,6 @@
-# 기술 영상(tech.html) · 홍보 영상(promo.html) · 이야기(stories.html) 페이지 만들기
-# 사용: python3 _tools/make_videos.py   (videos.json → 세 페이지 × 영어(루트, 기본)·한국어(ko/) 다시 생성)
+# 플레이리스트 「기술」·「이야기」·「홍보」 탭 — videos.json → 탭 내용 (2026-11-27 대표 지시: 영상 4페이지 → 플레이리스트 1페이지)
+# 사용: python3 _tools/make_videos.py   (= make_playlist.py — playlist.html 영어·한국어 다시 생성)
+#   옛 tech.html · promo.html · stories.html 은 playlist.html#tech 등으로 가는 이동 페이지
 import html, json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
@@ -50,6 +51,7 @@ def card(name, color, v, L):
 </a>'''
 
 def features(P, L):
+    PFX = P["key"] + "-"
     """이야기 페이지 위쪽 특집: 영상 + 옆에 '게임 해 보기' (2026-11-22 대표 지시)"""
     A = i18n.asset(L); out = []
     for f in P.get("features", []):
@@ -65,7 +67,7 @@ def features(P, L):
                      f'<span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: rgba(0,0,0,0.78); border-radius: 4px">{t(L, "영상 준비 중", "Video coming soon")}</span>')
             yt = ""
         game = f'{A}{f["game"]}?lang={L}'
-        out.append(f"""<article id="{f["key"]}" class="feat" style="scroll-margin-top: 16px; background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr)">
+        out.append(f"""<article id="{PFX}{f["key"]}" class="feat plsec" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr)">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">{media}</div>
 <div style="padding: 24px 26px; display: flex; flex-direction: column; gap: 12px; justify-content: center">
 <span style="align-self: flex-start; padding: 3px 10px; {F}; font-size: 13px; font-weight: 700; color: #FFFFFF; background: #2f855a; border-radius: 999px">{t(L, "아들이 만든 게임", "A game my son made")}</span>
@@ -104,6 +106,7 @@ html{scroll-behavior:smooth}
 ''' + latest_ui.CSS
 
 def build(P, L):
+    PFX = P["key"] + "-"   # 한 페이지에 4탭이 모이므로 id 앞에 탭 이름
     FIELDS = [(f["key"], tr(f, "name", L), f["color"], tr(f, "desc", L)) for f in P["fields"]]
     V = {k: [] for k, *_ in FIELDS}
     for v in sorted((x for x in P["videos"] if not x.get("hide")), key=lambda x: x["date"], reverse=True):
@@ -113,13 +116,13 @@ def build(P, L):
     A = i18n.asset(L)
     cnt = lambda n: t(L, f"{n}편", f"{n} video" + ("" if n == 1 else "s"))
     chips = "\n".join(
-     f'<a href="#{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{e(n)} <span style="font-weight: 500; color: #5A6478">{len(V[k])}</span></a>'
+     f'<a href="#{PFX}{k}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; {F}; font-size: 15px; font-weight: 700; border-radius: 999px; background: #FFFFFF; color: #1E3252; border: 1px solid #C9D3E0"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {c}; display: inline-block"></span>{e(n)} <span style="font-weight: 500; color: #5A6478">{len(V[k])}</span></a>'
      for k,n,c,_ in FIELDS if V[k])
     sections=[]
     for k,n,c,desc in FIELDS:
         if not V[k]: continue
         cards="\n".join(card(n,c,v,L) for v in V[k])
-        sections.append(f"""<section id="{k}" style="scroll-margin-top: 16px; margin-bottom: 48px">
+        sections.append(f"""<section id="{PFX}{k}" class="plsec" style="margin-bottom: 48px">
 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-left: 14px; border-left: 6px solid {c}">
 <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #1E3252">{e(n)}</h2>
 <span style="font-size: 14px; font-weight: 700; color: #0070C0">{cnt(len(V[k]))}</span>
@@ -136,55 +139,7 @@ def build(P, L):
     feat_ids = {x for f in P.get("features", []) for x in (f.get("video_id"), f.get("video_id_ko")) if x}
     latest_html = latest_ui.block(L, lv, *NAME[lv["field"]]) if lv and lv["id"] not in feat_ids else ""
     ptitle = tr(P, "title", L); sub = tr(P, "sub", L)
-    title = t(L, f"스타웍스 {ptitle}", f"STAR Works — {ptitle}")
-    desc = t(L, f"{sub} — 영상 {total}편 바로 가기", f"{sub} — {cnt(total)}")
-    foot = "\n".join(f'<p style="margin: 0">{x}</p>' for x in i18n.footer_lines(L))
-    return f"""<!doctype html>
-<html lang="{L}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{e(title)}</title>
-<meta name="description" content="{e(desc)}">
-<meta name="robots" content="noindex, nofollow">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{t(L, "스타웍스 STARWORKS", "STAR Works STARWORKS")}">
-<meta property="og:title" content="{e(title)}">
-<meta property="og:description" content="{e(desc)}">
-<meta property="og:url" content="{i18n.page_url(L, P["file"])}">
-<meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="{A}images/logo.svg" type="image/svg+xml">
-{i18n.hreflang(P["file"])}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap">
-<style>
-{CSS}
-</style>
-</head>
-<body>
-<div style="width: 100%; {F}; color: #1E3252; background: #F4F6F9">
-
-<header style="background: #1E3252; border-bottom: 1px solid rgba(255,255,255,0.15)">
-<div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
-<a href="index.html" style="display: flex; align-items: center; gap: 10px; color: #FFFFFF">
-<img src="{A}images/logo.svg" alt="STAR Works" style="height: 40px; width: auto; display: block">
-</a>
-<nav aria-label="{t(L, "주 메뉴", "Main menu")}" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
-{i18n.nav(L, P["file"])}
-</nav>
-</div>
-</header>
-
-<section style="background: #1E3252; color: #FFFFFF">
-<div style="max-width: 1200px; margin: 0 auto; padding: 64px 24px 56px; display: flex; flex-direction: column; gap: 14px">
-<p style="margin: 0; {F}; font-size: 14px; letter-spacing: 2px; color: #9CC3E8">{e(P["eyebrow"])}</p>
-<h1 style="margin: 0; font-size: 46px; font-weight: 900; letter-spacing: -1px">{e(ptitle)}</h1>
-<p style="margin: 0; font-size: 18px; color: #C9D3E0">{e(sub)} · {t(L, f"영상 {total}편", cnt(total))}</p>
-<p style="margin: 0; font-size: 14px; color: #9CC3E8">{t(L, "최근 갱신", "Last updated")} {D["updated"]} {t(L, "", "(KST)")}</p>
-</div>
-</section>
-
-{features(P, L)}{latest_html}
+    body = f"""{features(P, L)}{latest_html}
 <section style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 24px">
 <nav aria-label="{t(L, "분류 바로 가기", "Jump to a category")}" style="display: flex; flex-wrap: wrap; gap: 8px">
 {chips}
@@ -193,33 +148,12 @@ def build(P, L):
 
 <section style="max-width: 1200px; margin: 0 auto; padding: 16px 24px 32px">
 {chr(10).join(sections)}
-</section>
+</section>"""
+    return {"key": P["key"], "tab": tr(P, "nav", L).replace(" 영상", ""), "eyebrow": P["eyebrow"],
+            "title": ptitle, "intro": f'{sub} · {t(L, f"영상 {total}편", cnt(total))}', "count": total,
+            "body": body, "css": "", "extra": "", "updated": D["updated"]}
 
-<section style="background: #1E3252; color: #FFFFFF">
-<div style="max-width: 1200px; margin: 0 auto; padding: 56px 24px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between">
-<h2 style="margin: 0; font-size: 28px; font-weight: 900">{t(L, "제작·해석이 필요하신가요?", "Need manufacturing or analysis?")}</h2>
-<a href="contact.html" style="padding: 16px 28px; font-size: 16px; font-weight: 700; color: #FFFFFF; background: #0070C0; border-radius: 4px">{t(L, "문의하기", "Contact Us")}</a>
-</div>
-</section>
 
-<footer style="background: #16263F; color: #C9D3E0">
-<div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; font-size: 14px; line-height: 1.8">
-<div>
-<img src="{A}images/logo.svg" alt="STAR Works" style="height: 34px; width: auto; display: block; margin-bottom: 10px">
-{foot}
-</div>
-<p style="margin: 0; align-self: flex-end">© STARWORKS</p>
-</div>
-</footer>
-
-</div>
-</body>
-</html>
-""", total
-
-for P in D["pages"]:
-    for L, path in (("en", os.path.join(ROOT, P["file"])), ("ko", os.path.join(ROOT, "ko", P["file"]))):
-        out, n = build(P, L)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        open(path, "w", encoding="utf-8").write(out)
-        print(L, P["file"], n)
+if __name__ == "__main__":
+    import make_playlist
+    make_playlist.main()

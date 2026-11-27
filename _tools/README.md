@@ -1,12 +1,38 @@
+# 메뉴 구성 (2026-11-27 대표 지시)
+- 메뉴 5개: 회사소개 · 프로젝트 · 플레이리스트 · 툴 · 연락처 (`i18n.py` NAV)
+- 고친 뒤 순서: `make_playlist.py` → `make_tools.py` → `make_static.py`
+
+## 플레이리스트 `playlist.html` (영상 4페이지 → 1페이지)
+- 위 탭: 강의 · 기술 · 이야기 · 홍보 — 누르면 아래 창만 바뀜 (새로 읽지 않음)
+- 주소: `playlist.html#lectures` · `#tech` · `#stories` · `#promo`
+  - 분류 바로 가기 id는 탭 이름을 앞에 붙임: `#lectures-rubber`, `#tech-machining`, `#stories-baby-dino`
+- 생성: `python3 _tools/make_playlist.py` — `make_lectures.py`·`make_videos.py`로 실행해도 같은 결과
+  - 강의 탭 = lectures.json, 기술·이야기·홍보 탭 = videos.json (json 형식 그대로)
+  - 각 탭 맨 위 최신 영상 1편 규칙 그대로. 유튜브 창은 그 탭을 열 때만 불러옴(`data-src`)
+- 옛 주소 `lectures.html`·`tech.html`·`stories.html`·`promo.html`(영어·한국어)는 이동 페이지
+  - `lectures.html#rubber` → `playlist.html#lectures-rubber` (유튜브 설명란 옛 링크 보호) — 손으로 고치지 않음
+- 영상 갱신 검사: 새 id가 `playlist.html`·`ko/playlist.html`에 있는지 확인
+
+## 툴 `tools.html` (CAD · CAM)
+- CAD: DXF 뷰어(`tools/dxf_viewer.html`) · 3D CAD 뷰어(`tools/cad_viewer.html`)
+- CAM: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) · 조각기 CAM(`coupon-tool/cam.html`)
+- 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음
+- 주소: `tools.html#dxf` · `#cad3d` · `#coupon` · `#cam`, 해시가 없으면 이 브라우저에서 마지막으로 쓴 프로그램
+- 시편 설계는 툴 안에서 `coupon-tool.html?embed=1`로 열려 사이트 머리글을 숨김 (`make_tools.py`가 넣음)
+- 생성: `python3 _tools/make_tools.py` (프로그램 추가 = `PROGRAMS`에 한 줄)
+- 뷰어 원본(대표 PC): `D:\Dropbox\00-유투브제작\dxf_viewer\dxf_viewer.html`, `D:\Dropbox\00-유투브제작\cad_viewer.html`
+  - 원본이 바뀌면 `tools/`에 그대로 복사해 push (파일 내용은 고치지 않음)
+- 기획서: `_tools/홈페이지_플레이리스트·툴_재구성_v1.md`
+
 # 홈페이지 두 언어 (2026-11-15 대표 지시: 홈페이지도 영어 기본)
 - 루트 = 영어(기본), `ko/` = 한국어. 파일 이름은 같음 (예: `lectures.html` ↔ `ko/lectures.html`)
 - 모든 페이지 메뉴 끝에 언어 버튼(🌐 한국어 / 🌐 English), hreflang 서로 연결 — 공통 코드 `_tools/i18n.py`
-- 영상 페이지: `make_lectures.py`·`make_videos.py` 한 번 실행으로 영어·한국어 둘 다 생성
+- 플레이리스트: `make_playlist.py`(또는 `make_lectures.py`·`make_videos.py`) 한 번 실행으로 영어·한국어 둘 다 생성
   - 영어 글은 json의 `_en` 칸: 분야 `name_en`·`desc_en`, 영상 `title_en`, 페이지 `title_en`·`sub_en`·`nav_en`, 예제 `title_en`·`desc_en`
   - `title_en`이 비면 한국어 제목이 영어 페이지에 나옴 → 새 영상은 반드시 채움 (영어 기본으로 올린 영상은 유튜브 제목이 영어이므로 그대로, 한국어 `title`은 한국어 번역 제목)
 - 고정 페이지(회사소개·프로젝트·연락처): 원본은 `ko/index.html`·`ko/projects.html`·`ko/contact.html`(한국어, 손으로 고침)
   - 고친 뒤 `python3 _tools/make_static.py` → 메뉴 맞춤 + 번역표(`TX`)로 영어판 생성. 번역표에 없는 한글이 남으면 그 문장을 출력하고 멈춤 → 번역표에 추가
-- 사이트맵: 고정 페이지 영어·한국어 6개 (영상 페이지는 noindex)
+- 사이트맵: 고정 페이지 영어·한국어 6개 + 시편 설계 2개 + 툴 2개 (플레이리스트는 noindex)
 
 # 영상 페이지 맨 위 = 최신 영상 1편 (2026-11-24 대표 지시)
 - 대표 지시: 가장 최근에 올린 영상을 제일 위에 크게 보이게, 아래쪽은 지금까지 올린 영상 전부

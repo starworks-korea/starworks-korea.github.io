@@ -98,7 +98,7 @@
      폰: 화면 드래그 = 이동 · 오른쪽 아래 버튼 = 점프 · 그 위 = 필살기 · 왼쪽 = 꼬리 · 필살기 왼쪽 = 점프2<br>태블릿·PC를 추천해요 — 폰은 주변이 잘 안 보여요.</p>
   <button class="btn sub langBtn" type="button" style="min-width:0;padding:8px 16px;font-size:15px">🌐 English</button>
   <button class="btn" id="btnStart" data-en="Start">시작</button>
-  <a id="homeLink" class="small" href="../../ko/stories.html" style="margin-top:14px;color:#9be37f;text-decoration:underline" data-en="← STAR Works · Stories">← 스타웍스 홈페이지 · 이야기</a>
+  <a id="homeLink" class="small" href="../../ko/playlist.html#stories" style="margin-top:14px;color:#9be37f;text-decoration:underline" data-en="← STAR Works · Playlist · Stories">← 스타웍스 홈페이지 · 플레이리스트 · 이야기</a>
 </div></div>
 
 <div id="ovLevel" class="overlay"><div class="panel">
@@ -302,7 +302,7 @@ function setLang(lang){
     if (el.dataset.koAria === undefined) el.dataset.koAria = el.getAttribute('aria-label');
     el.setAttribute('aria-label', LANG === 'en' ? el.dataset.enAria : el.dataset.koAria);
   });
-  { const h = document.getElementById('homeLink'); if (h) h.href = LANG === 'en' ? '../../stories.html' : '../../ko/stories.html'; }
+  { const h = document.getElementById('homeLink'); if (h) h.href = LANG === 'en' ? '../../playlist.html#stories' : '../../ko/playlist.html#stories'; }
   document.querySelectorAll('.langBtn').forEach(b => b.textContent = LANG === 'en' ? '🌐 한국어' : '🌐 English');
   try { localStorage.setItem('babyDinoLang', LANG); } catch (e) {}
   try { if (G && G.state === 'pause') pauseInfo(); } catch (e) {}
