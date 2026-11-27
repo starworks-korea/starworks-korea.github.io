@@ -1,7 +1,7 @@
 {
   "name": "STAR Works CAD Viewer",
   "short_name": "STAR Works CAD",
-  "description": "View DWG · DXF · SVG · AI · STEP · IGES · STL drawings and models",
+  "description": "View DWG · DXF · SVG · AI · PDF · STEP · IGES · STL drawings and models",
   "lang": "en",
   "start_url": "/tools/sw_viewer.html?app=1&lang=en",
   "id": "/tools/sw_viewer.html?app=1&lang=en",
@@ -32,7 +32,7 @@
             "image/vnd.dxf", "image/x-dxf", "model/stl", "application/sla", "application/vnd.ms-pki.stl",
             "model/step", "application/step", "model/iges", "application/iges",
             "image/svg+xml", "application/postscript", "application/illustrator", "application/vnd.adobe.illustrator", "application/pdf",
-            ".dwg", ".dxf", ".svg", ".ai", ".stp", ".step", ".igs", ".iges", ".stl"
+            ".dwg", ".dxf", ".svg", ".ai", ".pdf", ".stp", ".step", ".igs", ".iges", ".stl"
           ]
         }
       ]
@@ -42,9 +42,10 @@
     {
       "action": "/tools/sw_viewer.html",
       "accept": {
-        "application/octet-stream": [".dwg", ".dxf", ".svg", ".ai", ".stp", ".step", ".igs", ".iges", ".stl"],
+        "application/octet-stream": [".dwg", ".dxf", ".svg", ".ai", ".pdf", ".stp", ".step", ".igs", ".iges", ".stl"],
         "image/svg+xml": [".svg"],
         "application/postscript": [".ai"],
+        "application/pdf": [".pdf"],
         "image/vnd.dwg": [".dwg"],
         "image/vnd.dxf": [".dxf"],
         "model/stl": [".stl"],

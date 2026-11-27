@@ -2,7 +2,7 @@
 <!-- ==========================================================================
      STAR Works CAD 뷰어 (2D · 3D 통합) — sw_viewer.html
      src/shell.html 기반 빌드 산출물 (node build.js). 직접 고치지 말고 src/ 를 고칩니다.
-     2D: DWG(R14 ~ 2018 형식) · DXF · SVG · AI (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
+     2D: DWG(R14 ~ 2018 형식) · DXF · SVG · AI · PDF (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
      3D: STEP · IGES · STL (어셈블리 트리, 분해도)
      ========================================================================== -->
 <html lang="ko">
@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/viewer-192.png" />
   <link rel="apple-touch-icon" href="icons/viewer-192.png" />
-  <title>STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · STEP · IGES · STL</title>
+  <title>STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · PDF · STEP · IGES · STL</title>
   <style>
 /* ============================================================================
  * shell.css — 통합 뷰어 틀 (머리줄 · 도구줄 · 본문 · 패널 · 서랍 · 상태줄)
@@ -671,7 +671,7 @@ body.theme-light #m2 .dim-val {
     </button>
     <div class="sw-title">
       <div id="sw-file-name" class="sw-file-name">열린 파일 없음</div>
-      <div id="sw-file-sub" class="sw-file-sub">DWG · DXF · SVG · AI · STEP · IGES · STL</div>
+      <div id="sw-file-sub" class="sw-file-sub">DWG · DXF · SVG · AI · PDF · STEP · IGES · STL</div>
     </div>
     <div class="sw-open-wide">
       <button class="btn btn-primary" data-open="downloads" title="다운로드 폴더에서 파일 고르기">다운로드</button>
@@ -719,7 +719,7 @@ body.theme-light #m2 .dim-val {
     <section id="home" class="sw-home">
       <div class="sw-home-card">
         <h1>도면 · 모델 파일 열기</h1>
-        <p class="sw-home-sub">2D 도면(DWG · DXF · SVG · AI)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
+        <p class="sw-home-sub">2D 도면(DWG · DXF · SVG · AI · PDF)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
         <div class="sw-open-big">
           <button class="sw-bigbtn sw-bigbtn-primary" data-open="downloads"><b>다운로드</b><small>다운로드 폴더</small></button>
           <button class="sw-bigbtn" data-open="kakao"><b>카카오톡</b><small id="sw-kakao-hint">받은 파일 폴더</small></button>
@@ -739,9 +739,10 @@ body.theme-light #m2 .dim-val {
             <tr><th>SVG</th><td>선·곡선·도형·글자를 선으로 읽음 — 크기 단위(mm 등)가 있으면 <b>1:1</b>, 없으면 px 가정을 알림</td></tr>
             <tr><th>AI</th><td>일러스트 <b>9 ~ CC</b> — "PDF 호환 파일 만들기"로 저장한 파일(기본 저장), 1 pt = 25.4/72 mm로 <b>1:1</b><br />
               그림(사진)·채움·그라데이션은 보이지 않고 윤곽선만 보입니다. 8 이하 옛 형식은 선·곡선만.</td></tr>
+            <tr><th>PDF</th><td>선으로 된 도면 PDF — <b>종이에 그려진 크기</b>로 잽니다(축척 도면은 실제 치수와 다름). 스캔한 PDF는 볼 수 없습니다.</td></tr>
             <tr><th>3D</th><td>STEP(.stp · .step) · IGES(.igs · .iges) · STL</td></tr>
           </table>
-          <p class="sw-credit">DWG 변환: LibreDWG (GNU GPL-3.0) · <a href="https://www.gnu.org/software/libredwg/" target="_blank" rel="noopener">소스</a> · 3D 면 분할: earcut (ISC, Mapbox) · AI 읽기: pdf.js (Apache-2.0, Mozilla)</p>
+          <p class="sw-credit">DWG 변환: LibreDWG (GNU GPL-3.0) · <a href="https://www.gnu.org/software/libredwg/" target="_blank" rel="noopener">소스</a> · 3D 면 분할: earcut (ISC, Mapbox) · AI · PDF 읽기: pdf.js (Apache-2.0, Mozilla)</p>
         </div>
       </div>
     </section>
@@ -1184,7 +1185,7 @@ body.theme-light #m2 .dim-val {
     <div id="sw-sheet-pop" class="sw-sheet-pop"></div>
 
     <!-- 끌어 놓기 안내 -->
-    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · STEP · IGES · STL)</div>
+    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)</div>
   </div>
 
   <!-- ==================== 상태줄 ==================== -->
@@ -1213,7 +1214,7 @@ body.theme-light #m2 .dim-val {
   </aside>
 
   <input id="sw-input" type="file" multiple hidden
-         accept=".dxf,.dwg,.svg,.ai,.stp,.step,.igs,.iges,.stl,.DXF,.DWG,.SVG,.AI,.STP,.STEP,.IGS,.IGES,.STL" />
+         accept=".dxf,.dwg,.svg,.ai,.pdf,.stp,.step,.igs,.iges,.stl,.DXF,.DWG,.SVG,.AI,.PDF,.STP,.STEP,.IGS,.IGES,.STL" />
   <div id="sw-toast" class="sw-toast"></div>
 </div>
 
@@ -1258,7 +1259,7 @@ body.theme-light #m2 .dim-val {
     '마지막에 잰 치수 지움': 'Erase the last measurement', '내가 잰 치수를 모두 지움': 'Erase all my measurements', '치수 재기 끝 (ESC)': 'Finish measuring (ESC)',
     '레이어 이름 찾기...': 'Find a layer...', '앞 파일 (PageUp)': 'Previous file (PageUp)', '다음 파일 (PageDown)': 'Next file (PageDown)',
     '앞 시트 (←)': 'Previous sheet (←)', '시트 목록': 'Sheet list', '다음 시트 (→)': 'Next sheet (→)', '전체 보기': 'Fit All', '파일 열기와 목록': 'Open files and list',
-    'STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · STEP · IGES · STL': 'STAR Works CAD Viewer — DWG · DXF · SVG · AI · STEP · IGES · STL', 'STAR Works 뷰어': 'STAR Works Viewer',
+    'STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · PDF · STEP · IGES · STL': 'STAR Works CAD Viewer — DWG · DXF · SVG · AI · PDF · STEP · IGES · STL', 'STAR Works 뷰어': 'STAR Works Viewer',
     'STAR Works CAD 뷰어': 'STAR Works CAD Viewer', '열린 파일 없음': 'No file open', '다운로드': 'Downloads', '카카오톡': 'KakaoTalk', '다른 위치': 'Browse',
     '열기': 'Open', '목록': 'Files', '패널': 'Panel', '중심부 맞춤': 'Fit Core', '치수 강조 ON': 'Dims ON', '치수 강조 OFF': 'Dims OFF', '격자': 'Grid',
     '시점 초기화': 'Reset View', 'PNG 저장': 'Save PNG', '정면': 'Front', '상면': 'Top', '우측': 'Right', '등각': 'Iso', '배면': 'Back', '하면': 'Bottom', '좌측': 'Left', '맞춤': 'Fit',
@@ -1272,11 +1273,11 @@ body.theme-light #m2 .dim-val {
     'R13 이하는 일부만 읽힙니다. AutoCAD Mechanical 전용 개체 등 일부는 빠질 수 있습니다.': 'R13 and older are only partly read. Some objects, such as AutoCAD Mechanical objects, may be missing.',
     '처음 열 때 변환 엔진(내려받기 약 2 MB)을 한 번 받습니다(인터넷 필요).': 'The first time, a converter engine (about 2 MB) is downloaded once (internet needed).',
     'R12 ~ 2018 형식 — 일반(ASCII) DXF. 이진(Binary) DXF는 안 됨': 'R12 – 2018 format — ASCII DXF. Binary DXF is not supported',
-    'DWG 변환: LibreDWG (GNU GPL-3.0) ·': 'DWG conversion: LibreDWG (GNU GPL-3.0) ·', '소스': 'source', '· 3D 면 분할: earcut (ISC, Mapbox)': '· 3D face triangulation: earcut (ISC, Mapbox)', '· 3D 면 분할: earcut (ISC, Mapbox) · AI 읽기: pdf.js (Apache-2.0, Mozilla)': '· 3D face triangulation: earcut (ISC, Mapbox) · AI reading: pdf.js (Apache-2.0, Mozilla)',
+    'DWG 변환: LibreDWG (GNU GPL-3.0) ·': 'DWG conversion: LibreDWG (GNU GPL-3.0) ·', '소스': 'source', '· 3D 면 분할: earcut (ISC, Mapbox)': '· 3D face triangulation: earcut (ISC, Mapbox)', '· 3D 면 분할: earcut (ISC, Mapbox) · AI · PDF 읽기: pdf.js (Apache-2.0, Mozilla)': '· 3D face triangulation: earcut (ISC, Mapbox) · AI · PDF reading: pdf.js (Apache-2.0, Mozilla)',
     '끌기: 이동 · 휠: 확대 · 시트 누르기: 그 장 확대 · 두 번 누르기: 전체 · F: 전체 · M: 치수 재기': 'Drag: pan · Wheel: zoom · Tap a sheet: zoom to it · Double-tap: fit all · F: fit · M: measure',
     '도면 읽는 중...': 'Reading the drawing...', '직선': 'Line', '수평': 'Horiz', '수직': 'Vert', '하나 지우기': 'Erase one', '되돌리기': 'Undo', '모두 지우기': 'Erase all', '끝': 'Done',
     '레이어': 'Layers', '치수': 'Dims', '정보': 'Info', '레이어 목록': 'Layers', '모두 켜기': 'All on', '모두 끄기': 'All off', '파일': 'File', '시트': 'Sheet', '전체': 'All',
-    '여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · STEP · IGES · STL)': 'Drop files here (DWG · DXF · SVG · AI · STEP · IGES · STL)', '준비 완료': 'Ready', '대기 중': 'Idle', '파일을 열어 주세요': 'Open a file', '닫기': 'Close',
+    '여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)': 'Drop files here (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)', '준비 완료': 'Ready', '대기 중': 'Idle', '파일을 열어 주세요': 'Open a file', '닫기': 'Close',
     // 2D 패널
     '치수 값 또는 유형 검색...': 'Search dimension value or type...', '치수선 가시성 극대화 설정': 'Dimension visibility', '가독성 강화': 'Readability', '치수 표시': 'Show dimensions',
     '치수 강조 모드 (고대비 + 최상단)': 'Highlight dimensions (high contrast, on top)', '치수 강조 색상': 'Highlight color', '선명한 노랑 (추천)': 'Vivid yellow (recommended)',
@@ -1314,19 +1315,19 @@ body.theme-light #m2 .dim-val {
     '.stl · .stp · .step · .igs · .iges · 어셈블리/분해도 지원': '.stl · .stp · .step · .igs · .iges · assemblies and exploded views',
     '대기 중 · STL / STEP / IGES 파일을 열어주세요': 'Idle · open an STL / STEP / IGES file',
     // 파일 열기 · 카카오톡
-    '열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · STEP · IGES · STL)': 'No supported file. (DWG · DXF · SVG · AI · STEP · IGES · STL)', 'DWG 파일이 아니거나 손상된 파일입니다.': 'This is not a DWG file, or it is damaged.',
+    '열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)': 'No supported file. (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)', 'DWG 파일이 아니거나 손상된 파일입니다.': 'This is not a DWG file, or it is damaged.',
     '이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.': 'Binary DXF cannot be opened. Save it as ASCII DXF or DWG in AutoCAD.',
     '도면에서 선을 찾지 못했습니다. 파일이 비었거나 지원하지 않는 개체만 들어 있습니다.': 'No lines were found. The file is empty or has only unsupported objects.',
     '읽지 못했습니다': 'Could not read', '알 수 없음': 'unknown',
     'DWG 변환이 너무 오래 걸려 멈췄습니다 (3분). 인터넷 연결이나 파일을 확인해 주세요.': 'DWG conversion took too long and was stopped (3 min). Check the connection or the file.',
-    'CAD 파일 (DWG · DXF · SVG · AI · STEP · IGES · STL)': 'CAD files (DWG · DXF · SVG · AI · STEP · IGES · STL)', '폴더를 읽는 중...': 'Reading the folder...',
+    'CAD 파일 (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)': 'CAD files (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)', '폴더를 읽는 중...': 'Reading the folder...',
     '폴더 읽기를 허용해야 목록을 볼 수 있습니다.': 'Allow folder access to see the list.', '카카오톡 안에서 연 화면': 'The KakaoTalk in-app browser', '삼성 인터넷': 'Samsung Internet',
     '아이폰·아이패드': 'iPhone / iPad', '이 브라우저': 'This browser', '카카오톡 폴더': 'KakaoTalk folder', '에서는 폴더를 지정해 둘 수 없습니다.': ' cannot remember a folder.',
     '파일 선택창에서 직접 골라 주세요.': 'Pick the file in the file chooser.', '크롬': 'Chrome',
     '으로 열면 카카오톡 폴더를 한 번만 지정하고, 다음부터 최신 파일 목록이 바로 나옵니다.': ': choose the KakaoTalk folder once, and the latest files show up right away from then on.',
     '크롬·엣지에서는 폴더를 한 번만 지정하면 됩니다.': 'In Chrome or Edge you only choose the folder once.', '크롬으로 열기': 'Open in Chrome', '파일 선택창 열기': 'Open file chooser',
     '선택창에서: ☰ › 내장 저장공간 › Download › KakaoTalk': 'In the chooser: ☰ › Internal storage › Download › KakaoTalk', '폴더 바꾸기': 'Change folder',
-    '이 폴더에 도면·모델 파일이 없습니다.': 'No drawing or model files in this folder.', '(DWG · DXF · SVG · AI · STEP · IGES · STL 만 보입니다)': '(only DWG · DXF · SVG · AI · STEP · IGES · STL are listed)',
+    '이 폴더에 도면·모델 파일이 없습니다.': 'No drawing or model files in this folder.', '(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL 만 보입니다)': '(only DWG · DXF · SVG · AI · PDF · STEP · IGES · STL are listed)',
     '폴더의 최신 파일 보기': 'Show the latest files in the folder', '브라우저는 폴더를 스스로 찾아 들어갈 수 없어,': 'A browser cannot find a folder by itself, so you choose it',
     '처음 한 번만': 'just once', '직접 골라 주셔야 합니다. 다음부터는 최신 파일 목록이 바로 나옵니다.': '. After that the latest files show up right away.',
     '① 아래 [폴더 고르기]': '① Tap [Choose folder] below', '② 왼쪽 위 ☰ › 휴대폰 이름(내장 저장공간)': '② Top-left ☰ › your phone (Internal storage)',
@@ -1361,19 +1362,28 @@ body.theme-light #m2 .dim-val {
   };
   // ---------- 2) 숫자·이름이 섞인 글 (앞에서부터 차례로 바꿈) ----------
   var RULES = [
+    // PDF 열기 · 설치 안내 (2026-11-28)
+    [/선으로 된 도면 PDF —\s*/g, 'Vector drawing PDFs — measured at '], [/^종이에 그려진 크기$/g, 'the size drawn on paper'], [/로 잽니다\(축척 도면은 실제 치수와 다름\)\. 스캔한 PDF는 볼 수 없습니다\./g, ' (scaled drawings differ from real dimensions). Scanned PDFs cannot be shown.'],
+    [/PDF는 종이에 그려진 크기로 잽니다\. 축척 도면은 실제 치수와 다릅니다\./g, 'A PDF is measured at its size on paper. Scaled drawings differ from real dimensions.'],
+    [/쪽 (\d+)개를 가로로 늘어놓았습니다\./g, '$1 pages are laid out side by side.'], [/앞의 (\d+)쪽만 열었습니다\./g, 'Only the first $1 pages were opened.'],
+    [/선으로 된 내용이 없습니다\. 스캔한\(그림으로 된\) 파일은 볼 수 없습니다\./g, 'No line content. Scanned (image-only) files cannot be shown.'],
+    [/PDF 파일이 아니거나 내용이 깨졌습니다\./g, 'This is not a PDF file, or it is damaged.'], [/PDF 내용을 읽지 못했습니다\./g, 'Could not read the PDF content.'],
+    [/^①$/g, '①'], [/위쪽\s*$/g, 'If the '], [/^왼편$/g, 'top-left'], [/^에\s*$/g, ' has '], [/가 있으면\(카카오톡·유튜브에서 열린 화면\)\s*/g, ' (a screen opened from KakaoTalk or YouTube): '], [/^Chrome 브라우저에서 열기$/g, 'Open in Chrome browser'],
+    [/^크롬\s*$/g, 'In Chrome, '], [/^오른쪽 위 ⋮$/g, 'top-right ⋮'], [/^설치 및 바로가기 만들기$/g, 'Install and create shortcut'], [/^설치$/g, 'Install'],
+    [/크롬·엣지 주소창 오른쪽의\s*/g, 'Use the '], [/단추, 또는\s*/g, ' button at the right of the address bar in Chrome or Edge, or '], [/^전송, 저장, 공유$/g, 'Cast, save and share'], [/^페이지를 앱으로 설치$/g, 'Install page as app'], [/^를 눌러 주세요\.$/g, '.'],
     // SVG · AI 열기 (2026-11-27)
-    [/2D 도면\(DWG · DXF · SVG · AI\)과 3D 모델\(STEP · IGES · STL\)을 한 곳에서 봅니다\./g, 'View 2D drawings (DWG · DXF · SVG · AI) and 3D models (STEP · IGES · STL) in one place.'],
+    [/2D 도면\(DWG · DXF · SVG · AI · PDF\)과 3D 모델\(STEP · IGES · STL\)을 한 곳에서 봅니다\./g, 'View 2D drawings (DWG · DXF · SVG · AI · PDF) and 3D models (STEP · IGES · STL) in one place.'],
     [/선·곡선·도형·글자를 선으로 읽음 — 크기 단위\(mm 등\)가 있으면\s*/g, 'Lines, curves, shapes and text are read as lines — with a size unit (mm etc.) it is '], [/, 없으면 px 가정을 알림/g, ', otherwise the px assumption is shown'],
     [/^일러스트\s*$/g, 'Illustrator '], [/일러스트 /g, 'Illustrator '], [/\s*— "PDF 호환 파일 만들기"로 저장한 파일\(기본 저장\), 1 pt = 25\.4\/72 mm로\s*/g, ' — files saved with "Create PDF Compatible File" (the default), 1 pt = 25.4/72 mm, so '],
     [/그림\(사진\)·채움·그라데이션은 보이지 않고 윤곽선만 보입니다\. 8 이하 옛 형식은 선·곡선만\./g, 'Images, fills and gradients are not shown, outlines only. Legacy files (8 and older): lines and curves only.'],
-    [/ · AI 읽기: pdf\.js \(Apache-2\.0, Mozilla\)/g, ' · AI reading: pdf.js (Apache-2.0, Mozilla)'],
-    [/(SVG|AI) · 읽는 중\.\.\./g, '$1 · reading...'], [/ · AI 읽기 엔진 받는 중 \(처음 한 번, 약 1\.5 MB\)\.\.\./g, ' · downloading the AI reader (first time only, about 1.5 MB)...'], [/ · 선으로 바꾸는 중\.\.\./g, ' · converting to lines...'],
+    [/ · AI · PDF 읽기: pdf\.js \(Apache-2\.0, Mozilla\)/g, ' · AI · PDF reading: pdf.js (Apache-2.0, Mozilla)'],
+    [/(SVG|AI|PDF) · 읽는 중\.\.\./g, '$1 · reading...'], [/ · 읽기 엔진 받는 중 \(처음 한 번, 약 1\.5 MB\)\.\.\./g, ' · downloading the reader (first time only, about 1.5 MB)...'], [/ · 선으로 바꾸는 중\.\.\./g, ' · converting to lines...'],
     [/AI\(옛 형식\)/g, 'AI (legacy)'], [/크기 0/g, 'size 0'],
     [/SVG에 길이 단위가 없어 1 px = (1\/\d+) 인치\(([\d.]+) mm\)로 봤습니다\. 치수는 이 가정으로 잰 값입니다\./g, 'This SVG has no length unit, so 1 px was taken as $1 inch ($2 mm). Measurements use this assumption.'],
     [/그림\(사진\) (\d+)개는 보이지 않습니다\./g, '$1 image(s) are not shown.'], [/대지 (\d+)개를 가로로 늘어놓았습니다\./g, '$1 artboards are laid out side by side.'],
     [/옛 형식 AI는 선·곡선만 읽습니다\./g, 'Legacy AI files: lines and curves only.'], [/선으로 된 내용을 찾지 못했습니다\./g, 'No line content was found.'],
-    [/SVG 파일이 아니거나 내용이 깨졌습니다\./g, 'This is not an SVG file, or it is damaged.'], [/AI 읽기 엔진을 불러오지 못했습니다\./g, 'Could not load the AI reader.'],
-    [/AI 읽기 엔진을 받지 못했습니다\. 인터넷 연결을 확인해 주세요\./g, 'Could not download the AI reader. Check your internet connection.'], [/암호가 걸린 파일은 열 수 없습니다\./g, 'Password-protected files cannot be opened.'],
+    [/SVG 파일이 아니거나 내용이 깨졌습니다\./g, 'This is not an SVG file, or it is damaged.'], [/읽기 엔진을 불러오지 못했습니다\./g, 'Could not load the reader.'],
+    [/읽기 엔진을 받지 못했습니다\. 인터넷 연결을 확인해 주세요\./g, 'Could not download the reader. Check your internet connection.'], [/암호가 걸린 파일은 열 수 없습니다\./g, 'Password-protected files cannot be opened.'],
     [/AI 파일 안의 PDF 내용을 읽지 못했습니다\./g, 'Could not read the PDF content inside the AI file.'],
     [/이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다\. 일러스트에서 \[다른 이름으로 저장\] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요\./g, 'This AI file was saved without "Create PDF Compatible File", so its content cannot be read. In Illustrator, use Save As with "Create PDF Compatible File" turned on.'],
     [/이 AI 파일\(옛 포스트스크립트 형식\)에서 선을 찾지 못했습니다\. 일러스트에서 PDF 호환으로 다시 저장하거나 SVG로 내보내 주세요\./g, 'No lines were found in this legacy (PostScript) AI file. Save it again as PDF-compatible, or export it as SVG.'],
@@ -6706,8 +6716,8 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       if (onStage) onStage('engine');
       pdfLibP = new Promise((resolve, reject) => {
         const s = document.createElement('script'); s.src = base + 'pdf.min.js';
-        s.onload = () => { if (!global.pdfjsLib) { reject(new Error('AI 읽기 엔진을 불러오지 못했습니다.')); return; } global.pdfjsLib.GlobalWorkerOptions.workerSrc = base + 'pdf.worker.min.js'; resolve(global.pdfjsLib); };
-        s.onerror = () => { pdfLibP = null; reject(new Error('AI 읽기 엔진을 받지 못했습니다. 인터넷 연결을 확인해 주세요.')); };
+        s.onload = () => { if (!global.pdfjsLib) { reject(new Error('읽기 엔진을 불러오지 못했습니다.')); return; } global.pdfjsLib.GlobalWorkerOptions.workerSrc = base + 'pdf.worker.min.js'; resolve(global.pdfjsLib); };
+        s.onerror = () => { pdfLibP = null; reject(new Error('읽기 엔진을 받지 못했습니다. 인터넷 연결을 확인해 주세요.')); };
         document.head.appendChild(s);
       });
     }
@@ -6719,7 +6729,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     const OPS = lib.OPS;
     let doc;
     try { doc = await lib.getDocument({ data: new Uint8Array(buf.slice(0)), isEvalSupported: false, disableFontFace: true, stopAtErrors: false }).promise; }
-    catch (e) { throw new Error(/password/i.test(String(e && e.name) + String(e && e.message)) ? '암호가 걸린 파일은 열 수 없습니다.' : 'AI 파일 안의 PDF 내용을 읽지 못했습니다. (' + (e && e.message ? e.message : e) + ')'); }
+    catch (e) { throw new Error(/password/i.test(String(e && e.name) + String(e && e.message)) ? '암호가 걸린 파일은 열 수 없습니다.' : (opt.kind === 'PDF' ? 'PDF 내용을 읽지 못했습니다. (' : 'AI 파일 안의 PDF 내용을 읽지 못했습니다. (') + (e && e.message ? e.message : e) + ')'); }
     const w = new Writer(); let images = 0, offX = 0, noPdf = false, shaded = 0;
     let ocNames = null;
     try { const cfg = await doc.getOptionalContentConfig(); ocNames = (id) => { try { const g = cfg.getGroup(id); return g && g.name ? g.name : null; } catch (_e) { return null; } }; } catch (_e) { ocNames = () => null; }
@@ -6789,9 +6799,9 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       page.cleanup();
     }
     const pages = doc.numPages; try { await doc.destroy(); } catch (_e) {}
-    if (noPdf && w.n.seg <= maxPages * 4 + 8) throw new Error('이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다. 일러스트에서 [다른 이름으로 저장] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요.');
+    if (noPdf && opt.kind !== 'PDF' && w.n.seg <= maxPages * 4 + 8) throw new Error('이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다. 일러스트에서 [다른 이름으로 저장] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요.');
     const b = w.box;
-    return { buffer: w.build(), kind: 'AI', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: images, shaded: shaded, pages: pages, shownPages: maxPages,
+    return { buffer: w.build(), kind: opt.kind || 'AI', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: images, shaded: shaded, pages: pages, shownPages: maxPages,
       size: isFinite(b[0]) ? [b[2] - b[0], b[3] - b[1]] : [0, 0], empty: w.n.seg + w.n.arc + w.n.circle + w.n.text <= maxPages * 4 };
   }
 
@@ -6847,6 +6857,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   }
   async function convert(buf, ext, opt) {
     const kind = sniff(buf);
+    if (ext === 'pdf' && kind !== 'pdf') throw new Error('PDF 파일이 아니거나 내용이 깨졌습니다.');
     if (ext === 'svg' || (kind === 'svg' && ext !== 'ai')) return svgToDxf(decodeText(buf), opt);
     if (kind === 'pdf') return pdfToDxf(buf, opt);
     if (kind === 'ps') return legacyAiToDxf(decodeText(buf));
@@ -9881,7 +9892,7 @@ earcut.flatten = function (data) {
   'use strict';
   const $ = (id) => document.getElementById(id);
   const app = $('app');
-  const EXT2D = ['dxf', 'dwg', 'svg', 'ai'];   // svg · ai 는 기기 안에서 DXF 로 바꿔 엶 (vec2dxf.js)
+  const EXT2D = ['dxf', 'dwg', 'svg', 'ai', 'pdf'];   // svg · ai 는 기기 안에서 DXF 로 바꿔 엶 (vec2dxf.js)
   const EXT3D = ['stp', 'step', 'igs', 'iges', 'stl'];
   const EXTALL = EXT2D.concat(EXT3D);
   const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -9976,7 +9987,7 @@ earcut.flatten = function (data) {
   }
   function setTitle(name, sub) {
     $('sw-file-name').textContent = name || '열린 파일 없음';
-    $('sw-file-sub').textContent = sub || 'DWG · DXF · SVG · AI · STEP · IGES · STL';
+    $('sw-file-sub').textContent = sub || 'DWG · DXF · SVG · AI · PDF · STEP · IGES · STL';
     document.title = (name ? name + ' — ' : '') + 'STAR Works CAD 뷰어';
   }
 
@@ -9997,7 +10008,7 @@ earcut.flatten = function (data) {
   async function openItems(items, start) {
     const list = items.filter(supported);
     if (list.length === 0) {
-      toast('열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · STEP · IGES · STL)');
+      toast('열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)');
       return;
     }
     SW.files = list;
@@ -10031,20 +10042,23 @@ earcut.flatten = function (data) {
           dxfBuf = await convertDwg(buf, (stage) => {
             setTitle(it.name, kind + (stage === 'engine' ? ' · 변환 엔진 받는 중 (처음 한 번, 약 2 MB)...' : ' · DXF로 변환 중...'));
           });
-        } else if (it.ext === 'svg' || it.ext === 'ai') {
+        } else if (it.ext === 'svg' || it.ext === 'ai' || it.ext === 'pdf') {
           // SVG · AI → DXF (이 기기 안에서 변환, 파일을 밖으로 보내지 않음)
-          kind = it.ext === 'svg' ? 'SVG' : 'AI';
+          kind = it.ext === 'svg' ? 'SVG' : it.ext === 'pdf' ? 'PDF' : 'AI';
+          const isPdf = it.ext === 'pdf';
           setTitle(it.name, kind + ' · 읽는 중...');
-          const vr = await window.Vec2Dxf.convert(buf, it.ext, { base: PDF_BASE, boardLayer: window.SW_LANG === 'en' ? 'Artboard' : '대지', textLayer: window.SW_LANG === 'en' ? 'Text' : '글자', onStage: (stage) => {
-            setTitle(it.name, kind + (stage === 'engine' ? ' · AI 읽기 엔진 받는 중 (처음 한 번, 약 1.5 MB)...' : ' · 선으로 바꾸는 중...'));
+          const vr = await window.Vec2Dxf.convert(buf, it.ext, { base: PDF_BASE, kind: isPdf ? 'PDF' : 'AI', boardLayer: window.SW_LANG === 'en' ? (isPdf ? 'Page' : 'Artboard') : (isPdf ? '쪽' : '대지'), textLayer: window.SW_LANG === 'en' ? 'Text' : '글자', onStage: (stage) => {
+            setTitle(it.name, kind + (stage === 'engine' ? ' · 읽기 엔진 받는 중 (처음 한 번, 약 1.5 MB)...' : ' · 선으로 바꾸는 중...'));
           } });
           dxfBuf = vr.buffer; kind = vr.kind + ' · ' + (vr.size[0] >= 0.05 ? (fmtMm(vr.size[0]) + ' × ' + fmtMm(vr.size[1]) + ' mm') : '크기 0');
           const notes = [];
           if (vr.assumed) notes.push(vr.unitNote + '. 치수는 이 가정으로 잰 값입니다.');
           if (vr.images) notes.push('그림(사진) ' + vr.images + '개는 보이지 않습니다.');
-          if (vr.pages > 1) notes.push('대지 ' + vr.pages + '개를 가로로 늘어놓았습니다.');
+          if (isPdf) notes.push('PDF는 종이에 그려진 크기로 잽니다. 축척 도면은 실제 치수와 다릅니다.');
+          if (vr.pages > 1) notes.push((isPdf ? '쪽 ' : '대지 ') + vr.pages + '개를 가로로 늘어놓았습니다.');
+          if (vr.shownPages && vr.pages > vr.shownPages) notes.push('앞의 ' + vr.shownPages + '쪽만 열었습니다.');
           if (vr.legacy) notes.push('옛 형식 AI는 선·곡선만 읽습니다.');
-          if (vr.empty) notes.push('선으로 된 내용을 찾지 못했습니다.');
+          if (vr.empty) notes.push(vr.images ? '선으로 된 내용이 없습니다. 스캔한(그림으로 된) 파일은 볼 수 없습니다.' : '선으로 된 내용을 찾지 못했습니다.');
           if (notes.length) toast(notes.join(' '), 7000);
         } else {
           if (dwgVersion(buf).indexOf('AutoCA') === 0) throw new Error('이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.');
@@ -10188,7 +10202,7 @@ earcut.flatten = function (data) {
     const base = { id: id, multiple: true };
     if (!IS_MOBILE) {
       // PC: 선택창에 CAD 파일만 보이게 (휴대폰은 파일 종류를 못 알아봐 가려질 수 있어 걸지 않음)
-      base.types = [{ description: 'CAD 파일 (DWG · DXF · SVG · AI · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
+      base.types = [{ description: 'CAD 파일 (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
     }
     // 시작 위치(다운로드 · 기억해 둔 폴더)를 못 받는 기기가 있어, 실패하면 위치 지정 없이 한 번 더
     const tries = startIn ? [Object.assign({ startIn: startIn }, base), base] : [base];
@@ -10325,7 +10339,7 @@ earcut.flatten = function (data) {
     if (SW.folderItems) {
       h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + ' · 최신순 ' + SW.folderItems.length + '개</small></span>' +
         '<button class="sw-link" data-act="rechoose">폴더 바꾸기</button></div>';
-      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.<br />(DWG · DXF · SVG · AI · STEP · IGES · STL 만 보입니다)</div>';
+      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.<br />(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL 만 보입니다)</div>';
       else h += '<div class="sw-list">' + SW.folderItems.slice(0, limit || 80).map((it, i) => fileRow(it, i, 'folder', false)).join('') + '</div>';
     } else if (SW.folderName) {
       h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + '</small></span>' +
@@ -10682,7 +10696,10 @@ earcut.flatten = function (data) {
         '설치해 두면 카카오톡 대화의 파일을 길게 눌러 <b>공유</b> › <b>스타웍스 CAD</b>로 바로 열 수 있습니다. 폴더를 찾아 들어갈 필요가 없습니다.<br />' +
         (installEvt ? '<button class="btn btn-primary" data-act="install">앱으로 설치</button>'
           : (IN_KAKAO || IS_SAMSUNG ? '먼저 크롬에서 이 화면을 열어 주세요. ' + (CHROME_LINK ? '<br /><a class="btn btn-primary" href="' + CHROME_LINK + '">크롬으로 열기</a>' : '')
-            : '크롬 오른쪽 위 <b>⋮</b> › <b>홈 화면에 추가</b>(앱 설치)를 눌러 주세요.'));
+            : (IS_ANDROID
+              ? '<span class="sw-steps"><b>①</b> 위쪽 <b>왼편</b>에 <b>⋮</b>가 있으면(카카오톡·유튜브에서 열린 화면) <b>⋮</b> › <b>Chrome 브라우저에서 열기</b><br />' +
+                '<b>②</b> 크롬 <b>오른쪽 위 ⋮</b> › <b>설치 및 바로가기 만들기</b> › <b>설치</b></span>'
+              : '크롬·엣지 주소창 오른쪽의 <b>설치</b> 단추, 또는 <b>⋮</b> › <b>전송, 저장, 공유</b> › <b>페이지를 앱으로 설치</b>를 눌러 주세요.')));
     }
     el.innerHTML = h; el.hidden = false;
   }
