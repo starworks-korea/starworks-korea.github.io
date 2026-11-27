@@ -695,7 +695,7 @@ body.theme-light #m2 .dim-val {
             <tr><th>DWG</th><td><b>R14 ~ 2018 형식</b> — AutoCAD R14(1997)부터 2026까지에서 저장한 파일<br />
               <small>확인한 형식: R14 · 2000 · 2004 · 2007 · 2010 · 2013 · 2018. AutoCAD 2018~2026은 모두 2018 형식으로 저장합니다.<br />
               R13 이하는 일부만 읽힙니다. AutoCAD Mechanical 전용 개체 등 일부는 빠질 수 있습니다.<br />
-              처음 열 때 변환 엔진(약 8 MB)을 한 번 받습니다(인터넷 필요).</small></td></tr>
+              처음 열 때 변환 엔진(내려받기 약 2 MB)을 한 번 받습니다(인터넷 필요).</small></td></tr>
             <tr><th>DXF</th><td>R12 ~ 2018 형식 — 일반(ASCII) DXF. 이진(Binary) DXF는 안 됨</td></tr>
             <tr><th>3D</th><td>STEP(.stp · .step) · IGES(.igs · .iges) · STL</td></tr>
           </table>
@@ -8274,7 +8274,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
           if (DWG_FORMATS[ver] && DWG_FORMATS[ver].partial) toast('R13 형식 DWG는 일부만 읽힙니다. 오토캐드에서 더 새 형식(2000 이상)으로 저장해 주세요. 지원 범위: ' + DWG_RANGE, 7000);
           if (!DWG_FORMATS[ver]) toast('확인하지 않은 DWG 형식(' + ver + ')입니다. 열리지 않거나 일부가 빠질 수 있습니다. 확인한 범위: ' + DWG_RANGE, 6000);
           dxfBuf = await convertDwg(buf, (stage) => {
-            setTitle(it.name, kind + (stage === 'engine' ? ' · 변환 엔진 받는 중 (처음 한 번, 약 8 MB)...' : ' · DXF로 변환 중...'));
+            setTitle(it.name, kind + (stage === 'engine' ? ' · 변환 엔진 받는 중 (처음 한 번, 약 2 MB)...' : ' · DXF로 변환 중...'));
           });
         } else {
           if (dwgVersion(buf).indexOf('AutoCA') === 0) throw new Error('이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.');
