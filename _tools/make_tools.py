@@ -1,6 +1,6 @@
 # 툴 페이지 — tools.html(영어, 기본) + ko/tools.html(한국어)
 # 2026-11-27 대표 지시: 툴은 CAD · CAM 두 분류, 여러 프로그램을 골라 쓰기 좋게
-#   CAD: CAD 뷰어 (2D DXF + 3D STEP·IGES·STL 통합, 대표 PC 원본 sw_viewer.html 을 tools/ 에 복사해 둠)
+#   CAD: CAD 뷰어 (2D DWG·DXF + 3D STEP·IGES·STL 통합, DWG 엔진은 tools/dwg/ (LibreDWG, GPL-3.0), 대표 PC 원본 sw_viewer.html 을 tools/ 에 복사해 둠)
 #   CAM: 시편 설계·견적(coupon-tool.html, 따로 둔 페이지) · 조각기 CAM(coupon-tool/cam.html)
 #   위에서 프로그램을 누르면 아래 창에서 바로 실행 — 한 번 연 프로그램은 바꿔도 그대로 남음(열어 둔 도면 유지)
 # 사용: python3 _tools/make_tools.py
@@ -27,7 +27,7 @@ GROUPS = [
 PROGRAMS = [
     # 2026-11-27 대표 지시: DXF 뷰어 + 3D CAD 뷰어 → 통합 「CAD 뷰어」 1개 (원본: 대표 PC 00-유투브제작\\sw_viewer)
     {"key": "viewer", "group": "cad", "name": ("CAD 뷰어 (2D·3D)", "CAD Viewer (2D·3D)"),
-     "desc": ("DXF · STEP · IGES · STL · 시트 이동", "DXF · STEP · IGES · STL · KR UI"),
+     "desc": ("DWG · DXF · STEP · IGES · STL", "DWG · DXF · STEP · IGES · STL · KR UI"),
      "src": "tools/sw_viewer.html"},
     {"key": "coupon", "group": "cam", "name": ("시편 설계·견적", "Specimen Design"),
      "desc": ("물성 예상 · 재단 배치 · 주문", "Properties · nesting · order"),
@@ -115,8 +115,8 @@ def build(L):
     pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False)} for p in PROGRAMS}
     nojs = " · ".join(f'<a href="{src(L, p, False)}">{e(p["name"][ix])}</a>' for p in PROGRAMS)
     title = t(L, "스타웍스 툴", "STAR Works — Tools")
-    desc = t(L, "CAD: 2D·3D 통합 뷰어(DXF · STEP · IGES · STL) / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로",
-             "CAD: 2D/3D viewer (DXF · STEP · IGES · STL) / CAM: specimen design & quote · router CAM — right in your browser, no install")
+    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · STEP · IGES · STL) / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로",
+             "CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / CAM: specimen design & quote · router CAM — right in your browser, no install")
     js = JS.replace("@PR@", json.dumps(pr, ensure_ascii=False)).replace("@KEEP@", PS.KEEP_HASH_JS)
     return PS.head(L, FILE, title, desc, CSS, robots="") + f"""
 <body>

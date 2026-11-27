@@ -2,7 +2,7 @@
 <!-- ==========================================================================
      STAR Works CAD 뷰어 (2D · 3D 통합) — sw_viewer.html
      src/shell.html 기반 빌드 산출물 (node build.js). 직접 고치지 말고 src/ 를 고칩니다.
-     2D: DXF (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
+     2D: DWG(R14 ~ 2018 형식) · DXF (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
      3D: STEP · IGES · STL (어셈블리 트리, 분해도)
      ========================================================================== -->
 <html lang="ko">
@@ -10,7 +10,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1120" />
-  <title>STAR Works CAD 뷰어 — 2D 도면 · 3D 모델</title>
+  <title>STAR Works CAD 뷰어 — DWG · DXF · STEP · IGES · STL</title>
   <style>
 /* ============================================================================
  * shell.css — 통합 뷰어 틀 (머리줄 · 도구줄 · 본문 · 패널 · 서랍 · 상태줄)
@@ -175,6 +175,13 @@ body.theme-light .btn-dim-active { color: #b45309; border-color: #d97706; backgr
 .sw-open-big-sm .sw-bigbtn { min-height: 62px; }
 .sw-open-big-sm .sw-bigbtn b { font-size: 14px; }
 .sw-home-list { margin-top: 18px; }
+.sw-support { margin-top: 22px; }
+.sw-support-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 1.6; }
+.sw-support-tbl th { width: 54px; padding: 8px 6px; vertical-align: top; text-align: left; color: var(--accent); font-weight: 800; border-top: 1px solid var(--border); }
+.sw-support-tbl td { padding: 8px 6px; border-top: 1px solid var(--border); color: var(--text-main); }
+.sw-support-tbl small { color: var(--text-sub); font-size: 11.5px; }
+.sw-credit { margin: 8px 0 0; font-size: 11px; color: var(--text-sub); }
+.sw-credit a { color: var(--accent); }
 
 /* ---------- 파일 목록 줄 ---------- */
 .sw-list-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 14px 0 6px; font-size: 12.5px; font-weight: 800; }
@@ -628,7 +635,7 @@ body.theme-light #m2 .dim-val {
     </button>
     <div class="sw-title">
       <div id="sw-file-name" class="sw-file-name">열린 파일 없음</div>
-      <div id="sw-file-sub" class="sw-file-sub">DXF · STEP · IGES · STL</div>
+      <div id="sw-file-sub" class="sw-file-sub">DWG · DXF · STEP · IGES · STL</div>
     </div>
     <div class="sw-open-wide">
       <button class="btn btn-primary" data-open="downloads" title="다운로드 폴더에서 파일 고르기">다운로드</button>
@@ -674,7 +681,7 @@ body.theme-light #m2 .dim-val {
     <section id="home" class="sw-home">
       <div class="sw-home-card">
         <h1>도면 · 모델 파일 열기</h1>
-        <p class="sw-home-sub">2D 도면(DXF)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
+        <p class="sw-home-sub">2D 도면(DWG · DXF)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
         <div class="sw-open-big">
           <button class="sw-bigbtn sw-bigbtn-primary" data-open="downloads"><b>다운로드</b><small>다운로드 폴더</small></button>
           <button class="sw-bigbtn" data-open="kakao"><b>카카오톡</b><small id="sw-kakao-hint">받은 파일 폴더</small></button>
@@ -682,6 +689,18 @@ body.theme-light #m2 .dim-val {
         </div>
         <p class="sw-home-tip sw-hide-narrow">PC: 파일을 이 화면에 끌어다 놓아도 됩니다. 여러 개를 한꺼번에 열 수 있습니다.</p>
         <div id="sw-home-list" class="sw-home-list"></div>
+        <div class="sw-support">
+          <div class="sw-list-title"><span>열 수 있는 파일</span></div>
+          <table class="sw-support-tbl">
+            <tr><th>DWG</th><td><b>R14 ~ 2018 형식</b> — AutoCAD R14(1997)부터 2026까지에서 저장한 파일<br />
+              <small>확인한 형식: R14 · 2000 · 2004 · 2007 · 2010 · 2013 · 2018. AutoCAD 2018~2026은 모두 2018 형식으로 저장합니다.<br />
+              R13 이하는 일부만 읽힙니다. AutoCAD Mechanical 전용 개체 등 일부는 빠질 수 있습니다.<br />
+              처음 열 때 변환 엔진(약 8 MB)을 한 번 받습니다(인터넷 필요).</small></td></tr>
+            <tr><th>DXF</th><td>R12 ~ 2018 형식 — 일반(ASCII) DXF. 이진(Binary) DXF는 안 됨</td></tr>
+            <tr><th>3D</th><td>STEP(.stp · .step) · IGES(.igs · .iges) · STL</td></tr>
+          </table>
+          <p class="sw-credit">DWG 변환: LibreDWG (GNU GPL-3.0) · <a href="https://www.gnu.org/software/libredwg/" target="_blank" rel="noopener">소스</a></p>
+        </div>
       </div>
     </section>
 
@@ -1111,7 +1130,7 @@ body.theme-light #m2 .dim-val {
     <div id="sw-sheet-pop" class="sw-sheet-pop"></div>
 
     <!-- 끌어 놓기 안내 -->
-    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DXF · STEP · IGES · STL)</div>
+    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DWG · DXF · STEP · IGES · STL)</div>
   </div>
 
   <!-- ==================== 상태줄 ==================== -->
@@ -8102,6 +8121,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
  * 모듈명: shell.js — 통합 뷰어 틀
  * 하는 일:
  *   1. 파일 확장자로 2D(DXF) · 3D(STEP·IGES·STL) 화면 자동 전환
+ *   1-1. DWG 는 LibreDWG(WebAssembly)로 기기 안에서 DXF 로 바꿔 엽니다 (R14 ~ 2018 형식)
  *   2. 파일 빨리 열기: 다운로드 · 카카오톡(폴더 기억, 최신 파일 목록) · 다른 위치
  *   3. 여러 파일 목록(앞·뒤 이동), 한 파일 안의 여러 시트 이동(눌러서 확대)
  *   4. 휴대폰 손가락 조작(2D: 한 손가락 이동, 두 손가락 확대), 패널·서랍, 화면 색
@@ -8112,9 +8132,9 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   'use strict';
   const $ = (id) => document.getElementById(id);
   const app = $('app');
-  const EXT2D = ['dxf'];
+  const EXT2D = ['dxf', 'dwg'];
   const EXT3D = ['stp', 'step', 'igs', 'iges', 'stl'];
-  const EXTALL = EXT2D.concat(EXT3D, ['dwg']);
+  const EXTALL = EXT2D.concat(EXT3D);
   const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
   const HAS_FILE_PICKER = typeof window.showOpenFilePicker === 'function';
   const HAS_DIR_PICKER = typeof window.showDirectoryPicker === 'function';
@@ -8201,7 +8221,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   }
   function setTitle(name, sub) {
     $('sw-file-name').textContent = name || '열린 파일 없음';
-    $('sw-file-sub').textContent = sub || 'DXF · STEP · IGES · STL';
+    $('sw-file-sub').textContent = sub || 'DWG · DXF · STEP · IGES · STL';
     document.title = (name ? name + ' — ' : '') + 'STAR Works CAD 뷰어';
   }
 
@@ -8222,7 +8242,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   async function openItems(items, start) {
     const list = items.filter(supported);
     if (list.length === 0) {
-      toast('열 수 있는 파일이 없습니다. (지원: DXF · STEP · IGES · STL)');
+      toast('열 수 있는 파일이 없습니다. (지원: DWG · DXF · STEP · IGES · STL)');
       return;
     }
     SW.files = list;
@@ -8234,11 +8254,6 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   async function openIndex(i) {
     if (opening || i < 0 || i >= SW.files.length) return;
     const it = SW.files[i];
-    if (it.ext === 'dwg') {
-      toast('DWG는 아직 바로 열 수 없습니다. 오토캐드에서 "다른 이름으로 저장 → DXF"로 바꿔 주세요. (DWG 열기는 다음 단계)', 6000);
-      SW.cur = i; updateNav(); renderFilesBody();
-      return;
-    }
     opening = true;
     try {
       const file = await it.get();
@@ -8248,20 +8263,37 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       SW.sheets = []; SW.sheetIdx = -1;
       if (EXT2D.indexOf(it.ext) >= 0) {
         setMode('2d');
-        setTitle(it.name, '2D 도면 · 읽는 중...');
+        let dxfBuf = buf, kind = '2D 도면';
+        if (it.ext === 'dwg') {
+          // DWG → DXF (이 기기 안에서 변환, 파일을 밖으로 보내지 않음)
+          const ver = dwgVersion(buf);
+          const label = DWG_FORMATS[ver] ? (DWG_FORMATS[ver].fmt + ' 형식 · ' + DWG_FORMATS[ver].app) : ('형식 ' + ver);
+          kind = 'DWG ' + label;
+          setTitle(it.name, kind + ' · 변환 중...');
+          if (!/^AC10/.test(ver)) throw new Error('DWG 파일이 아니거나 손상된 파일입니다.');
+          if (DWG_FORMATS[ver] && DWG_FORMATS[ver].partial) toast('R13 형식 DWG는 일부만 읽힙니다. 오토캐드에서 더 새 형식(2000 이상)으로 저장해 주세요. 지원 범위: ' + DWG_RANGE, 7000);
+          if (!DWG_FORMATS[ver]) toast('확인하지 않은 DWG 형식(' + ver + ')입니다. 열리지 않거나 일부가 빠질 수 있습니다. 확인한 범위: ' + DWG_RANGE, 6000);
+          dxfBuf = await convertDwg(buf, (stage) => {
+            setTitle(it.name, kind + (stage === 'engine' ? ' · 변환 엔진 받는 중 (처음 한 번, 약 8 MB)...' : ' · DXF로 변환 중...'));
+          });
+        } else {
+          if (dwgVersion(buf).indexOf('AutoCA') === 0) throw new Error('이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.');
+          setTitle(it.name, '2D 도면 · 읽는 중...');
+        }
         await new Promise((r) => requestAnimationFrame(r));
         window.Cad2D.handleResize();
-        const res = await window.Cad2D.load(buf, it.name);
+        const res = await window.Cad2D.load(dxfBuf, it.name);
         if (res) {
           SW.sheets = res.sheets || [];
-          const parts = ['2D 도면', '선분 ' + res.segments.toLocaleString()];
+          const parts = [kind, '선분 ' + res.segments.toLocaleString()];
           if (SW.sheets.length > 1) parts.push('시트 ' + SW.sheets.length + '장');
           if (res.merged) parts.push('겹친 선 ' + res.merged.toLocaleString() + '개 정리');
           setTitle(it.name, parts.join(' · '));
           const hm = $('hud-merged');
           hm.style.display = res.merged ? '' : 'none';
           hm.textContent = '겹친 선 정리: ' + res.merged.toLocaleString();
-          if (SW.sheets.length > 1) toast('시트 ' + SW.sheets.length + '장을 찾았습니다. 번호가 붙은 틀을 누르면 그 장이 크게 보입니다.', 4200);
+          if (!res.segments) toast('도면에서 선을 찾지 못했습니다. 파일이 비었거나 지원하지 않는 개체만 들어 있습니다.', 6000);
+          else if (SW.sheets.length > 1) toast('시트 ' + SW.sheets.length + '장을 찾았습니다. 번호가 붙은 틀을 누르면 그 장이 크게 보입니다.', 4200);
         } else {
           setTitle(it.name, '읽지 못했습니다');
         }
@@ -8275,13 +8307,97 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
       }
     } catch (err) {
       console.error(err);
-      toast('파일을 읽지 못했습니다: ' + (err && err.message ? err.message : err));
+      toast('파일을 읽지 못했습니다: ' + (err && err.message ? err.message : err), 6000);
+      setTitle(it.name, '읽지 못했습니다');
     } finally {
       opening = false;
       updateNav();
       renderFilesBody();
     }
   }
+
+  // ==================== DWG → DXF 변환 ====================
+  // 엔진: LibreDWG(GNU, GPL-3.0)를 WebAssembly 로 묶은 @mlightcad/libredwg-web — 별도 작업자(Worker)에서 실행
+  // 엔진 파일 위치: 이 페이지 옆 dwg/ 폴더. 내 PC에서 파일로 연 경우(file://)는 홈페이지의 엔진을 받아 씁니다(인터넷 필요).
+  // 확인한 형식(2026-11-27, LibreDWG 견본 변환 → 오토캐드가 낸 DXF와 선분 수 비교)
+  //   R14 · 2000 · 2004 · 2007 · 2010 · 2013 · 2018: 일치(99.8 ~ 100 %) / R13: 약 11 % 만 읽힘 → 지원 범위에서 뺌
+  const DWG_FORMATS = {
+    AC1012: { fmt: 'R13', app: 'AutoCAD R13', partial: true },
+    AC1014: { fmt: 'R14', app: 'AutoCAD R14' },
+    AC1015: { fmt: '2000', app: 'AutoCAD 2000~2002' },
+    AC1018: { fmt: '2004', app: 'AutoCAD 2004~2006' },
+    AC1021: { fmt: '2007', app: 'AutoCAD 2007~2009' },
+    AC1024: { fmt: '2010', app: 'AutoCAD 2010~2012' },
+    AC1027: { fmt: '2013', app: 'AutoCAD 2013~2017' },
+    AC1032: { fmt: '2018', app: 'AutoCAD 2018~2026' }
+  };
+  const DWG_RANGE = 'R14 ~ 2018 형식 (AutoCAD R14 ~ 2026에서 저장한 파일)';
+  const DWG_BASE = window.SW_DWG_BASE ||
+    (/^https?:$/.test(location.protocol) ? new URL('dwg/', location.href).href : 'https://starworks-korea.github.io/tools/dwg/');
+  function dwgVersion(buf) {
+    return String.fromCharCode.apply(null, new Uint8Array(buf, 0, Math.min(6, buf.byteLength)));
+  }
+  let dwgWorker = null, dwgSeq = 0, dwgDone = 0;
+  const dwgJobs = new Map();
+  function dwgWorkerStart() {
+    const src = `
+      const BASE = ${JSON.stringify(DWG_BASE)};
+      let libP = null;
+      self.onmessage = async (ev) => {
+        const id = ev.data.id;
+        try {
+          if (!libP) {
+            self.postMessage({ id: id, stage: 'engine' });
+            libP = import(BASE + 'libredwg-web.js').then((m) => m.default({ locateFile: (f) => BASE + f }));
+          }
+          const lib = await libP;
+          self.postMessage({ id: id, stage: 'convert' });
+          lib.FS.writeFile('in.dwg', new Uint8Array(ev.data.buffer));
+          try { lib.FS.unlink('out.dxf'); } catch (_e) {}
+          const rc = lib.dwg_write_dxf('in.dwg', 'out.dxf');
+          let out = null;
+          try { out = lib.FS.readFile('out.dxf'); } catch (_e) {}
+          try { lib.FS.unlink('in.dwg'); lib.FS.unlink('out.dxf'); } catch (_e) {}
+          if (!out || out.length < 100) throw new Error('DWG를 DXF로 바꾸지 못했습니다 (엔진 응답 ' + rc + ')');
+          self.postMessage({ id: id, ok: true, rc: rc, dxf: out.buffer }, [out.buffer]);
+        } catch (err) {
+          libP = null;
+          self.postMessage({ id: id, ok: false, error: String(err && err.message ? err.message : err) });
+        }
+      };
+    `;
+    const w = new Worker(URL.createObjectURL(new Blob([src], { type: 'application/javascript' })));
+    w.onmessage = (ev) => {
+      const job = dwgJobs.get(ev.data.id);
+      if (!job) return;
+      if (ev.data.stage) { job.onStage(ev.data.stage); return; }
+      dwgJobs.delete(ev.data.id);
+      clearTimeout(job.timer);
+      if (ev.data.ok) job.resolve(ev.data.dxf); else job.reject(new Error(ev.data.error));
+    };
+    w.onerror = (ev) => {
+      for (const job of dwgJobs.values()) { clearTimeout(job.timer); job.reject(new Error('DWG 변환 엔진 오류: ' + (ev.message || '알 수 없음'))); }
+      dwgJobs.clear(); dwgWorker = null;
+    };
+    return w;
+  }
+  /** DWG 내용을 DXF 내용으로 바꿉니다 (기기 안에서 실행) */
+  function convertDwg(buf, onStage) {
+    // 엔진 메모리가 쌓이지 않게 20개마다 새로 띄움
+    if (dwgWorker && dwgDone >= 20) { dwgWorker.terminate(); dwgWorker = null; dwgDone = 0; }
+    if (!dwgWorker) dwgWorker = dwgWorkerStart();
+    return new Promise((resolve, reject) => {
+      const id = ++dwgSeq;
+      const timer = setTimeout(() => {
+        dwgJobs.delete(id);
+        if (dwgWorker) { dwgWorker.terminate(); dwgWorker = null; }
+        reject(new Error('DWG 변환이 너무 오래 걸려 멈췄습니다 (3분). 인터넷 연결이나 파일을 확인해 주세요.'));
+      }, 180000);
+      dwgJobs.set(id, { resolve: (v) => { dwgDone++; resolve(v); }, reject: reject, onStage: onStage || (() => {}), timer: timer });
+      dwgWorker.postMessage({ id: id, buffer: buf }, [buf]);
+    });
+  }
+  SW.dwgRange = DWG_RANGE;
 
   // ==================== 파일 고르기 (다운로드 · 카카오톡 · 다른 위치) ====================
   function pickWithInput() {
@@ -8299,7 +8415,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
     if (startIn) opts.startIn = startIn;
     if (!IS_MOBILE) {
       // PC: 선택창에 CAD 파일만 보이게 (휴대폰은 파일 종류를 못 알아봐 가려질 수 있어 걸지 않음)
-      opts.types = [{ description: 'CAD 파일 (DXF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
+      opts.types = [{ description: 'CAD 파일 (DWG · DXF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
     }
     try {
       const handles = await window.showOpenFilePicker(opts);
@@ -8395,7 +8511,7 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
   $('sw-open-narrow').onclick = () => { renderFilesBody(); openFiles(); };
 
   function fileRow(it, idx, src, isCur) {
-    const cls = EXT3D.indexOf(it.ext) >= 0 ? 'e3' : (it.ext === 'dwg' ? 'ew' : '');
+    const cls = EXT3D.indexOf(it.ext) >= 0 ? 'e3' : '';
     const meta = [fmtDate(it.mtime), fmtSize(it.size)].filter(Boolean).join(' · ');
     return '<button class="sw-file' + (isCur ? ' cur' : '') + '" data-src="' + src + '" data-idx="' + idx + '">' +
       '<span class="sw-ext ' + cls + '">' + esc(it.ext.toUpperCase()) + '</span>' +

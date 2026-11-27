@@ -14,9 +14,10 @@
 - 영상 갱신 검사: 새 id가 `playlist.html`·`ko/playlist.html`에 있는지 확인
 
 ## 툴 `tools.html` (CAD · CAM)
-- CAD: CAD 뷰어(`tools/sw_viewer.html`) — 2D DXF + 3D STEP·IGES·STL 통합 (2026-11-27, 옛 DXF 뷰어·3D CAD 뷰어를 합침)
+- CAD: CAD 뷰어(`tools/sw_viewer.html`) — 2D DWG·DXF + 3D STEP·IGES·STL 통합 (2026-11-27, 옛 DXF 뷰어·3D CAD 뷰어를 합침)
   - 파일 열기 버튼: 다운로드 · 카카오톡(폴더 기억) · 다른 위치, 여러 파일 ◀ ▶, 한 파일의 여러 시트 ◀ ▶
   - 겹친 선은 한 개만 표시(도면 겹쳐 열기 기능 없음)
+  - DWG: `tools/dwg/`의 LibreDWG WebAssembly(GPL-3.0, `@mlightcad/libredwg-web` 0.9.4 그대로)로 기기 안에서 DXF로 바꿔 엶 — R14 ~ 2018 형식(AutoCAD R14 ~ 2026), 범위는 뷰어 처음 화면에 표기
   - 옛 `tools/dxf_viewer.html` · `tools/cad_viewer.html` 은 이동 페이지
 - CAM: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) · 조각기 CAM(`coupon-tool/cam.html`)
 - 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음
