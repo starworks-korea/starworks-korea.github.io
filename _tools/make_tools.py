@@ -156,7 +156,7 @@ def build(L):
         f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p["desc"][0])}</p>'
         f'<a class="tl-go" href="{src(L, p, False)}" target="_blank" rel="noopener">{t(L, "새 창에서 크게 열기", "Open full size in a new window")} ↗</a>'
         f'<button type="button" class="tl-here" data-embed="{p["key"]}">{t(L, "이 화면에서 열기", "Open here instead")}</button>'
-        + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "소개 영상 보기 (3분) · 설치 방법", "Watch the 3-minute intro · how to install")}</a>' if p.get("video") else "") +
+        + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "무료 · 소개 영상 보기 (3분) · 설치 방법", "Free · watch the 3-minute intro · how to install")}</a>' if p.get("video") else "") +
         f'<ul class="tl-pts">' + "".join(f"<li>{e(x)}</li>" for x in p.get("points", ((), ()))[ix]) + '</ul>'
         f'</div></section>'
         for p in PROGRAMS if p.get("launch"))
