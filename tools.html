@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>STAR Works — Tools</title>
-<meta name="description" content="CAD: DXF viewer · 3D CAD viewer / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
+<meta name="description" content="CAD: 2D/3D viewer (DXF · STEP · IGES · STL) / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="STAR Works STARWORKS">
 <meta property="og:title" content="STAR Works — Tools">
-<meta property="og:description" content="CAD: DXF viewer · 3D CAD viewer / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
+<meta property="og:description" content="CAD: 2D/3D viewer (DXF · STEP · IGES · STL) / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
 <meta property="og:url" content="https://starworks-korea.github.io/tools.html">
 <meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -69,20 +69,19 @@ a{color:inherit;text-decoration:none}
 <div class="tbar" id="tbar">
 <div class="tbar-in" role="tablist" aria-label="Choose a program">
 <div class="tgrp" role="group" aria-label="CAD"><span class="tgl"><b>CAD</b><small>Drawings &amp; 3D</small></span>
-<a href="#dxf" id="tp-dxf" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">DXF Viewer</span><span class="tpd">2D drawings · dims · KR UI</span></a>
-<a href="#cad3d" id="tp-cad3d" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">3D CAD Viewer</span><span class="tpd">STEP · IGES · STL · KR UI</span></a>
+<a href="#viewer" id="tp-viewer" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">CAD Viewer (2D·3D)</span><span class="tpd">DXF · STEP · IGES · STL · KR UI</span></a>
 </div>
 <span class="tsep" aria-hidden="true"></span>
 <div class="tgrp" role="group" aria-label="CAM"><span class="tgl"><b>CAM</b><small>Router specimens</small></span>
 <a href="#coupon" id="tp-coupon" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">Specimen Design</span><span class="tpd">Properties · nesting · order</span></a>
 <a href="#cam" id="tp-cam" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">Router CAM</span><span class="tpd">RichAuto · NC · simulation</span></a>
 </div>
-<a class="topen" id="topen" href="tools/dxf_viewer.html" target="_blank" rel="noopener">Open in new window ↗</a>
+<a class="topen" id="topen" href="tools/sw_viewer.html" target="_blank" rel="noopener">Open in new window ↗</a>
 </div>
 </div>
 <main class="stage" id="stage" aria-live="polite">
 <div class="tload">Loading the program…</div>
-<noscript><div class="nojs" style="position: relative"><a href="tools/dxf_viewer.html">DXF Viewer</a> · <a href="tools/cad_viewer.html">3D CAD Viewer</a> · <a href="coupon-tool.html">Specimen Design</a> · <a href="coupon-tool/cam.html">Router CAM</a></div></noscript>
+<noscript><div class="nojs" style="position: relative"><a href="tools/sw_viewer.html">CAD Viewer (2D·3D)</a> · <a href="coupon-tool.html">Specimen Design</a> · <a href="coupon-tool/cam.html">Router CAM</a></div></noscript>
 </main>
 </div>
 <footer style="background: #16263F; color: #C9D3E0">
@@ -99,7 +98,7 @@ a{color:inherit;text-decoration:none}
 </div>
 <script>
 (function(){
-var PR={"dxf": {"name": "DXF Viewer", "src": "tools/dxf_viewer.html", "open": "tools/dxf_viewer.html"}, "cad3d": {"name": "3D CAD Viewer", "src": "tools/cad_viewer.html", "open": "tools/cad_viewer.html"}, "coupon": {"name": "Specimen Design", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "Router CAM", "src": "coupon-tool/cam.html", "open": "coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
+var PR={"viewer": {"name": "CAD Viewer (2D·3D)", "src": "tools/sw_viewer.html", "open": "tools/sw_viewer.html"}, "coupon": {"name": "Specimen Design", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "Router CAM", "src": "coupon-tool/cam.html", "open": "coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
 var stage=document.getElementById('stage'), open=document.getElementById('topen'), base=document.title;
 function swHash(k){var a=document.querySelector('nav a[hreflang]');if(a){a.setAttribute('href',a.getAttribute('href').split('#')[0]+(k?'#'+k:''))}}
 function show(k){
@@ -112,8 +111,9 @@ function show(k){
   try{localStorage.setItem('swTool',k)}catch(_){}
 }
 function route(){
-  var h=decodeURIComponent(location.hash.slice(1)), k=h;
-  if(!PR[k]){try{k=localStorage.getItem('swTool')}catch(_){k=null}}
+  var OLD={dxf:'viewer',cad3d:'viewer'};   // 옛 주소 #dxf · #cad3d → 통합 뷰어
+  var h=decodeURIComponent(location.hash.slice(1)), k=OLD[h]||h;
+  if(!PR[k]){try{k=localStorage.getItem('swTool');k=OLD[k]||k}catch(_){k=null}}
   show(PR[k]?k:DEF);
 }
 window.addEventListener('hashchange',route);

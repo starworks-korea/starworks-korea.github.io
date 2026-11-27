@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>스타웍스 툴</title>
-<meta name="description" content="CAD: DXF 뷰어 · 3D CAD 뷰어 / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로">
+<meta name="description" content="CAD: 2D·3D 통합 뷰어(DXF · STEP · IGES · STL) / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="스타웍스 STARWORKS">
 <meta property="og:title" content="스타웍스 툴">
-<meta property="og:description" content="CAD: DXF 뷰어 · 3D CAD 뷰어 / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로">
+<meta property="og:description" content="CAD: 2D·3D 통합 뷰어(DXF · STEP · IGES · STL) / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로">
 <meta property="og:url" content="https://starworks-korea.github.io/ko/tools.html">
 <meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -69,20 +69,19 @@ a{color:inherit;text-decoration:none}
 <div class="tbar" id="tbar">
 <div class="tbar-in" role="tablist" aria-label="프로그램 선택">
 <div class="tgrp" role="group" aria-label="CAD"><span class="tgl"><b>CAD</b><small>도면·3D 보기</small></span>
-<a href="#dxf" id="tp-dxf" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">DXF 뷰어</span><span class="tpd">2D 도면 · 치수 강조 · 도면 중첩</span></a>
-<a href="#cad3d" id="tp-cad3d" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">3D CAD 뷰어</span><span class="tpd">STEP · IGES · STL · 어셈블리 · 분해도</span></a>
+<a href="#viewer" id="tp-viewer" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">CAD 뷰어 (2D·3D)</span><span class="tpd">DXF · STEP · IGES · STL · 시트 이동</span></a>
 </div>
 <span class="tsep" aria-hidden="true"></span>
 <div class="tgrp" role="group" aria-label="CAM"><span class="tgl"><b>CAM</b><small>조각기 시편</small></span>
 <a href="#coupon" id="tp-coupon" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">시편 설계·견적</span><span class="tpd">물성 예상 · 재단 배치 · 주문</span></a>
 <a href="#cam" id="tp-cam" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">조각기 CAM</span><span class="tpd">RichAuto 시편 가공 · NC · 시뮬레이션</span></a>
 </div>
-<a class="topen" id="topen" href="../tools/dxf_viewer.html" target="_blank" rel="noopener">새 창으로 열기 ↗</a>
+<a class="topen" id="topen" href="../tools/sw_viewer.html" target="_blank" rel="noopener">새 창으로 열기 ↗</a>
 </div>
 </div>
 <main class="stage" id="stage" aria-live="polite">
 <div class="tload">프로그램을 불러오는 중…</div>
-<noscript><div class="nojs" style="position: relative"><a href="../tools/dxf_viewer.html">DXF 뷰어</a> · <a href="../tools/cad_viewer.html">3D CAD 뷰어</a> · <a href="coupon-tool.html">시편 설계·견적</a> · <a href="../coupon-tool/cam.html">조각기 CAM</a></div></noscript>
+<noscript><div class="nojs" style="position: relative"><a href="../tools/sw_viewer.html">CAD 뷰어 (2D·3D)</a> · <a href="coupon-tool.html">시편 설계·견적</a> · <a href="../coupon-tool/cam.html">조각기 CAM</a></div></noscript>
 </main>
 </div>
 <footer style="background: #16263F; color: #C9D3E0">
@@ -99,7 +98,7 @@ a{color:inherit;text-decoration:none}
 </div>
 <script>
 (function(){
-var PR={"dxf": {"name": "DXF 뷰어", "src": "../tools/dxf_viewer.html", "open": "../tools/dxf_viewer.html"}, "cad3d": {"name": "3D CAD 뷰어", "src": "../tools/cad_viewer.html", "open": "../tools/cad_viewer.html"}, "coupon": {"name": "시편 설계·견적", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "조각기 CAM", "src": "../coupon-tool/cam.html", "open": "../coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
+var PR={"viewer": {"name": "CAD 뷰어 (2D·3D)", "src": "../tools/sw_viewer.html", "open": "../tools/sw_viewer.html"}, "coupon": {"name": "시편 설계·견적", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "조각기 CAM", "src": "../coupon-tool/cam.html", "open": "../coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
 var stage=document.getElementById('stage'), open=document.getElementById('topen'), base=document.title;
 function swHash(k){var a=document.querySelector('nav a[hreflang]');if(a){a.setAttribute('href',a.getAttribute('href').split('#')[0]+(k?'#'+k:''))}}
 function show(k){
@@ -112,8 +111,9 @@ function show(k){
   try{localStorage.setItem('swTool',k)}catch(_){}
 }
 function route(){
-  var h=decodeURIComponent(location.hash.slice(1)), k=h;
-  if(!PR[k]){try{k=localStorage.getItem('swTool')}catch(_){k=null}}
+  var OLD={dxf:'viewer',cad3d:'viewer'};   // 옛 주소 #dxf · #cad3d → 통합 뷰어
+  var h=decodeURIComponent(location.hash.slice(1)), k=OLD[h]||h;
+  if(!PR[k]){try{k=localStorage.getItem('swTool');k=OLD[k]||k}catch(_){k=null}}
   show(PR[k]?k:DEF);
 }
 window.addEventListener('hashchange',route);
