@@ -13,21 +13,25 @@
   - `lectures.html#rubber` → `playlist.html#lectures-rubber` (유튜브 설명란 옛 링크 보호) — 손으로 고치지 않음
 - 영상 갱신 검사: 새 id가 `playlist.html`·`ko/playlist.html`에 있는지 확인
 
-## 툴 `tools.html` (CAD · CAM)
+## 툴 `tools.html` (CAD · 시편 주문 · CAM)
 - CAD: CAD 뷰어(`tools/sw_viewer.html`) — 2D DWG·DXF + 3D STEP·IGES·STL 통합 (2026-11-27, 옛 DXF 뷰어·3D CAD 뷰어를 합침)
   - 파일 열기 버튼: 다운로드 · 카카오톡(폴더 기억) · 다른 위치, 여러 파일 ◀ ▶, 한 파일의 여러 시트 ◀ ▶
   - 겹친 선은 한 개만 표시(도면 겹쳐 열기 기능 없음)
   - 휴대폰: `tools/manifest.webmanifest` + `tools/sw_viewer_sw.js` + `tools/icons/` — 앱으로 설치하면 카카오톡 파일 › 공유 › CAD 뷰어로 바로 열림(서비스 워커는 공유 받기만 처리, 화면은 저장해 두지 않음)
   - DWG: `tools/dwg/`의 LibreDWG WebAssembly(GPL-3.0, `@mlightcad/libredwg-web` 0.9.4 그대로)로 기기 안에서 DXF로 바꿔 엶 — R14 ~ 2018 형식(AutoCAD R14 ~ 2026), 범위는 뷰어 처음 화면에 표기
   - 옛 `tools/dxf_viewer.html` · `tools/cad_viewer.html` 은 이동 페이지
-- CAM: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) · 조각기 CAM(`coupon-tool/cam.html`)
-- 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음
+  - 새 창으로 엶 (2026-11-27 17:59 대표 지시: 도면은 큰 화면에서) — `PROGRAMS`의 `"launch": True`
+    - 위 [CAD 뷰어 ↗] 버튼과 아래 여는 화면의 큰 버튼 = 새 탭, 작은 버튼 [이 화면에서 열기] = 예전처럼 아래 창
+    - 페이지를 열 때 자동으로 새 창을 띄우지 않음(브라우저가 팝업으로 막음)
+- 시편 주문: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) — 2026-11-27 18:01 대표 지시로 CAM과 분리
+- CAM: 조각기 CAM(`coupon-tool/cam.html`)
+- 시편 주문·CAM은 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음
 - 주소: `tools.html#viewer` · `#coupon` · `#cam` (옛 `#dxf` · `#cad3d` 는 `#viewer` 로), 해시가 없으면 이 브라우저에서 마지막으로 쓴 프로그램
 - 시편 설계는 툴 안에서 `coupon-tool.html?embed=1`로 열려 사이트 머리글을 숨김 (`make_tools.py`가 넣음)
 - 생성: `python3 _tools/make_tools.py` (프로그램 추가 = `PROGRAMS`에 한 줄)
 - 뷰어 원본(대표 PC): `D:\\Dropbox\\00-유투브제작\\sw_viewer\\` (`src/` 수정 → `node build.js` → `sw_viewer.html`)
   - 원본이 바뀌면 `tools/sw_viewer.html`로 그대로 복사해 push
-- 기획서: `_tools/홈페이지_플레이리스트·툴_재구성_v1.md`
+- 기획서: `_tools/홈페이지_플레이리스트·툴_재구성_v1.md`, `_tools/홈페이지_툴_새창열기·3분류_v1.md`
 
 # 홈페이지 두 언어 (2026-11-15 대표 지시: 홈페이지도 영어 기본)
 - 루트 = 영어(기본), `ko/` = 한국어. 파일 이름은 같음 (예: `lectures.html` ↔ `ko/lectures.html`)

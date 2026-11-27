@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>STAR Works — Tools</title>
-<meta name="description" content="CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
+<meta name="description" content="CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / Specimens: design, quote &amp; order / CAM: router CAM — right in your browser, no install">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="STAR Works STARWORKS">
 <meta property="og:title" content="STAR Works — Tools">
-<meta property="og:description" content="CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / CAM: specimen design &amp; quote · router CAM — right in your browser, no install">
+<meta property="og:description" content="CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / Specimens: design, quote &amp; order / CAM: router CAM — right in your browser, no install">
 <meta property="og:url" content="https://starworks-korea.github.io/tools.html">
 <meta property="og:image" content="https://starworks-korea.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -34,16 +34,28 @@ a{color:inherit;text-decoration:none}
 .tprog:hover{border-color:#0070C0;color:#0070C0}
 .tprog[aria-selected="true"]{background:#1E3252;border-color:#1E3252;color:#FFFFFF}
 .tprog[aria-selected="true"] .tpd{color:#C9D3E0}
-.tprog:focus-visible,.topen:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
+.tprog .tpx{font-weight:400;margin-left:4px}
+.tprog:focus-visible,.topen:focus-visible,.tl-go:focus-visible,.tl-here:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
 .topen{margin-left:auto;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;font-size:14px;font-weight:700;color:#0070C0;border:1px solid #0070C0;border-radius:8px;white-space:nowrap}
 .topen:hover{background:#0070C0;color:#FFFFFF}
 .stage{flex:1;min-height:0;position:relative;background:#0B1120}
 .stage .tload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#94A3B8;font-size:15px}
 .tframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:transparent}
 .tframe.on{display:block}
+.tlaunch{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;overflow:auto;background:#0B1120}
+.tlaunch.on{display:flex}
+.tl-in{width:100%;max-width:560px;background:#FFFFFF;border-radius:14px;padding:36px 32px;text-align:center;box-sizing:border-box}
+.tl-eye{margin:0;font-size:13px;font-weight:900;letter-spacing:2px;color:#0070C0}
+.tl-in h1{margin:6px 0 4px;font-size:28px;line-height:1.25;color:#1E3252}
+.tl-fmt{margin:0 0 22px;font-size:15px;color:#5A6478}
+.tl-go{display:flex;align-items:center;justify-content:center;min-height:64px;padding:10px 20px;border-radius:10px;background:#1E3252;color:#FFFFFF;font-size:20px;font-weight:700}
+.tl-go:hover{background:#0070C0}
+.tl-here{margin-top:10px;width:100%;min-height:44px;padding:8px 16px;border:1px solid #C9D3E0;border-radius:10px;background:#FFFFFF;color:#1E3252;font:inherit;font-size:15px;cursor:pointer}
+.tl-here:hover{border-color:#0070C0;color:#0070C0}
+.tl-pts{margin:22px 0 0;padding:16px 0 0;border-top:1px solid #DCE1E8;list-style:none;font-size:14px;line-height:1.9;color:#5A6478}
 .nojs{padding:24px;color:#FFFFFF}
 .nojs a{color:#9CC3E8;text-decoration:underline}
-@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tgrp{width:100%;display:grid;grid-template-columns:64px 1fr 1fr;gap:6px}.tprog{min-height:40px;padding:6px 8px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{min-height:34px;padding:4px 12px;font-size:13px}}
+@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tbar-in{display:grid;grid-template-columns:repeat(3,1fr);align-items:stretch}.tgrp{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:4px;min-width:0}.tgl{flex-direction:row;align-items:baseline;gap:6px;padding:0}.tgl b{font-size:13px;white-space:nowrap}.tgl small{display:none}.tprog{flex:1;min-height:44px;padding:6px 6px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{grid-column:1/-1;justify-self:end;margin-left:0;min-height:34px;padding:4px 12px;font-size:13px}.tlaunch{padding:14px;align-items:flex-start}.tl-in{padding:26px 18px}.tl-in h1{font-size:23px}.tl-go{font-size:18px}}
 
 </style>
 </head>
@@ -69,11 +81,14 @@ a{color:inherit;text-decoration:none}
 <div class="tbar" id="tbar">
 <div class="tbar-in" role="tablist" aria-label="Choose a program">
 <div class="tgrp" role="group" aria-label="CAD"><span class="tgl"><b>CAD</b><small>Drawings &amp; 3D</small></span>
-<a href="#viewer" id="tp-viewer" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">CAD Viewer (2D·3D)</span><span class="tpd">DWG · DXF · STEP · IGES · STL · KR UI</span></a>
+<a href="tools/sw_viewer.html" target="_blank" rel="noopener" data-launch id="tp-viewer" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage" title="Opens in a new window"><span class="tpn">CAD Viewer (2D·3D)<span class="tpx" aria-hidden="true">↗</span></span><span class="tpd">DWG · DXF · STEP · IGES · STL · KR UI</span></a>
 </div>
 <span class="tsep" aria-hidden="true"></span>
-<div class="tgrp" role="group" aria-label="CAM"><span class="tgl"><b>CAM</b><small>Router specimens</small></span>
+<div class="tgrp" role="group" aria-label="Specimens"><span class="tgl"><b>Specimens</b><small>Design · quote · order</small></span>
 <a href="#coupon" id="tp-coupon" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">Specimen Design</span><span class="tpd">Properties · nesting · order</span></a>
+</div>
+<span class="tsep" aria-hidden="true"></span>
+<div class="tgrp" role="group" aria-label="CAM"><span class="tgl"><b>CAM</b><small>Router machining</small></span>
 <a href="#cam" id="tp-cam" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage"><span class="tpn">Router CAM</span><span class="tpd">RichAuto · NC · simulation</span></a>
 </div>
 <a class="topen" id="topen" href="tools/sw_viewer.html" target="_blank" rel="noopener">Open in new window ↗</a>
@@ -81,6 +96,7 @@ a{color:inherit;text-decoration:none}
 </div>
 <main class="stage" id="stage" aria-live="polite">
 <div class="tload">Loading the program…</div>
+<section class="tlaunch" id="tl-viewer" aria-label="CAD Viewer (2D·3D)"><div class="tl-in"><p class="tl-eye">CAD</p><h1>CAD Viewer (2D·3D)</h1><p class="tl-fmt">DWG · DXF · STEP · IGES · STL</p><a class="tl-go" href="tools/sw_viewer.html" target="_blank" rel="noopener">Open full size in a new window ↗</a><button type="button" class="tl-here" data-embed="viewer">Open here instead</button><ul class="tl-pts"><li>Open straight from the Downloads folder</li><li>Multi-sheet drawings: jump sheet to sheet</li><li>Endpoint-snap measuring</li></ul></div></section>
 <noscript><div class="nojs" style="position: relative"><a href="tools/sw_viewer.html">CAD Viewer (2D·3D)</a> · <a href="coupon-tool.html">Specimen Design</a> · <a href="coupon-tool/cam.html">Router CAM</a></div></noscript>
 </main>
 </div>
@@ -98,16 +114,18 @@ a{color:inherit;text-decoration:none}
 </div>
 <script>
 (function(){
-var PR={"viewer": {"name": "CAD Viewer (2D·3D)", "src": "tools/sw_viewer.html", "open": "tools/sw_viewer.html"}, "coupon": {"name": "Specimen Design", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "Router CAM", "src": "coupon-tool/cam.html", "open": "coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
+var PR={"viewer": {"name": "CAD Viewer (2D·3D)", "src": "tools/sw_viewer.html", "open": "tools/sw_viewer.html", "launch": 1}, "coupon": {"name": "Specimen Design", "src": "coupon-tool.html?embed=1", "open": "coupon-tool.html"}, "cam": {"name": "Router CAM", "src": "coupon-tool/cam.html", "open": "coupon-tool/cam.html"}}, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
 var stage=document.getElementById('stage'), open=document.getElementById('topen'), base=document.title;
 function swHash(k){var a=document.querySelector('nav a[hreflang]');if(a){a.setAttribute('href',a.getAttribute('href').split('#')[0]+(k?'#'+k:''))}}
+function frame(k){var f=document.createElement('iframe');f.className='tframe';f.title=PR[k].name;f.src=PR[k].src;
+  f.setAttribute('allow','fullscreen; clipboard-read; clipboard-write');f.setAttribute('allowfullscreen','');stage.appendChild(f);return f}
 function show(k){
   if(!PR[k]) k=DEF; if(cur===k) return; cur=k;
-  if(!made[k]){var f=document.createElement('iframe');f.className='tframe';f.title=PR[k].name;f.src=PR[k].src;
-    f.setAttribute('allow','fullscreen; clipboard-read; clipboard-write');f.setAttribute('allowfullscreen','');stage.appendChild(f);made[k]=f}
+  if(!made[k]) made[k]=PR[k].launch?document.getElementById('tl-'+k):frame(k);   // launch: 새 창으로 여는 프로그램 — 아래 창에는 여는 화면
   for(var x in made) made[x].classList.toggle('on',x===k);
   for(var i=0;i<KEYS.length;i++){var b=document.getElementById('tp-'+KEYS[i]),on=KEYS[i]===k;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1}
-  open.href=PR[k].open; document.title=PR[k].name+' · '+base; swHash(k);
+  open.href=PR[k].open; open.style.display=PR[k].launch&&made[k].className.indexOf('tlaunch')>=0?'none':'';   // 여는 화면에 큰 버튼이 있으면 오른쪽 버튼은 숨김
+  document.title=PR[k].name+' · '+base; swHash(k);
   try{localStorage.setItem('swTool',k)}catch(_){}
 }
 function route(){
@@ -117,6 +135,14 @@ function route(){
   show(PR[k]?k:DEF);
 }
 window.addEventListener('hashchange',route);
+// 새 창으로 여는 프로그램: 위 버튼은 링크(target=_blank)가 새 창을 열고, 여기서는 아래 여는 화면만 맞춤
+document.getElementById('tbar').addEventListener('click',function(ev){
+  var a=ev.target.closest?ev.target.closest('.tprog[data-launch]'):null; if(a) location.hash=a.id.slice(3);
+});
+stage.addEventListener('click',function(ev){
+  var b=ev.target.closest?ev.target.closest('[data-embed]'):null; if(!b) return;
+  var k=b.getAttribute('data-embed'), f=frame(k); made[k].classList.remove('on'); made[k]=f; if(cur===k) f.classList.add('on'); open.style.display='';
+});
 document.getElementById('tbar').addEventListener('keydown',function(ev){
   var i=KEYS.indexOf(cur),n=null;
   if(ev.target.className.indexOf('tprog')<0) return;

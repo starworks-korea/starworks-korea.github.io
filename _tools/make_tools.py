@@ -1,8 +1,10 @@
 # 툴 페이지 — tools.html(영어, 기본) + ko/tools.html(한국어)
-# 2026-11-27 대표 지시: 툴은 CAD · CAM 두 분류, 여러 프로그램을 골라 쓰기 좋게
+# 2026-11-27 대표 지시: 여러 프로그램을 골라 쓰기 좋게 — 분류 3개 (18:01 시편 주문과 CAM을 따로 구분)
 #   CAD: CAD 뷰어 (2D DWG·DXF + 3D STEP·IGES·STL 통합, DWG 엔진은 tools/dwg/ (LibreDWG, GPL-3.0), 대표 PC 원본 sw_viewer.html 을 tools/ 에 복사해 둠)
-#   CAM: 시편 설계·견적(coupon-tool.html, 따로 둔 페이지) · 조각기 CAM(coupon-tool/cam.html)
-#   위에서 프로그램을 누르면 아래 창에서 바로 실행 — 한 번 연 프로그램은 바꿔도 그대로 남음(열어 둔 도면 유지)
+#        17:59 지시: 도면은 큰 화면에서 → 아래 창에 끼우지 않고 눌러서 새 창(새 탭)으로 엶 (PROGRAMS 의 "launch")
+#   시편 주문: 시편 설계·견적(coupon-tool.html, 따로 둔 페이지)
+#   CAM: 조각기 CAM(coupon-tool/cam.html)
+#   시편 주문·CAM 은 위에서 누르면 아래 창에서 바로 실행 — 한 번 연 프로그램은 바꿔도 그대로 남음
 # 사용: python3 _tools/make_tools.py
 #   - tools.html · ko/tools.html 생성
 #   - coupon-tool.html · ko/coupon-tool.html 메뉴(툴 굵게)와 embed 모드(툴 페이지 안에서는 사이트 머리글 숨김) 맞춤
@@ -20,16 +22,19 @@ F = PS.F
 FILE = "tools.html"
 
 GROUPS = [
-    {"key": "cad", "name": "CAD", "sub": ("도면·3D 보기", "Drawings & 3D")},
-    {"key": "cam", "name": "CAM", "sub": ("조각기 시편", "Router specimens")},
+    {"key": "cad", "name": ("CAD", "CAD"), "sub": ("도면·3D 보기", "Drawings & 3D")},
+    {"key": "order", "name": ("시편 주문", "Specimens"), "sub": ("설계·견적·주문", "Design · quote · order")},
+    {"key": "cam", "name": ("CAM", "CAM"), "sub": ("조각기 가공", "Router machining")},
 ]
 # src: 루트 기준 경로, both: 영어·한국어 폴더에 같은 이름 파일이 있음(한국어 페이지에서 ../ 안 붙임)
 PROGRAMS = [
     # 2026-11-27 대표 지시: DXF 뷰어 + 3D CAD 뷰어 → 통합 「CAD 뷰어」 1개 (원본: 대표 PC 00-유투브제작\\sw_viewer)
     {"key": "viewer", "group": "cad", "name": ("CAD 뷰어 (2D·3D)", "CAD Viewer (2D·3D)"),
      "desc": ("DWG · DXF · STEP · IGES · STL", "DWG · DXF · STEP · IGES · STL · KR UI"),
-     "src": "tools/sw_viewer.html"},
-    {"key": "coupon", "group": "cam", "name": ("시편 설계·견적", "Specimen Design"),
+     "src": "tools/sw_viewer.html", "launch": True,
+     "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
+                ("Open straight from the Downloads folder", "Multi-sheet drawings: jump sheet to sheet", "Endpoint-snap measuring"))},
+    {"key": "coupon", "group": "order", "name": ("시편 설계·견적", "Specimen Design"),
      "desc": ("물성 예상 · 재단 배치 · 주문", "Properties · nesting · order"),
      "src": "coupon-tool.html", "embed": "?embed=1", "both": True},
     {"key": "cam", "group": "cam", "name": ("조각기 CAM", "Router CAM"),
@@ -53,16 +58,28 @@ a{color:inherit;text-decoration:none}
 .tprog:hover{border-color:#0070C0;color:#0070C0}
 .tprog[aria-selected="true"]{background:#1E3252;border-color:#1E3252;color:#FFFFFF}
 .tprog[aria-selected="true"] .tpd{color:#C9D3E0}
-.tprog:focus-visible,.topen:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
+.tprog .tpx{font-weight:400;margin-left:4px}
+.tprog:focus-visible,.topen:focus-visible,.tl-go:focus-visible,.tl-here:focus-visible{outline:3px solid #0070C0;outline-offset:2px}
 .topen{margin-left:auto;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;font-size:14px;font-weight:700;color:#0070C0;border:1px solid #0070C0;border-radius:8px;white-space:nowrap}
 .topen:hover{background:#0070C0;color:#FFFFFF}
 .stage{flex:1;min-height:0;position:relative;background:#0B1120}
 .stage .tload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#94A3B8;font-size:15px}
 .tframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:transparent}
 .tframe.on{display:block}
+.tlaunch{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;overflow:auto;background:#0B1120}
+.tlaunch.on{display:flex}
+.tl-in{width:100%;max-width:560px;background:#FFFFFF;border-radius:14px;padding:36px 32px;text-align:center;box-sizing:border-box}
+.tl-eye{margin:0;font-size:13px;font-weight:900;letter-spacing:2px;color:#0070C0}
+.tl-in h1{margin:6px 0 4px;font-size:28px;line-height:1.25;color:#1E3252}
+.tl-fmt{margin:0 0 22px;font-size:15px;color:#5A6478}
+.tl-go{display:flex;align-items:center;justify-content:center;min-height:64px;padding:10px 20px;border-radius:10px;background:#1E3252;color:#FFFFFF;font-size:20px;font-weight:700}
+.tl-go:hover{background:#0070C0}
+.tl-here{margin-top:10px;width:100%;min-height:44px;padding:8px 16px;border:1px solid #C9D3E0;border-radius:10px;background:#FFFFFF;color:#1E3252;font:inherit;font-size:15px;cursor:pointer}
+.tl-here:hover{border-color:#0070C0;color:#0070C0}
+.tl-pts{margin:22px 0 0;padding:16px 0 0;border-top:1px solid #DCE1E8;list-style:none;font-size:14px;line-height:1.9;color:#5A6478}
 .nojs{padding:24px;color:#FFFFFF}
 .nojs a{color:#9CC3E8;text-decoration:underline}
-@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tgrp{width:100%;display:grid;grid-template-columns:64px 1fr 1fr;gap:6px}.tprog{min-height:40px;padding:6px 8px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{min-height:34px;padding:4px 12px;font-size:13px}}
+@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tbar-in{display:grid;grid-template-columns:repeat(3,1fr);align-items:stretch}.tgrp{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:4px;min-width:0}.tgl{flex-direction:row;align-items:baseline;gap:6px;padding:0}.tgl b{font-size:13px;white-space:nowrap}.tgl small{display:none}.tprog{flex:1;min-height:44px;padding:6px 6px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{grid-column:1/-1;justify-self:end;margin-left:0;min-height:34px;padding:4px 12px;font-size:13px}.tlaunch{padding:14px;align-items:flex-start}.tl-in{padding:26px 18px}.tl-in h1{font-size:23px}.tl-go{font-size:18px}}
 """
 
 JS = """<script>
@@ -70,13 +87,15 @@ JS = """<script>
 var PR=@PR@, KEYS=Object.keys(PR), DEF=KEYS[0], cur=null, made={};
 var stage=document.getElementById('stage'), open=document.getElementById('topen'), base=document.title;
 @KEEP@
+function frame(k){var f=document.createElement('iframe');f.className='tframe';f.title=PR[k].name;f.src=PR[k].src;
+  f.setAttribute('allow','fullscreen; clipboard-read; clipboard-write');f.setAttribute('allowfullscreen','');stage.appendChild(f);return f}
 function show(k){
   if(!PR[k]) k=DEF; if(cur===k) return; cur=k;
-  if(!made[k]){var f=document.createElement('iframe');f.className='tframe';f.title=PR[k].name;f.src=PR[k].src;
-    f.setAttribute('allow','fullscreen; clipboard-read; clipboard-write');f.setAttribute('allowfullscreen','');stage.appendChild(f);made[k]=f}
+  if(!made[k]) made[k]=PR[k].launch?document.getElementById('tl-'+k):frame(k);   // launch: 새 창으로 여는 프로그램 — 아래 창에는 여는 화면
   for(var x in made) made[x].classList.toggle('on',x===k);
   for(var i=0;i<KEYS.length;i++){var b=document.getElementById('tp-'+KEYS[i]),on=KEYS[i]===k;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1}
-  open.href=PR[k].open; document.title=PR[k].name+' · '+base; swHash(k);
+  open.href=PR[k].open; open.style.display=PR[k].launch&&made[k].className.indexOf('tlaunch')>=0?'none':'';   // 여는 화면에 큰 버튼이 있으면 오른쪽 버튼은 숨김
+  document.title=PR[k].name+' · '+base; swHash(k);
   try{localStorage.setItem('swTool',k)}catch(_){}
 }
 function route(){
@@ -86,6 +105,14 @@ function route(){
   show(PR[k]?k:DEF);
 }
 window.addEventListener('hashchange',route);
+// 새 창으로 여는 프로그램: 위 버튼은 링크(target=_blank)가 새 창을 열고, 여기서는 아래 여는 화면만 맞춤
+document.getElementById('tbar').addEventListener('click',function(ev){
+  var a=ev.target.closest?ev.target.closest('.tprog[data-launch]'):null; if(a) location.hash=a.id.slice(3);
+});
+stage.addEventListener('click',function(ev){
+  var b=ev.target.closest?ev.target.closest('[data-embed]'):null; if(!b) return;
+  var k=b.getAttribute('data-embed'), f=frame(k); made[k].classList.remove('on'); made[k]=f; if(cur===k) f.classList.add('on'); open.style.display='';
+});
 document.getElementById('tbar').addEventListener('keydown',function(ev){
   var i=KEYS.indexOf(cur),n=null;
   if(ev.target.className.indexOf('tprog')<0) return;
@@ -106,17 +133,35 @@ def build(L):
     ix = 0 if L == "ko" else 1
     groups = []
     for g in GROUPS:
-        btns = "\n".join(
-            f'<a href="#{p["key"]}" id="tp-{p["key"]}" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage">'
-            f'<span class="tpn">{e(p["name"][ix])}</span><span class="tpd">{e(p["desc"][ix])}</span></a>'
-            for p in PROGRAMS if p["group"] == g["key"])
-        groups.append(f'<div class="tgrp" role="group" aria-label="{g["name"]}"><span class="tgl"><b>{g["name"]}</b><small>{e(g["sub"][ix])}</small></span>\n{btns}\n</div>')
+        btns = []
+        for p in PROGRAMS:
+            if p["group"] != g["key"]:
+                continue
+            if p.get("launch"):   # 새 창으로 여는 프로그램: 버튼 자체가 새 창 링크
+                btns.append(
+                    f'<a href="{src(L, p, False)}" target="_blank" rel="noopener" data-launch id="tp-{p["key"]}" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage" title="{t(L, "새 창으로 열기", "Opens in a new window")}">'
+                    f'<span class="tpn">{e(p["name"][ix])}<span class="tpx" aria-hidden="true">↗</span></span><span class="tpd">{e(p["desc"][ix])}</span></a>')
+            else:
+                btns.append(
+                    f'<a href="#{p["key"]}" id="tp-{p["key"]}" class="tprog" role="tab" aria-selected="false" tabindex="-1" aria-controls="stage">'
+                    f'<span class="tpn">{e(p["name"][ix])}</span><span class="tpd">{e(p["desc"][ix])}</span></a>')
+        btns = "\n".join(btns)
+        groups.append(f'<div class="tgrp" role="group" aria-label="{e(g["name"][ix])}"><span class="tgl"><b>{e(g["name"][ix])}</b><small>{e(g["sub"][ix])}</small></span>\n{btns}\n</div>')
+    gname = {g["key"]: g["name"][ix] for g in GROUPS}
+    launch = "\n".join(
+        f'<section class="tlaunch" id="tl-{p["key"]}" aria-label="{e(p["name"][ix])}"><div class="tl-in">'
+        f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p["desc"][0])}</p>'
+        f'<a class="tl-go" href="{src(L, p, False)}" target="_blank" rel="noopener">{t(L, "새 창에서 크게 열기", "Open full size in a new window")} ↗</a>'
+        f'<button type="button" class="tl-here" data-embed="{p["key"]}">{t(L, "이 화면에서 열기", "Open here instead")}</button>'
+        f'<ul class="tl-pts">' + "".join(f"<li>{e(x)}</li>" for x in p.get("points", ((), ()))[ix]) + '</ul>'
+        f'</div></section>'
+        for p in PROGRAMS if p.get("launch"))
     bar = '\n<span class="tsep" aria-hidden="true"></span>\n'.join(groups)
-    pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False)} for p in PROGRAMS}
+    pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False), **({"launch": 1} if p.get("launch") else {})} for p in PROGRAMS}
     nojs = " · ".join(f'<a href="{src(L, p, False)}">{e(p["name"][ix])}</a>' for p in PROGRAMS)
     title = t(L, "스타웍스 툴", "STAR Works — Tools")
-    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · STEP · IGES · STL) / CAM: 시편 설계·견적 · 조각기 CAM — 설치 없이 브라우저에서 바로",
-             "CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / CAM: specimen design & quote · router CAM — right in your browser, no install")
+    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · STEP · IGES · STL) / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
+             "CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
     js = JS.replace("@PR@", json.dumps(pr, ensure_ascii=False)).replace("@KEEP@", PS.KEEP_HASH_JS)
     return PS.head(L, FILE, title, desc, CSS, robots="") + f"""
 <body>
@@ -131,6 +176,7 @@ def build(L):
 </div>
 <main class="stage" id="stage" aria-live="polite">
 <div class="tload">{t(L, "프로그램을 불러오는 중…", "Loading the program…")}</div>
+{launch}
 <noscript><div class="nojs" style="position: relative">{nojs}</div></noscript>
 </main>
 </div>
