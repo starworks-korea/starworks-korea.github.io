@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 17:50",
+ "updated": "2026-11-27 20:55",
  "pages": [
   {
    "key": "tech",
@@ -21,9 +21,9 @@
      "key": "product",
      "name": "제품 개발",
      "color": "#1f5fa8",
-     "desc": "휴머노이드 구동기 · 복합재 판스프링 · 면도기 · CFRP 소재분리기",
+     "desc": "휴대폰 CAD 뷰어 · 휴머노이드 구동기 · 복합재 판스프링 · 면도기 · CFRP 소재분리기",
      "name_en": "Product Development",
-     "desc_en": "Humanoid actuators · composite leaf springs · razor · CFRP material separator"
+     "desc_en": "Phone CAD viewer · Humanoid actuators · composite leaf springs · razor · CFRP material separator"
     },
     {
      "key": "fem",
@@ -263,6 +263,32 @@
      },
      "title": "FreeCAD-FEM-Composite 오픈소스 프로그램으로 설계해석하기",
      "title_en": "FreeCAD-FEM-Composite — Design Analysis with Open-Source Software"
+    },
+    {
+     "field": "product",
+     "id": "diJ3_QjG0ag",
+     "ko_id": "RU6GZ8yLlcY",
+     "ko_card": true,
+     "vis": "일부 공개",
+     "date": "2026-11-27",
+     "dur": "3:01",
+     "dur_ko": "3:07",
+     "lang": {
+      "ko": "",
+      "en": "원본",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "lang_ko": {
+      "ko": "원본",
+      "en": "",
+      "ja": "",
+      "es": "",
+      "etc": {}
+     },
+     "title": "휴대폰으로 도면 보기 — 스타웍스 CAD 뷰어 (DWG · DXF · STEP · 카카오톡 파일)",
+     "title_en": "CAD Viewer for Your Phone: DWG · DXF · STEP, No Ads | STAR Works"
     }
    ],
    "nav_en": "Tech",

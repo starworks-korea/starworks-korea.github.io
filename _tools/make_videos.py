@@ -36,6 +36,8 @@ def lang_chips(lg, L):
     return out
 def card(name, color, v, L):
     vid, title, dur, date, vis, lg = v["id"], tr(v, "title", L), v["dur"], v["date"], v.get("vis", "공개"), v.get("lang", {"ko": "원본"})
+    if L == "ko" and v.get("ko_card") and v.get("ko_id"):   # 화면 글자까지 다른 한국어판을 따로 올린 편: 한국어 페이지 카드는 한국어판
+        vid, dur, lg = v["ko_id"], v.get("dur_ko", dur), v.get("lang_ko", lg)
     return f'''<a href="https://youtu.be/{vid}" target="_blank" rel="noopener" class="vcard" style="background: #FFFFFF; border: 1px solid #DCE1E8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
 <div style="position: relative; aspect-ratio: 16 / 9; background: #1E3252">
 <img src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="{e(title)} {t(L, "썸네일", "thumbnail")}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block">

@@ -30,8 +30,9 @@ GROUPS = [
 PROGRAMS = [
     # 2026-11-27 대표 지시: DXF 뷰어 + 3D CAD 뷰어 → 통합 「CAD 뷰어」 1개 (원본: 대표 PC 00-유투브제작\\sw_viewer)
     {"key": "viewer", "group": "cad", "name": ("CAD 뷰어 (2D·3D)", "CAD Viewer (2D·3D)"),
-     "desc": ("DWG · DXF · STEP · IGES · STL", "DWG · DXF · STEP · IGES · STL · KR UI"),
+     "desc": ("DWG · DXF · STEP · IGES · STL", "DWG · DXF · STEP · IGES · STL"),
      "src": "tools/sw_viewer.html", "launch": True,
+     "video": ("https://youtu.be/RU6GZ8yLlcY", "https://youtu.be/diJ3_QjG0ag"),   # 소개 영상(한국어판, 영어판) 2026-11-27
      "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
                 ("Open straight from the Downloads folder", "Multi-sheet drawings: jump sheet to sheet", "Endpoint-snap measuring"))},
     {"key": "coupon", "group": "order", "name": ("시편 설계·견적", "Specimen Design"),
@@ -76,6 +77,8 @@ a{color:inherit;text-decoration:none}
 .tl-go:hover{background:#0070C0}
 .tl-here{margin-top:10px;width:100%;min-height:44px;padding:8px 16px;border:1px solid #C9D3E0;border-radius:10px;background:#FFFFFF;color:#1E3252;font:inherit;font-size:15px;cursor:pointer}
 .tl-here:hover{border-color:#0070C0;color:#0070C0}
+.tl-vid{display:flex;align-items:center;justify-content:center;margin-top:10px;min-height:44px;padding:8px 16px;border-radius:10px;background:#EAF3FB;color:#0B4F8A;font-size:15px;font-weight:700}
+.tl-vid:hover{background:#D5E8F8}
 .tl-pts{margin:22px 0 0;padding:16px 0 0;border-top:1px solid #DCE1E8;list-style:none;font-size:14px;line-height:1.9;color:#5A6478}
 .nojs{padding:24px;color:#FFFFFF}
 .nojs a{color:#9CC3E8;text-decoration:underline}
@@ -153,6 +156,7 @@ def build(L):
         f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p["desc"][0])}</p>'
         f'<a class="tl-go" href="{src(L, p, False)}" target="_blank" rel="noopener">{t(L, "새 창에서 크게 열기", "Open full size in a new window")} ↗</a>'
         f'<button type="button" class="tl-here" data-embed="{p["key"]}">{t(L, "이 화면에서 열기", "Open here instead")}</button>'
+        + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "소개 영상 보기 (3분) · 설치 방법", "Watch the 3-minute intro · how to install")}</a>' if p.get("video") else "") +
         f'<ul class="tl-pts">' + "".join(f"<li>{e(x)}</li>" for x in p.get("points", ((), ()))[ix]) + '</ul>'
         f'</div></section>'
         for p in PROGRAMS if p.get("launch"))
