@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27 21:25",
+ "updated": "2026-11-28 04:25",
  "pages": [
   {
    "key": "tech",
@@ -266,13 +266,14 @@
     },
     {
      "field": "product",
-     "id": "diJ3_QjG0ag",
-     "ko_id": "RU6GZ8yLlcY",
+     "id": "G-vAhCOF7eA",
+     "ko_id": "N5tZ6Nz3il0",
+     "old_ids": ["diJ3_QjG0ag", "RU6GZ8yLlcY"],
      "ko_card": true,
      "vis": "공개",
-     "date": "2026-11-27",
-     "dur": "3:01",
-     "dur_ko": "3:07",
+     "date": "2026-11-28",
+     "dur": "3:15",
+     "dur_ko": "3:24",
      "lang": {
       "ko": "",
       "en": "원본",
@@ -287,8 +288,8 @@
       "es": "",
       "etc": {}
      },
-     "title": "[무료] 휴대폰으로 도면 보기 — 스타웍스 CAD 뷰어 (DWG · DXF · STEP · 카카오톡 파일)",
-     "title_en": "FREE CAD Viewer for Your Phone: DWG · DXF · STEP, No Ads | STAR Works"
+     "title": "[무료] 휴대폰으로 도면 보기 — 스타웍스 CAD 뷰어 (DWG · DXF · PDF · STEP · 카카오톡 파일)",
+     "title_en": "FREE CAD Viewer for Your Phone: DWG · DXF · PDF · STEP, No Ads | STAR Works"
     }
    ],
    "nav_en": "Tech",

@@ -32,7 +32,7 @@ PROGRAMS = [
     {"key": "viewer", "group": "cad", "name": ("CAD 뷰어 (2D·3D)", "CAD Viewer (2D·3D)"),
      "desc": ("DWG · DXF · SVG · AI · PDF · STEP · IGES · STL", "DWG · DXF · SVG · AI · PDF · STEP · IGES · STL"),
      "src": "tools/sw_viewer.html", "launch": True,
-     "video": ("https://youtu.be/RU6GZ8yLlcY", "https://youtu.be/diJ3_QjG0ag"),   # 소개 영상(한국어판, 영어판) 2026-11-27
+     "video": ("https://youtu.be/N5tZ6Nz3il0", "https://youtu.be/G-vAhCOF7eA"),   # 소개 영상(한국어판, 영어판) 2026-11-27
      "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
                 ("Open straight from the Downloads folder", "Multi-sheet drawings: jump sheet to sheet", "Endpoint-snap measuring"))},
     {"key": "coupon", "group": "order", "name": ("시편 설계·견적", "Specimen Design"),
@@ -156,7 +156,7 @@ def build(L):
         f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p["desc"][0])}</p>'
         f'<a class="tl-go" href="{src(L, p, False)}" target="_blank" rel="noopener">{t(L, "새 창에서 크게 열기", "Open full size in a new window")} ↗</a>'
         f'<button type="button" class="tl-here" data-embed="{p["key"]}">{t(L, "이 화면에서 열기", "Open here instead")}</button>'
-        + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "무료 · 소개 영상 보기 (3분) · 설치 방법", "Free · watch the 3-minute intro · how to install")}</a>' if p.get("video") else "") +
+        + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "무료 · 소개 영상 보기 (3분 반) · 설치 방법", "Free · watch the 3-minute intro video · how to install")}</a>' if p.get("video") else "") +
         f'<ul class="tl-pts">' + "".join(f"<li>{e(x)}</li>" for x in p.get("points", ((), ()))[ix]) + '</ul>'
         f'</div></section>'
         for p in PROGRAMS if p.get("launch"))
