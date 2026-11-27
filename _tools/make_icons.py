@@ -7,6 +7,8 @@
 #   images/icons/maskable-192 · 512.png   안드로이드용(가장자리가 잘려도 로고가 남게 여백 넓힘)
 #   images/icons/apple-touch-icon.png     아이폰용 180 (모서리는 아이폰이 둥글림)
 #   favicon.ico                           16 · 32 · 48 (아이콘 줄이 없는 페이지도 이 파일로 표시됨)
+#   tools/icons/viewer-192 · 512 · maskable-512.png   CAD 뷰어 설치 아이콘 = 스타웍스 로고 + 아래 하늘색 띠 "CAD"
+#       (2026-11-27 대표 지시: 뷰어를 설치해도 스타웍스 로고가 보이게. 홈페이지 아이콘과는 "CAD" 띠로 구분)
 import asyncio, io, os, re
 from playwright.async_api import async_playwright
 from PIL import Image
@@ -40,6 +42,28 @@ def icon(kind, rx=92, k=1.0):
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">{bg}{body}</svg>'
 
 
+def viewer_icon(rx=92, k=1.0):
+    """CAD 뷰어 설치 아이콘: 스타웍스 로고(별 마크 + STAR Works) + 아래 하늘색 띠 'CAD'"""
+    mw, tw, gap = 150 * k, 250 * k, 18 * k
+    mh, th = mw * MB[3] / MB[2], tw * TB[3] / TB[2]
+    band = 112 * k
+    by = 256 + (512 * (1 if rx else k) / 2) - band if rx else 256 + 256 * k - band     # 띠 위쪽 y
+    top = (256 - (256 if rx else 256 * k)) + ((by - (256 - (256 if rx else 256 * k))) - (mh + gap + th)) / 2
+    body = place(MARK, MB, (512 - mw) / 2, top, mw) + place(STAR_T + WORKS_T, TB, (512 - tw) / 2, top + mh + gap, tw)
+    if rx:   # 둥근 모서리 안쪽에만 띠가 보이게 잘라 냄
+        clip = f'<clipPath id="c"><rect width="512" height="512" rx="{rx}"/></clipPath>'
+        bandsvg = f'<g clip-path="url(#c)"><rect x="0" y="{by:.1f}" width="512" height="{512 - by:.1f}" fill="#0EA5E9"/></g>'
+        ty, fs = by + band * 0.72, band * 0.66
+    else:    # 안드로이드용: 가장자리가 잘리므로 띠를 안전 영역 안의 알약 모양으로
+        clip = ""
+        bw = 250 * k
+        bandsvg = f'<rect x="{(512 - bw) / 2:.1f}" y="{by:.1f}" width="{bw:.1f}" height="{band * 0.8:.1f}" rx="{band * 0.4:.1f}" fill="#0EA5E9"/>'
+        ty, fs = by + band * 0.8 * 0.74, band * 0.8 * 0.66
+    text = f'<text x="256" y="{ty:.1f}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="{fs:.1f}" letter-spacing="{fs * 0.08:.1f}" fill="#FFFFFF">CAD</text>'
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>{clip}</defs>'
+            f'<rect width="512" height="512" rx="{rx}" fill="{NAVY}"/>{body}{bandsvg}{text}</svg>')
+
+
 JOBS = [  # (파일, 종류, 크기, 모서리, 로고 비율)
     ("icon-16.png", "A", 16, 92, 1.06), ("icon-32.png", "A", 32, 92, 1.03),
     ("icon-48.png", "A", 48, 92, 1.0), ("icon-64.png", "A", 64, 92, 1.0),
@@ -62,6 +86,14 @@ async def main():
             await p.close()
             Image.open(io.BytesIO(png)).save(os.path.join(OUT, name), optimize=True)
             print(name, px)
+        VOUT = os.path.join(ROOT, "tools", "icons")
+        for name, px, rx, k in (("viewer-192.png", 192, 92, 1.0), ("viewer-512.png", 512, 92, 1.0), ("viewer-maskable-512.png", 512, 0, 0.74)):
+            p = await b.new_page(viewport={"width": px, "height": px})
+            await p.set_content(f'<body style="margin:0;background:transparent"><div style="width:{px}px;height:{px}px;display:block;line-height:0">{viewer_icon(rx, k)}</div></body>')
+            png = await p.screenshot(omit_background=True)
+            await p.close()
+            Image.open(io.BytesIO(png)).save(os.path.join(VOUT, name), optimize=True)
+            print("tools/icons/" + name, px)
         await b.close()
     ims = [Image.open(os.path.join(OUT, f"icon-{n}.png")).convert("RGBA") for n in (16, 32, 48)]
     ims[2].save(os.path.join(ROOT, "favicon.ico"), format="ICO", append_images=ims[:2], sizes=[(16, 16), (32, 32), (48, 48)])

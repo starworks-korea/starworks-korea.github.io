@@ -39,7 +39,9 @@
 - 매니페스트: `manifest.webmanifest`(영어, 시작 `/`) · `ko/manifest.webmanifest`(한국어, 시작 `/ko/`) — 손으로 고침, 아이콘 주소는 `/images/icons/…`
 - 머리글 줄(아이콘·매니페스트·테마 색)은 `i18n.icon_links()` 한 곳 — `page_shell.head`, `make_static.py`, `make_tools.py`(시편 설계)가 넣음
 - 크롬: ⋮ › 전송, 저장, 공유 › [바로가기 만들기] 또는 [페이지를 앱으로 설치] 때 이 아이콘을 씀. 주소를 바탕화면으로 끌어 만든 바로가기(.url)는 브라우저 모양 그대로(사이트에서 못 바꿈)
-- CAD 뷰어(`tools/`)는 자기 매니페스트·아이콘(`tools/icons/`) 그대로
+- CAD 뷰어(`tools/`)는 자기 매니페스트(`tools/manifest.webmanifest`, 이름 「스타웍스 CAD」) — 따로 설치되는 앱(카카오톡 공유 받기 포함)
+  - 설치 아이콘 `tools/icons/viewer-*.png` = 스타웍스 로고 + 아래 하늘색 띠 "CAD" (`make_icons.py`가 같이 만듦, 2026-11-27 대표 지시)
+  - 짧은 주소 `starworks-korea.github.io/cad` → `tools/sw_viewer.html` (`cad/index.html`, 영상 설명란·안내용)
 - 기획서: `_tools/홈페이지_바로가기_아이콘_v1.md`
 
 # 홈페이지 두 언어 (2026-11-15 대표 지시: 홈페이지도 영어 기본)
