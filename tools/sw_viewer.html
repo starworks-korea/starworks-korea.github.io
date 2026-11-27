@@ -2,7 +2,7 @@
 <!-- ==========================================================================
      STAR Works CAD 뷰어 (2D · 3D 통합) — sw_viewer.html
      src/shell.html 기반 빌드 산출물 (node build.js). 직접 고치지 말고 src/ 를 고칩니다.
-     2D: DWG(R14 ~ 2018 형식) · DXF (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
+     2D: DWG(R14 ~ 2018 형식) · DXF · SVG · AI (WebGL2 선분 배칭, 치수 강조, 겹친 선 정리, 시트 자동 인식)
      3D: STEP · IGES · STL (어셈블리 트리, 분해도)
      ========================================================================== -->
 <html lang="ko">
@@ -13,7 +13,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/viewer-192.png" />
   <link rel="apple-touch-icon" href="icons/viewer-192.png" />
-  <title>STAR Works CAD 뷰어 — DWG · DXF · STEP · IGES · STL</title>
+  <title>STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · STEP · IGES · STL</title>
   <style>
 /* ============================================================================
  * shell.css — 통합 뷰어 틀 (머리줄 · 도구줄 · 본문 · 패널 · 서랍 · 상태줄)
@@ -671,7 +671,7 @@ body.theme-light #m2 .dim-val {
     </button>
     <div class="sw-title">
       <div id="sw-file-name" class="sw-file-name">열린 파일 없음</div>
-      <div id="sw-file-sub" class="sw-file-sub">DWG · DXF · STEP · IGES · STL</div>
+      <div id="sw-file-sub" class="sw-file-sub">DWG · DXF · SVG · AI · STEP · IGES · STL</div>
     </div>
     <div class="sw-open-wide">
       <button class="btn btn-primary" data-open="downloads" title="다운로드 폴더에서 파일 고르기">다운로드</button>
@@ -719,7 +719,7 @@ body.theme-light #m2 .dim-val {
     <section id="home" class="sw-home">
       <div class="sw-home-card">
         <h1>도면 · 모델 파일 열기</h1>
-        <p class="sw-home-sub">2D 도면(DWG · DXF)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
+        <p class="sw-home-sub">2D 도면(DWG · DXF · SVG · AI)과 3D 모델(STEP · IGES · STL)을 한 곳에서 봅니다.<br />파일은 이 기기 안에서만 열리고 밖으로 보내지 않습니다.</p>
         <div class="sw-open-big">
           <button class="sw-bigbtn sw-bigbtn-primary" data-open="downloads"><b>다운로드</b><small>다운로드 폴더</small></button>
           <button class="sw-bigbtn" data-open="kakao"><b>카카오톡</b><small id="sw-kakao-hint">받은 파일 폴더</small></button>
@@ -736,9 +736,12 @@ body.theme-light #m2 .dim-val {
               R13 이하는 일부만 읽힙니다. AutoCAD Mechanical 전용 개체 등 일부는 빠질 수 있습니다.<br />
               처음 열 때 변환 엔진(내려받기 약 2 MB)을 한 번 받습니다(인터넷 필요).</small></td></tr>
             <tr><th>DXF</th><td>R12 ~ 2018 형식 — 일반(ASCII) DXF. 이진(Binary) DXF는 안 됨</td></tr>
+            <tr><th>SVG</th><td>선·곡선·도형·글자를 선으로 읽음 — 크기 단위(mm 등)가 있으면 <b>1:1</b>, 없으면 px 가정을 알림</td></tr>
+            <tr><th>AI</th><td>일러스트 <b>9 ~ CC</b> — "PDF 호환 파일 만들기"로 저장한 파일(기본 저장), 1 pt = 25.4/72 mm로 <b>1:1</b><br />
+              그림(사진)·채움·그라데이션은 보이지 않고 윤곽선만 보입니다. 8 이하 옛 형식은 선·곡선만.</td></tr>
             <tr><th>3D</th><td>STEP(.stp · .step) · IGES(.igs · .iges) · STL</td></tr>
           </table>
-          <p class="sw-credit">DWG 변환: LibreDWG (GNU GPL-3.0) · <a href="https://www.gnu.org/software/libredwg/" target="_blank" rel="noopener">소스</a> · 3D 면 분할: earcut (ISC, Mapbox)</p>
+          <p class="sw-credit">DWG 변환: LibreDWG (GNU GPL-3.0) · <a href="https://www.gnu.org/software/libredwg/" target="_blank" rel="noopener">소스</a> · 3D 면 분할: earcut (ISC, Mapbox) · AI 읽기: pdf.js (Apache-2.0, Mozilla)</p>
         </div>
       </div>
     </section>
@@ -1181,7 +1184,7 @@ body.theme-light #m2 .dim-val {
     <div id="sw-sheet-pop" class="sw-sheet-pop"></div>
 
     <!-- 끌어 놓기 안내 -->
-    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DWG · DXF · STEP · IGES · STL)</div>
+    <div id="sw-drop" class="sw-drop">여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · STEP · IGES · STL)</div>
   </div>
 
   <!-- ==================== 상태줄 ==================== -->
@@ -1210,7 +1213,7 @@ body.theme-light #m2 .dim-val {
   </aside>
 
   <input id="sw-input" type="file" multiple hidden
-         accept=".dxf,.dwg,.stp,.step,.igs,.iges,.stl,.DXF,.DWG,.STP,.STEP,.IGS,.IGES,.STL" />
+         accept=".dxf,.dwg,.svg,.ai,.stp,.step,.igs,.iges,.stl,.DXF,.DWG,.SVG,.AI,.STP,.STEP,.IGS,.IGES,.STL" />
   <div id="sw-toast" class="sw-toast"></div>
 </div>
 
@@ -1255,7 +1258,7 @@ body.theme-light #m2 .dim-val {
     '마지막에 잰 치수 지움': 'Erase the last measurement', '내가 잰 치수를 모두 지움': 'Erase all my measurements', '치수 재기 끝 (ESC)': 'Finish measuring (ESC)',
     '레이어 이름 찾기...': 'Find a layer...', '앞 파일 (PageUp)': 'Previous file (PageUp)', '다음 파일 (PageDown)': 'Next file (PageDown)',
     '앞 시트 (←)': 'Previous sheet (←)', '시트 목록': 'Sheet list', '다음 시트 (→)': 'Next sheet (→)', '전체 보기': 'Fit All', '파일 열기와 목록': 'Open files and list',
-    'STAR Works CAD 뷰어 — DWG · DXF · STEP · IGES · STL': 'STAR Works CAD Viewer — DWG · DXF · STEP · IGES · STL', 'STAR Works 뷰어': 'STAR Works Viewer',
+    'STAR Works CAD 뷰어 — DWG · DXF · SVG · AI · STEP · IGES · STL': 'STAR Works CAD Viewer — DWG · DXF · SVG · AI · STEP · IGES · STL', 'STAR Works 뷰어': 'STAR Works Viewer',
     'STAR Works CAD 뷰어': 'STAR Works CAD Viewer', '열린 파일 없음': 'No file open', '다운로드': 'Downloads', '카카오톡': 'KakaoTalk', '다른 위치': 'Browse',
     '열기': 'Open', '목록': 'Files', '패널': 'Panel', '중심부 맞춤': 'Fit Core', '치수 강조 ON': 'Dims ON', '치수 강조 OFF': 'Dims OFF', '격자': 'Grid',
     '시점 초기화': 'Reset View', 'PNG 저장': 'Save PNG', '정면': 'Front', '상면': 'Top', '우측': 'Right', '등각': 'Iso', '배면': 'Back', '하면': 'Bottom', '좌측': 'Left', '맞춤': 'Fit',
@@ -1269,11 +1272,11 @@ body.theme-light #m2 .dim-val {
     'R13 이하는 일부만 읽힙니다. AutoCAD Mechanical 전용 개체 등 일부는 빠질 수 있습니다.': 'R13 and older are only partly read. Some objects, such as AutoCAD Mechanical objects, may be missing.',
     '처음 열 때 변환 엔진(내려받기 약 2 MB)을 한 번 받습니다(인터넷 필요).': 'The first time, a converter engine (about 2 MB) is downloaded once (internet needed).',
     'R12 ~ 2018 형식 — 일반(ASCII) DXF. 이진(Binary) DXF는 안 됨': 'R12 – 2018 format — ASCII DXF. Binary DXF is not supported',
-    'DWG 변환: LibreDWG (GNU GPL-3.0) ·': 'DWG conversion: LibreDWG (GNU GPL-3.0) ·', '소스': 'source', '· 3D 면 분할: earcut (ISC, Mapbox)': '· 3D face triangulation: earcut (ISC, Mapbox)',
+    'DWG 변환: LibreDWG (GNU GPL-3.0) ·': 'DWG conversion: LibreDWG (GNU GPL-3.0) ·', '소스': 'source', '· 3D 면 분할: earcut (ISC, Mapbox)': '· 3D face triangulation: earcut (ISC, Mapbox)', '· 3D 면 분할: earcut (ISC, Mapbox) · AI 읽기: pdf.js (Apache-2.0, Mozilla)': '· 3D face triangulation: earcut (ISC, Mapbox) · AI reading: pdf.js (Apache-2.0, Mozilla)',
     '끌기: 이동 · 휠: 확대 · 시트 누르기: 그 장 확대 · 두 번 누르기: 전체 · F: 전체 · M: 치수 재기': 'Drag: pan · Wheel: zoom · Tap a sheet: zoom to it · Double-tap: fit all · F: fit · M: measure',
     '도면 읽는 중...': 'Reading the drawing...', '직선': 'Line', '수평': 'Horiz', '수직': 'Vert', '하나 지우기': 'Erase one', '되돌리기': 'Undo', '모두 지우기': 'Erase all', '끝': 'Done',
     '레이어': 'Layers', '치수': 'Dims', '정보': 'Info', '레이어 목록': 'Layers', '모두 켜기': 'All on', '모두 끄기': 'All off', '파일': 'File', '시트': 'Sheet', '전체': 'All',
-    '여기에 파일을 놓으세요 (DWG · DXF · STEP · IGES · STL)': 'Drop files here (DWG · DXF · STEP · IGES · STL)', '준비 완료': 'Ready', '대기 중': 'Idle', '파일을 열어 주세요': 'Open a file', '닫기': 'Close',
+    '여기에 파일을 놓으세요 (DWG · DXF · SVG · AI · STEP · IGES · STL)': 'Drop files here (DWG · DXF · SVG · AI · STEP · IGES · STL)', '준비 완료': 'Ready', '대기 중': 'Idle', '파일을 열어 주세요': 'Open a file', '닫기': 'Close',
     // 2D 패널
     '치수 값 또는 유형 검색...': 'Search dimension value or type...', '치수선 가시성 극대화 설정': 'Dimension visibility', '가독성 강화': 'Readability', '치수 표시': 'Show dimensions',
     '치수 강조 모드 (고대비 + 최상단)': 'Highlight dimensions (high contrast, on top)', '치수 강조 색상': 'Highlight color', '선명한 노랑 (추천)': 'Vivid yellow (recommended)',
@@ -1311,19 +1314,19 @@ body.theme-light #m2 .dim-val {
     '.stl · .stp · .step · .igs · .iges · 어셈블리/분해도 지원': '.stl · .stp · .step · .igs · .iges · assemblies and exploded views',
     '대기 중 · STL / STEP / IGES 파일을 열어주세요': 'Idle · open an STL / STEP / IGES file',
     // 파일 열기 · 카카오톡
-    '열 수 있는 파일이 없습니다. (지원: DWG · DXF · STEP · IGES · STL)': 'No supported file. (DWG · DXF · STEP · IGES · STL)', 'DWG 파일이 아니거나 손상된 파일입니다.': 'This is not a DWG file, or it is damaged.',
+    '열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · STEP · IGES · STL)': 'No supported file. (DWG · DXF · SVG · AI · STEP · IGES · STL)', 'DWG 파일이 아니거나 손상된 파일입니다.': 'This is not a DWG file, or it is damaged.',
     '이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.': 'Binary DXF cannot be opened. Save it as ASCII DXF or DWG in AutoCAD.',
     '도면에서 선을 찾지 못했습니다. 파일이 비었거나 지원하지 않는 개체만 들어 있습니다.': 'No lines were found. The file is empty or has only unsupported objects.',
     '읽지 못했습니다': 'Could not read', '알 수 없음': 'unknown',
     'DWG 변환이 너무 오래 걸려 멈췄습니다 (3분). 인터넷 연결이나 파일을 확인해 주세요.': 'DWG conversion took too long and was stopped (3 min). Check the connection or the file.',
-    'CAD 파일 (DWG · DXF · STEP · IGES · STL)': 'CAD files (DWG · DXF · STEP · IGES · STL)', '폴더를 읽는 중...': 'Reading the folder...',
+    'CAD 파일 (DWG · DXF · SVG · AI · STEP · IGES · STL)': 'CAD files (DWG · DXF · SVG · AI · STEP · IGES · STL)', '폴더를 읽는 중...': 'Reading the folder...',
     '폴더 읽기를 허용해야 목록을 볼 수 있습니다.': 'Allow folder access to see the list.', '카카오톡 안에서 연 화면': 'The KakaoTalk in-app browser', '삼성 인터넷': 'Samsung Internet',
     '아이폰·아이패드': 'iPhone / iPad', '이 브라우저': 'This browser', '카카오톡 폴더': 'KakaoTalk folder', '에서는 폴더를 지정해 둘 수 없습니다.': ' cannot remember a folder.',
     '파일 선택창에서 직접 골라 주세요.': 'Pick the file in the file chooser.', '크롬': 'Chrome',
     '으로 열면 카카오톡 폴더를 한 번만 지정하고, 다음부터 최신 파일 목록이 바로 나옵니다.': ': choose the KakaoTalk folder once, and the latest files show up right away from then on.',
     '크롬·엣지에서는 폴더를 한 번만 지정하면 됩니다.': 'In Chrome or Edge you only choose the folder once.', '크롬으로 열기': 'Open in Chrome', '파일 선택창 열기': 'Open file chooser',
     '선택창에서: ☰ › 내장 저장공간 › Download › KakaoTalk': 'In the chooser: ☰ › Internal storage › Download › KakaoTalk', '폴더 바꾸기': 'Change folder',
-    '이 폴더에 도면·모델 파일이 없습니다.': 'No drawing or model files in this folder.', '(DWG · DXF · STEP · IGES · STL 만 보입니다)': '(only DWG · DXF · STEP · IGES · STL are listed)',
+    '이 폴더에 도면·모델 파일이 없습니다.': 'No drawing or model files in this folder.', '(DWG · DXF · SVG · AI · STEP · IGES · STL 만 보입니다)': '(only DWG · DXF · SVG · AI · STEP · IGES · STL are listed)',
     '폴더의 최신 파일 보기': 'Show the latest files in the folder', '브라우저는 폴더를 스스로 찾아 들어갈 수 없어,': 'A browser cannot find a folder by itself, so you choose it',
     '처음 한 번만': 'just once', '직접 골라 주셔야 합니다. 다음부터는 최신 파일 목록이 바로 나옵니다.': '. After that the latest files show up right away.',
     '① 아래 [폴더 고르기]': '① Tap [Choose folder] below', '② 왼쪽 위 ☰ › 휴대폰 이름(내장 저장공간)': '② Top-left ☰ › your phone (Internal storage)',
@@ -1358,6 +1361,23 @@ body.theme-light #m2 .dim-val {
   };
   // ---------- 2) 숫자·이름이 섞인 글 (앞에서부터 차례로 바꿈) ----------
   var RULES = [
+    // SVG · AI 열기 (2026-11-27)
+    [/2D 도면\(DWG · DXF · SVG · AI\)과 3D 모델\(STEP · IGES · STL\)을 한 곳에서 봅니다\./g, 'View 2D drawings (DWG · DXF · SVG · AI) and 3D models (STEP · IGES · STL) in one place.'],
+    [/선·곡선·도형·글자를 선으로 읽음 — 크기 단위\(mm 등\)가 있으면\s*/g, 'Lines, curves, shapes and text are read as lines — with a size unit (mm etc.) it is '], [/, 없으면 px 가정을 알림/g, ', otherwise the px assumption is shown'],
+    [/^일러스트\s*$/g, 'Illustrator '], [/일러스트 /g, 'Illustrator '], [/\s*— "PDF 호환 파일 만들기"로 저장한 파일\(기본 저장\), 1 pt = 25\.4\/72 mm로\s*/g, ' — files saved with "Create PDF Compatible File" (the default), 1 pt = 25.4/72 mm, so '],
+    [/그림\(사진\)·채움·그라데이션은 보이지 않고 윤곽선만 보입니다\. 8 이하 옛 형식은 선·곡선만\./g, 'Images, fills and gradients are not shown, outlines only. Legacy files (8 and older): lines and curves only.'],
+    [/ · AI 읽기: pdf\.js \(Apache-2\.0, Mozilla\)/g, ' · AI reading: pdf.js (Apache-2.0, Mozilla)'],
+    [/(SVG|AI) · 읽는 중\.\.\./g, '$1 · reading...'], [/ · AI 읽기 엔진 받는 중 \(처음 한 번, 약 1\.5 MB\)\.\.\./g, ' · downloading the AI reader (first time only, about 1.5 MB)...'], [/ · 선으로 바꾸는 중\.\.\./g, ' · converting to lines...'],
+    [/AI\(옛 형식\)/g, 'AI (legacy)'], [/크기 0/g, 'size 0'],
+    [/SVG에 길이 단위가 없어 1 px = (1\/\d+) 인치\(([\d.]+) mm\)로 봤습니다\. 치수는 이 가정으로 잰 값입니다\./g, 'This SVG has no length unit, so 1 px was taken as $1 inch ($2 mm). Measurements use this assumption.'],
+    [/그림\(사진\) (\d+)개는 보이지 않습니다\./g, '$1 image(s) are not shown.'], [/대지 (\d+)개를 가로로 늘어놓았습니다\./g, '$1 artboards are laid out side by side.'],
+    [/옛 형식 AI는 선·곡선만 읽습니다\./g, 'Legacy AI files: lines and curves only.'], [/선으로 된 내용을 찾지 못했습니다\./g, 'No line content was found.'],
+    [/SVG 파일이 아니거나 내용이 깨졌습니다\./g, 'This is not an SVG file, or it is damaged.'], [/AI 읽기 엔진을 불러오지 못했습니다\./g, 'Could not load the AI reader.'],
+    [/AI 읽기 엔진을 받지 못했습니다\. 인터넷 연결을 확인해 주세요\./g, 'Could not download the AI reader. Check your internet connection.'], [/암호가 걸린 파일은 열 수 없습니다\./g, 'Password-protected files cannot be opened.'],
+    [/AI 파일 안의 PDF 내용을 읽지 못했습니다\./g, 'Could not read the PDF content inside the AI file.'],
+    [/이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다\. 일러스트에서 \[다른 이름으로 저장\] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요\./g, 'This AI file was saved without "Create PDF Compatible File", so its content cannot be read. In Illustrator, use Save As with "Create PDF Compatible File" turned on.'],
+    [/이 AI 파일\(옛 포스트스크립트 형식\)에서 선을 찾지 못했습니다\. 일러스트에서 PDF 호환으로 다시 저장하거나 SVG로 내보내 주세요\./g, 'No lines were found in this legacy (PostScript) AI file. Save it again as PDF-compatible, or export it as SVG.'],
+    [/AI 파일 형식을 알아보지 못했습니다\. \(PDF 호환 저장본 또는 SVG로 내보낸 파일을 열어 주세요\)/g, 'Unknown AI file format. (Open a PDF-compatible AI file or an exported SVG.)'],
     [/시트 (\d+)장을 찾았습니다\. 번호가 붙은 틀을 누르면 그 장이 크게 보입니다\./g, 'Found $1 sheets. Tap a numbered frame to zoom to that sheet.'],
     [/ — STAR Works CAD 뷰어/g, ' — STAR Works CAD Viewer'], [/폭 ([\d.,]+) × 높이 ([\d.,]+)/g, 'W $1 × H $2'], [/ · 레이어 /g, ' · layer '],
     [/선형 치수/g, 'Linear'], [/정렬 치수/g, 'Aligned'], [/반지름 치수/g, 'Radius'], [/지름 치수/g, 'Diameter'], [/각도 치수/g, 'Angular'], [/좌표 치수/g, 'Ordinate'],
@@ -6268,6 +6288,576 @@ window.__DXF_WORKER_SRC__ = "/**\n * ===========================================
 
 ;
 /**
+ * ============================================================================
+ * vec2dxf.js — SVG · AI(일러스트) 파일을 DXF 글로 바꿉니다. (2026-11-27)
+ * ----------------------------------------------------------------------------
+ * 바꾼 DXF 는 기존 2D 엔진(Cad2D.load)에 그대로 넘깁니다. (DWG 와 같은 길)
+ *   - 길이 단위: mm 1:1  (SVG: width/height 의 단위, 없으면 px 가정 / AI: 1 pt = 25.4/72 mm)
+ *   - 베지어 곡선: 원·원호 모양이면 CIRCLE·ARC, 아니면 짧은 선(허용 오차 0.01 mm)
+ *   - 색: 선 색(없으면 채움 색). 검정·흰색에 가까우면 7번(화면 바탕에 맞춰 보이는 색)
+ *   - 그림(비트맵)·채움·그라데이션은 넣지 않습니다(윤곽선만).
+ * AI: 일러스트 9 ~ CC 의 "PDF 호환" 저장본은 pdf.js(Mozilla, Apache-2.0)로 읽고,
+ *     일러스트 8 이하(포스트스크립트 글)는 선·곡선만 읽습니다.
+ * ============================================================================
+ */
+(function (global) {
+  'use strict';
+  const MM_PER_PT = 25.4 / 72, MM_PER_PX = 25.4 / 96;
+  const FLAT_TOL = 0.01;          // 곡선을 선으로 나눌 때 허용 오차(mm)
+  const TEXT_CAP = 0.72;          // 글꼴 크기 → 도면 글자 높이(대문자 높이) 비
+
+  // ---------------------------------------------------------------- 행렬 [a,b,c,d,e,f]: x' = a x + c y + e, y' = b x + d y + f
+  const I = [1, 0, 0, 1, 0, 0];
+  const mul = (A, B) => [                       // B 를 먼저, 그다음 A
+    A[0] * B[0] + A[2] * B[1], A[1] * B[0] + A[3] * B[1],
+    A[0] * B[2] + A[2] * B[3], A[1] * B[2] + A[3] * B[3],
+    A[0] * B[4] + A[2] * B[5] + A[4], A[1] * B[4] + A[3] * B[5] + A[5]];
+  const ap = (M, x, y) => [M[0] * x + M[2] * y + M[4], M[1] * x + M[3] * y + M[5]];
+  const mscale = (M) => Math.sqrt(Math.abs(M[0] * M[3] - M[1] * M[2]));
+
+  // ---------------------------------------------------------------- DXF 쓰기
+  function Writer() {
+    this.out = []; this.layers = new Map(); this.layers.set('0', 7);
+    this.n = { line: 0, arc: 0, circle: 0, text: 0, seg: 0 };
+    this.box = [Infinity, Infinity, -Infinity, -Infinity];
+  }
+  const f = (v) => { const r = Math.round(v * 1e5) / 1e5; return (Object.is(r, -0) ? 0 : r).toString(); };
+  Writer.prototype.layer = function (name, aci) {
+    name = String(name || '0').replace(/[\r\n<>\/\\":;?*|=,`]/g, '_').trim().slice(0, 60) || '0';
+    if (!this.layers.has(name)) this.layers.set(name, aci || 7);
+    return name;
+  };
+  Writer.prototype.head = function (type, layer, color) {
+    this.out.push('0', type, '8', layer || '0');
+    if (color && color.rgb !== undefined) this.out.push('420', String(color.rgb)); else this.out.push('62', String(color && color.aci ? color.aci : 7));
+  };
+  Writer.prototype.grow = function (x, y) {
+    const b = this.box; if (x < b[0]) b[0] = x; if (y < b[1]) b[1] = y; if (x > b[2]) b[2] = x; if (y > b[3]) b[3] = y;
+  };
+  Writer.prototype.poly = function (pts, closed, layer, color) {
+    // 같은 점이 이어지면 뺌
+    const p = []; for (const q of pts) { const l = p[p.length - 1]; if (!l || Math.abs(l[0] - q[0]) > 1e-6 || Math.abs(l[1] - q[1]) > 1e-6) p.push(q); }
+    if (closed && p.length > 2) { const a = p[0], z = p[p.length - 1]; if (Math.abs(a[0] - z[0]) < 1e-6 && Math.abs(a[1] - z[1]) < 1e-6) p.pop(); }
+    if (p.length < 2) return;
+    for (const q of p) this.grow(q[0], q[1]);
+    if (p.length === 2) {
+      this.head('LINE', layer, color); this.out.push('10', f(p[0][0]), '20', f(p[0][1]), '11', f(p[1][0]), '21', f(p[1][1])); this.n.line++; this.n.seg++; return;
+    }
+    this.head('LWPOLYLINE', layer, color); this.out.push('90', String(p.length), '70', closed ? '1' : '0');
+    for (const q of p) this.out.push('10', f(q[0]), '20', f(q[1]));
+    this.n.line++; this.n.seg += p.length - (closed ? 0 : 1);
+  };
+  Writer.prototype.circle = function (c, r, layer, color) {
+    this.head('CIRCLE', layer, color); this.out.push('10', f(c[0]), '20', f(c[1]), '40', f(r));
+    this.grow(c[0] - r, c[1] - r); this.grow(c[0] + r, c[1] + r); this.n.circle++;
+  };
+  Writer.prototype.arc = function (c, r, a0, a1, layer, color) {   // a0 → a1 반시계(도)
+    this.head('ARC', layer, color); this.out.push('10', f(c[0]), '20', f(c[1]), '40', f(r), '50', f(a0), '51', f(a1));
+    this.grow(c[0] - r, c[1] - r); this.grow(c[0] + r, c[1] + r); this.n.arc++;
+  };
+  Writer.prototype.text = function (x, y, h, str, rotDeg, layer, color) {
+    str = String(str).replace(/[\r\n\t]+/g, ' ').trim(); if (!str || !(h > 0)) return;
+    this.head('TEXT', layer, color); this.out.push('10', f(x), '20', f(y), '40', f(h), '1', str);
+    if (rotDeg) this.out.push('50', f(rotDeg));
+    this.grow(x, y); this.n.text++;
+  };
+  Writer.prototype.build = function () {
+    const h = ['0', 'SECTION', '2', 'HEADER', '9', '$ACADVER', '1', 'AC1015', '9', '$INSUNITS', '70', '4', '9', '$MEASUREMENT', '70', '1', '0', 'ENDSEC',
+      '0', 'SECTION', '2', 'TABLES', '0', 'TABLE', '2', 'LAYER', '70', String(this.layers.size)];
+    this.layers.forEach((aci, name) => { h.push('0', 'LAYER', '2', name, '70', '0', '62', String(aci), '6', 'CONTINUOUS'); });
+    h.push('0', 'ENDTAB', '0', 'ENDSEC', '0', 'SECTION', '2', 'ENTITIES');
+    const txt = h.concat(this.out, ['0', 'ENDSEC', '0', 'EOF', '']).join('\n');
+    return new TextEncoder().encode(txt).buffer;
+  };
+
+  // ---------------------------------------------------------------- 색
+  const NAMED = { black: '#000', white: '#fff', red: '#f00', green: '#008000', lime: '#0f0', blue: '#00f', yellow: '#ff0', cyan: '#0ff', aqua: '#0ff', magenta: '#f0f', fuchsia: '#f0f',
+    gray: '#808080', grey: '#808080', silver: '#c0c0c0', orange: '#ffa500', purple: '#800080', navy: '#000080', maroon: '#800000', olive: '#808000', teal: '#008080', brown: '#a52a2a', pink: '#ffc0cb' };
+  function parseColor(s) {                      // → [r,g,b] 0~255, 없으면 null
+    if (!s) return null; s = String(s).trim().toLowerCase();
+    if (s === 'none' || s === 'transparent' || s.indexOf('url(') === 0) return null;
+    if (NAMED[s]) s = NAMED[s];
+    let m = /^#([0-9a-f]{3})$/.exec(s); if (m) return m[1].split('').map((c) => parseInt(c + c, 16));
+    m = /^#([0-9a-f]{6})/.exec(s); if (m) return [0, 2, 4].map((i) => parseInt(m[1].substr(i, 2), 16));
+    m = /^rgba?\(([^)]+)\)/.exec(s);
+    if (m) { const v = m[1].split(/[\s,\/]+/).filter(Boolean); if (v.length >= 3) return v.slice(0, 3).map((x) => /%$/.test(x) ? Math.round(parseFloat(x) * 2.55) : Math.round(parseFloat(x))); }
+    return [0, 0, 0];                           // 모르는 색 이름 → 검정으로 봄(7번이 됨)
+  }
+  function dxfColor(rgb) {
+    if (!rgb) return { aci: 7 };
+    const r = Math.max(0, Math.min(255, rgb[0] | 0)), g = Math.max(0, Math.min(255, rgb[1] | 0)), b = Math.max(0, Math.min(255, rgb[2] | 0));
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (mx < 115 || (mx - mn < 40 && mn > 215)) return { aci: 7 };    // 어두운 색(검정·군청 등)·흰색 쪽 → 바탕에 맞춰 보이는 색(어두운 바탕에서 안 보이는 것을 막음)
+    return { rgb: (r << 16) | (g << 8) | b };
+  }
+
+  // ---------------------------------------------------------------- 경로: 선(L)·3차 베지어(C) 조각 → 선·원호·원
+  // sub = { p: [x,y] 시작점, segs: [ ['L',x,y] | ['C',x1,y1,x2,y2,x,y] ], closed }  (좌표는 이미 mm, 위가 +)
+  function circleOf(a, b, c) {                  // 세 점을 지나는 원
+    const d = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1]));
+    if (Math.abs(d) < 1e-12) return null;
+    const a2 = a[0] * a[0] + a[1] * a[1], b2 = b[0] * b[0] + b[1] * b[1], c2 = c[0] * c[0] + c[1] * c[1];
+    const x = (a2 * (b[1] - c[1]) + b2 * (c[1] - a[1]) + c2 * (a[1] - b[1])) / d, y = (a2 * (c[0] - b[0]) + b2 * (a[0] - c[0]) + c2 * (b[0] - a[0])) / d;
+    return { c: [x, y], r: Math.hypot(a[0] - x, a[1] - y) };
+  }
+  const bez = (p0, p1, p2, p3, t) => { const u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, d = t * t * t;
+    return [a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]]; };
+  function asArc(p0, p1, p2, p3) {              // 베지어가 원호 모양이면 {c,r,sweep(rad, 반시계 +)}
+    const chord = Math.hypot(p3[0] - p0[0], p3[1] - p0[1]);
+    const pm = bez(p0, p1, p2, p3, 0.5);
+    const ci = circleOf(p0, pm, p3); if (!ci) return null;
+    if (!(ci.r > 1e-4) || ci.r > 50 * Math.max(chord, Math.hypot(pm[0] - p0[0], pm[1] - p0[1]))) return null;
+    const tol = Math.max(ci.r * 1e-3, 0.002);
+    for (const t of [0.125, 0.25, 0.375, 0.625, 0.75, 0.875]) { const q = bez(p0, p1, p2, p3, t); if (Math.abs(Math.hypot(q[0] - ci.c[0], q[1] - ci.c[1]) - ci.r) > tol) return null; }
+    const a0 = Math.atan2(p0[1] - ci.c[1], p0[0] - ci.c[0]), am = Math.atan2(pm[1] - ci.c[1], pm[0] - ci.c[0]), a1 = Math.atan2(p3[1] - ci.c[1], p3[0] - ci.c[0]);
+    const norm = (x) => { while (x <= -Math.PI) x += 2 * Math.PI; while (x > Math.PI) x -= 2 * Math.PI; return x; };
+    const s1 = norm(am - a0), s2 = norm(a1 - am);
+    if (s1 === 0 || s2 === 0 || (s1 > 0) !== (s2 > 0)) return null;
+    const sweep = s1 + s2; if (Math.abs(sweep) > Math.PI * 1.02) return null;   // 조각 하나는 반원까지만
+    return { c: ci.c, r: ci.r, a0: a0, sweep: sweep };
+  }
+  function flatten(p0, p1, p2, p3, out) {
+    const dx1 = p0[0] - 2 * p1[0] + p2[0], dy1 = p0[1] - 2 * p1[1] + p2[1], dx2 = p1[0] - 2 * p2[0] + p3[0], dy2 = p1[1] - 2 * p2[1] + p3[1];
+    const M = 6 * Math.max(Math.hypot(dx1, dy1), Math.hypot(dx2, dy2));
+    const n = Math.max(1, Math.min(240, Math.ceil(Math.sqrt(M / (8 * FLAT_TOL)))));
+    for (let i = 1; i <= n; i++) out.push(bez(p0, p1, p2, p3, i / n));
+  }
+  function emitSub(w, sub, layer, color) {
+    let cur = sub.p, pts = [cur], run = null; const first = sub.p;
+    const items = [];                            // {t:'P',pts,closed?} | {t:'A',c,r,a0,sweep}
+    const flushPts = () => { if (pts.length > 1) items.push({ t: 'P', pts: pts }); pts = [cur]; };
+    const flushRun = () => { if (run) { items.push(run); run = null; } };
+    for (const s of sub.segs) {
+      if (s[0] === 'L') { flushRun(); const q = [s[1], s[2]]; pts.push(q); cur = q; continue; }
+      const p1 = [s[1], s[2]], p2 = [s[3], s[4]], p3 = [s[5], s[6]];
+      const arc = asArc(cur, p1, p2, p3);
+      if (arc) {
+        flushPts();
+        const tol = Math.max(arc.r * 2e-3, 0.004);
+        if (run && Math.abs(run.r - arc.r) < tol && Math.hypot(run.c[0] - arc.c[0], run.c[1] - arc.c[1]) < tol && (run.sweep > 0) === (arc.sweep > 0)) run.sweep += arc.sweep;
+        else { flushRun(); run = { t: 'A', c: arc.c, r: arc.r, a0: arc.a0, sweep: arc.sweep }; }
+        cur = p3; pts = [cur];
+      } else { flushRun(); flatten(cur, p1, p2, p3, pts); cur = p3; }
+    }
+    flushRun();
+    const gap = Math.hypot(cur[0] - first[0], cur[1] - first[1]);
+    if (sub.closed && gap > 1e-6) { pts.push(first); }
+    const onlyPoly = items.length === 0;
+    if (pts.length > 1) items.push({ t: 'P', pts: pts, closed: onlyPoly && sub.closed });
+    for (const it of items) {
+      if (it.t === 'P') { w.poly(it.pts, !!it.closed, layer, color); continue; }
+      const deg = (x) => { let d = x * 180 / Math.PI; d %= 360; if (d < 0) d += 360; return d; };
+      if (Math.abs(it.sweep) >= 2 * Math.PI * 0.9985) w.circle(it.c, it.r, layer, color);
+      else if (it.sweep > 0) w.arc(it.c, it.r, deg(it.a0), deg(it.a0 + it.sweep), layer, color);
+      else w.arc(it.c, it.r, deg(it.a0 + it.sweep), deg(it.a0), layer, color);
+    }
+  }
+  // 경로 만들기 도우미: 지역 좌표 → 행렬 M 으로 mm 좌표
+  function PathBuilder(M) { this.M = M; this.subs = []; this.cur = null; this.pos = [0, 0]; }
+  PathBuilder.prototype.m = function (x, y) { this.cur = { p: ap(this.M, x, y), segs: [], closed: false }; this.subs.push(this.cur); this.pos = [x, y]; this.start = [x, y]; };
+  PathBuilder.prototype.l = function (x, y) { if (!this.cur) this.m(this.pos[0], this.pos[1]); const q = ap(this.M, x, y); this.cur.segs.push(['L', q[0], q[1]]); this.pos = [x, y]; };
+  PathBuilder.prototype.c = function (x1, y1, x2, y2, x, y) {
+    if (!this.cur) this.m(this.pos[0], this.pos[1]);
+    const a = ap(this.M, x1, y1), b = ap(this.M, x2, y2), q = ap(this.M, x, y); this.cur.segs.push(['C', a[0], a[1], b[0], b[1], q[0], q[1]]); this.pos = [x, y];
+  };
+  PathBuilder.prototype.q = function (x1, y1, x, y) { const p = this.pos; this.c(p[0] + 2 / 3 * (x1 - p[0]), p[1] + 2 / 3 * (y1 - p[1]), x + 2 / 3 * (x1 - x), y + 2 / 3 * (y1 - y), x, y); };
+  PathBuilder.prototype.z = function () { if (this.cur) { this.cur.closed = true; this.pos = this.start.slice(); this.cur = null; } };
+  PathBuilder.prototype.arcTo = function (rx, ry, phiDeg, large, sweep, x, y) {   // SVG 타원 호 → 베지어
+    const p0 = this.pos; if (p0[0] === x && p0[1] === y) return;
+    rx = Math.abs(rx); ry = Math.abs(ry); if (!rx || !ry) { this.l(x, y); return; }
+    const phi = phiDeg * Math.PI / 180, cs = Math.cos(phi), sn = Math.sin(phi);
+    const dx = (p0[0] - x) / 2, dy = (p0[1] - y) / 2, x1 = cs * dx + sn * dy, y1 = -sn * dx + cs * dy;
+    const lam = x1 * x1 / (rx * rx) + y1 * y1 / (ry * ry); if (lam > 1) { const k = Math.sqrt(lam); rx *= k; ry *= k; }
+    let num = rx * rx * ry * ry - rx * rx * y1 * y1 - ry * ry * x1 * x1; const den = rx * rx * y1 * y1 + ry * ry * x1 * x1;
+    let co = Math.sqrt(Math.max(0, num / den)); if (!!large === !!sweep) co = -co;
+    const cxp = co * rx * y1 / ry, cyp = -co * ry * x1 / rx, cx = cs * cxp - sn * cyp + (p0[0] + x) / 2, cy = sn * cxp + cs * cyp + (p0[1] + y) / 2;
+    const ang = (ux, uy, vx, vy) => { const d = Math.hypot(ux, uy) * Math.hypot(vx, vy); let a = Math.acos(Math.max(-1, Math.min(1, (ux * vx + uy * vy) / d))); if (ux * vy - uy * vx < 0) a = -a; return a; };
+    const th1 = ang(1, 0, (x1 - cxp) / rx, (y1 - cyp) / ry); let dth = ang((x1 - cxp) / rx, (y1 - cyp) / ry, (-x1 - cxp) / rx, (-y1 - cyp) / ry);
+    if (!sweep && dth > 0) dth -= 2 * Math.PI; else if (sweep && dth < 0) dth += 2 * Math.PI;
+    const n = Math.max(1, Math.ceil(Math.abs(dth) / (Math.PI / 2) - 1e-9)), d = dth / n, k = 4 / 3 * Math.tan(d / 4);
+    const pt = (t) => { const c = Math.cos(t), s = Math.sin(t); return [cx + rx * c * cs - ry * s * sn, cy + rx * c * sn + ry * s * cs, -rx * s * cs - ry * c * sn, -rx * s * sn + ry * c * cs]; };
+    let a = pt(th1);
+    for (let i = 1; i <= n; i++) { const b = pt(th1 + d * i); const end = i === n ? [x, y] : [b[0], b[1]];
+      this.c(a[0] + k * a[2], a[1] + k * a[3], b[0] - k * b[2], b[1] - k * b[3], end[0], end[1]); a = b; }
+  };
+  PathBuilder.prototype.ellipse = function (cx, cy, rx, ry) {
+    this.m(cx + rx, cy); this.arcTo(rx, ry, 0, 0, 1, cx, cy + ry); this.arcTo(rx, ry, 0, 0, 1, cx - rx, cy); this.arcTo(rx, ry, 0, 0, 1, cx, cy - ry); this.arcTo(rx, ry, 0, 0, 1, cx + rx, cy); this.z();
+  };
+  PathBuilder.prototype.emit = function (w, layer, color) { for (const s of this.subs) if (s.segs.length) emitSub(w, s, layer, color); };
+
+  // ================================================================ SVG
+  function lenToPx(s, ref) {                    // SVG 길이 → px(사용자 단위)
+    if (s === null || s === undefined || s === '') return null;
+    const m = /^\s*([-+]?[\d.]+(?:e[-+]?\d+)?)\s*([a-z%]*)\s*$/i.exec(String(s)); if (!m) return null;
+    const v = parseFloat(m[1]), u = m[2].toLowerCase();
+    if (u === '' || u === 'px') return v; if (u === 'mm') return v * 96 / 25.4; if (u === 'cm') return v * 960 / 25.4; if (u === 'in') return v * 96;
+    if (u === 'pt') return v * 96 / 72; if (u === 'pc') return v * 16; if (u === 'q') return v * 96 / 101.6; if (u === '%') return ref ? v * ref / 100 : null; if (u === 'em') return v * 16;
+    return v;
+  }
+  function unitOf(s) { const m = /([a-z%]+)\s*$/i.exec(String(s || '')); return m ? m[1].toLowerCase() : ''; }
+  function parseTransform(s) {
+    let M = I; if (!s) return M;
+    const re = /(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^)]*)\)/g; let m;
+    while ((m = re.exec(s))) {
+      const v = m[2].split(/[\s,]+/).filter(Boolean).map(parseFloat); let T = I;
+      if (m[1] === 'matrix' && v.length >= 6) T = v.slice(0, 6);
+      else if (m[1] === 'translate') T = [1, 0, 0, 1, v[0] || 0, v[1] || 0];
+      else if (m[1] === 'scale') T = [v[0], 0, 0, v.length > 1 ? v[1] : v[0], 0, 0];
+      else if (m[1] === 'rotate') { const a = (v[0] || 0) * Math.PI / 180, c = Math.cos(a), sn = Math.sin(a); T = [c, sn, -sn, c, 0, 0];
+        if (v.length >= 3) T = mul(mul([1, 0, 0, 1, v[1], v[2]], T), [1, 0, 0, 1, -v[1], -v[2]]); }
+      else if (m[1] === 'skewX') T = [1, 0, Math.tan((v[0] || 0) * Math.PI / 180), 1, 0, 0];
+      else if (m[1] === 'skewY') T = [1, Math.tan((v[0] || 0) * Math.PI / 180), 0, 1, 0, 0];
+      M = mul(M, T);
+    }
+    return M;
+  }
+  function parseCss(doc) {                      // <style> 의 .클래스 · #아이디 · 태그 규칙만
+    const rules = { cls: {}, id: {}, tag: {} };
+    doc.querySelectorAll('style').forEach((st) => {
+      const css = (st.textContent || '').replace(/\/\*[\s\S]*?\*\//g, ''); const re = /([^{}]+)\{([^}]*)\}/g; let m;
+      while ((m = re.exec(css))) {
+        const decl = {}; m[2].split(';').forEach((d) => { const i = d.indexOf(':'); if (i > 0) decl[d.slice(0, i).trim().toLowerCase()] = d.slice(i + 1).trim(); });
+        m[1].split(',').forEach((sel) => { sel = sel.trim(); const last = sel.split(/\s+/).pop();
+          let k; if ((k = /^\.([\w-]+)$/.exec(last))) Object.assign(rules.cls[k[1]] = rules.cls[k[1]] || {}, decl);
+          else if ((k = /^#([\w-]+)$/.exec(last))) Object.assign(rules.id[k[1]] = rules.id[k[1]] || {}, decl);
+          else if ((k = /^([a-z]+)$/i.exec(last))) Object.assign(rules.tag[k[1].toLowerCase()] = rules.tag[k[1].toLowerCase()] || {}, decl);
+        });
+      }
+    });
+    return rules;
+  }
+  const INHERIT = ['stroke', 'fill', 'font-size', 'visibility', 'text-anchor'];
+  function styleOf(el, parent, rules) {     // 우선순위: 표현 속성 < <style> 규칙(태그 < 클래스 < 아이디) < style=""
+    const st = {}; for (const k of INHERIT) if (parent[k] !== undefined) st[k] = parent[k];
+    const own = {}; const tag = el.localName.toLowerCase();
+    for (const k of ['stroke', 'fill', 'font-size', 'visibility', 'display', 'text-anchor']) { const v = el.getAttribute(k); if (v !== null) own[k] = v; }
+    Object.assign(own, rules.tag[tag] || {});
+    (el.getAttribute('class') || '').split(/\s+/).filter(Boolean).forEach((c) => Object.assign(own, rules.cls[c] || {}));
+    const id = el.getAttribute('id'); if (id && rules.id[id]) Object.assign(own, rules.id[id]);
+    (el.getAttribute('style') || '').split(';').forEach((d) => { const i = d.indexOf(':'); if (i > 0) own[d.slice(0, i).trim().toLowerCase()] = d.slice(i + 1).trim(); });
+    for (const k in own) if (own[k] !== 'inherit') st[k] = own[k];
+    return st;
+  }
+  function pickColor(st) {
+    const s = st.stroke, fl = st.fill;
+    if (s && s !== 'none') { const c = parseColor(s === 'currentcolor' || s === 'currentColor' ? '#000' : s); if (c) return dxfColor(c); }
+    if (fl === 'none' && (!s || s === 'none')) return null;                    // 선도 채움도 없음 → 안 보이는 도형
+    if (fl && fl !== 'none') { const c = parseColor(fl); return dxfColor(c || [0, 0, 0]); }
+    return { aci: 7 };                                                         // 기본 채움(검정)
+  }
+  function pathData(pb, d) {
+    const re = /([MmLlHhVvCcSsQqTtAaZz])|([-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?)/g; const tk = []; let m;
+    while ((m = re.exec(d))) tk.push(m[1] ? m[1] : parseFloat(m[2]));
+    let i = 0, cmd = '', lastC = null, lastQ = null;
+    const num = () => { const v = tk[i]; if (typeof v !== 'number') throw new Error('경로 숫자가 모자랍니다'); i++; return v; };
+    const flag = () => { // 호 명령의 0/1 표시는 붙여 쓴 경우가 있음(이미 숫자로 나뉘어 있으면 그대로)
+      const v = tk[i]; if (typeof v !== 'number') throw new Error('경로 숫자가 모자랍니다'); i++; return v ? 1 : 0; };
+    while (i < tk.length) {
+      if (typeof tk[i] === 'string') { cmd = tk[i++]; if (cmd === 'Z' || cmd === 'z') { pb.z(); lastC = lastQ = null; continue; } }
+      else if (!cmd) throw new Error('경로가 명령 없이 시작합니다');
+      else if (cmd === 'M') cmd = 'L'; else if (cmd === 'm') cmd = 'l';
+      else if (cmd === 'Z' || cmd === 'z') throw new Error('경로 형식 오류');
+      const rel = cmd === cmd.toLowerCase(), p = pb.pos, ox = rel ? p[0] : 0, oy = rel ? p[1] : 0; const C = cmd.toUpperCase();
+      try {
+        if (C === 'M') { const x = num() + ox, y = num() + oy; pb.m(x, y); lastC = lastQ = null; }
+        else if (C === 'L') { const x = num() + ox, y = num() + oy; pb.l(x, y); lastC = lastQ = null; }
+        else if (C === 'H') { const x = num() + ox; pb.l(x, p[1]); lastC = lastQ = null; }
+        else if (C === 'V') { const y = num() + oy; pb.l(p[0], y); lastC = lastQ = null; }
+        else if (C === 'C') { const a = num() + ox, b = num() + oy, c = num() + ox, d2 = num() + oy, x = num() + ox, y = num() + oy; pb.c(a, b, c, d2, x, y); lastC = [c, d2]; lastQ = null; }
+        else if (C === 'S') { const c = num() + ox, d2 = num() + oy, x = num() + ox, y = num() + oy; const a = lastC ? 2 * p[0] - lastC[0] : p[0], b = lastC ? 2 * p[1] - lastC[1] : p[1]; pb.c(a, b, c, d2, x, y); lastC = [c, d2]; lastQ = null; }
+        else if (C === 'Q') { const a = num() + ox, b = num() + oy, x = num() + ox, y = num() + oy; pb.q(a, b, x, y); lastQ = [a, b]; lastC = null; }
+        else if (C === 'T') { const x = num() + ox, y = num() + oy; const a = lastQ ? 2 * p[0] - lastQ[0] : p[0], b = lastQ ? 2 * p[1] - lastQ[1] : p[1]; pb.q(a, b, x, y); lastQ = [a, b]; lastC = null; }
+        else if (C === 'A') { const rx = num(), ry = num(), ph = num(), la = flag(), sw = flag(), x = num() + ox, y = num() + oy; pb.arcTo(rx, ry, ph, la, sw, x, y); lastC = lastQ = null; }
+        else throw new Error('모르는 경로 명령 ' + cmd);
+      } catch (e) { break; }                     // 잘린 경로: 읽은 데까지만
+    }
+  }
+  // 호 명령에서 "a5 5 0 01 10 10" 처럼 표시가 붙어 있으면 떼어 줌
+  function fixArcFlags(d) {
+    return d.replace(/([Aa])([^MmLlHhVvCcSsQqTtZzAa]*)/g, (all, c, body) => {
+      const nums = body.match(/[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g); if (!nums) return all;
+      const out = []; let k = 0, i = 0;
+      while (i < nums.length) {
+        const slot = k % 7;
+        if ((slot === 3 || slot === 4) && nums[i].length > 1 && /^[01]/.test(nums[i]) && !/^[01]\./.test(nums[i])) { out.push(nums[i][0]); nums[i] = nums[i].slice(1); k++; continue; }
+        out.push(nums[i]); i++; k++;
+      }
+      return c + out.join(' ');
+    });
+  }
+  function svgToDxf(text, opt) {
+    opt = opt || {};
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    const root = doc.documentElement;
+    if (!root || root.localName !== 'svg' || doc.getElementsByTagName('parsererror').length) {
+      const h = new DOMParser().parseFromString(text, 'text/html').querySelector('svg');
+      if (!h) throw new Error('SVG 파일이 아니거나 내용이 깨졌습니다.');
+      return svgToDxf(new XMLSerializer().serializeToString(h).replace(/ xmlns="http:\/\/www\.w3\.org\/1999\/xhtml"/g, ''), Object.assign({ retried: true }, opt));
+    }
+    const illustrator = /Generator:\s*Adobe Illustrator/i.test(text) || /xmlns:i="[^"]*adobe/i.test(text.slice(0, 3000));
+    const cairo = /<pageSet[\s>]/.test(text) || /id="(?:surface\d+|glyph-?\d+-\d+)"/.test(text.slice(0, 20000));   // cairo(pdftocairo 등)가 낸 SVG: 단위 없는 숫자가 pt
+    const vbA = (root.getAttribute('viewBox') || '').split(/[\s,]+/).filter(Boolean).map(parseFloat);
+    const wAttr = root.getAttribute('width'), hAttr = root.getAttribute('height');
+    const wu = unitOf(wAttr), hu = unitOf(hAttr); const physical = /^(mm|cm|in|pt|pc|q)$/.test(wu) || /^(mm|cm|in|pt|pc|q)$/.test(hu);
+    const pxmm = physical ? MM_PER_PX : (illustrator || cairo ? MM_PER_PT : MM_PER_PX);   // px 한 칸의 mm
+    let vb = vbA.length === 4 && vbA[2] > 0 && vbA[3] > 0 ? vbA : null;
+    const wPx = lenToPx(wAttr), hPx = lenToPx(hAttr);
+    if (!vb) vb = [0, 0, wPx || 0, hPx || 0];
+    let sx = pxmm, sy = pxmm;
+    if (vbA.length === 4 && vb[2] > 0 && vb[3] > 0) { if (wPx && wu !== '%') sx = wPx / vb[2] * pxmm; if (hPx && hu !== '%') sy = hPx / vb[3] * pxmm; if (wPx && !hPx) sy = sx; if (hPx && !wPx) sx = sy;
+      if (Math.abs(sx - sy) / Math.max(sx, sy) < 0.01) sy = sx; }
+    const unitNote = physical ? ('SVG 크기 단위(' + (wu || hu) + ') 기준 1:1')
+      : ('SVG에 길이 단위가 없어 1 px = ' + (pxmm === MM_PER_PT ? '1/72' : '1/96') + ' 인치(' + pxmm.toFixed(4) + ' mm)로 봤습니다');
+    // 사용자 좌표 → mm, 위가 +
+    const BASE = [sx, 0, 0, -sy, -vb[0] * sx, (vb[1] + vb[3]) * sy];
+    const rules = parseCss(doc), w = new Writer(); let images = 0, skipped = 0, shapes = 0;
+    const SKIP = { defs: 1, clippath: 1, mask: 1, pattern: 1, marker: 1, lineargradient: 1, radialgradient: 1, metadata: 1, title: 1, desc: 1, style: 1, script: 1, filter: 1, foreignobject: 1, symbol: 1, namedview: 1, switch: 0 };
+    const SHAPE = { path: 1, line: 1, polyline: 1, polygon: 1, rect: 1, circle: 1, ellipse: 1 }; let pageN = 0; const pageStep = vb[2] * 1.05;
+    const num = (el, k, d) => { const v = lenToPx(el.getAttribute(k)); return v === null || isNaN(v) ? (d || 0) : v; };
+    function walk(el, M, pst, layer, depth, viaUse) {
+      if (el.nodeType !== 1) return;
+      const tag = el.localName.toLowerCase();
+      if (SKIP[tag] && !(viaUse && tag === 'symbol')) return;
+      if (tag === 'image') { images++; return; }
+      const st = styleOf(el, pst, rules);
+      if (st.display === 'none' || st.visibility === 'hidden' || st.visibility === 'collapse') { skipped++; return; }
+      const T = mul(M, parseTransform(el.getAttribute('transform')));
+      if (depth === 1 && tag === 'g') {
+        const nm = el.getAttribute('inkscape:label') || el.getAttribute('data-name') || el.getAttribute('id');
+        if (nm) layer = w.layer(nm.replace(/_x([0-9A-F]{2,4})_/g, (a, hx) => String.fromCharCode(parseInt(hx, 16))));
+      } else if (tag === 'g' && el.getAttribute('inkscape:groupmode') === 'layer') {
+        const nm = el.getAttribute('inkscape:label') || el.getAttribute('id'); if (nm) layer = w.layer(nm);
+      }
+      if (!SHAPE[tag] && tag !== 'use' && tag !== 'text') {      // 묶음(g · svg · a · switch · symbol · pageSet · page 등): 안쪽을 읽음
+        let T2 = T; if (tag === 'svg' && depth > 0) T2 = mul(T, [1, 0, 0, 1, num(el, 'x'), num(el, 'y')]);
+        if (tag === 'page') { T2 = mul(T, [1, 0, 0, 1, pageN * pageStep, 0]); pageN++; }   // 여러 쪽 SVG(cairo): 쪽을 가로로 늘어놓음
+        for (const ch of el.children) walk(ch, T2, st, layer, depth + (tag === 'pageset' || tag === 'page' ? 0 : 1), false);
+        return;
+      }
+      if (tag === 'use') {
+        if (depth > 24) return;
+        const href = el.getAttribute('href') || el.getAttribute('xlink:href') || el.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+        const ref = href && href[0] === '#' ? doc.getElementById(href.slice(1)) : null; if (!ref) return;
+        walk(ref, mul(T, [1, 0, 0, 1, num(el, 'x'), num(el, 'y')]), st, layer, depth + 8, true); return;
+      }
+      if (tag === 'text') { textOf(el, T, st, layer); return; }
+      const color = pickColor(st); if (!color) { skipped++; return; }
+      const pb = new PathBuilder(mul(BASE, T));
+      if (tag === 'path') { const d = el.getAttribute('d'); if (d) pathData(pb, fixArcFlags(d)); }
+      else if (tag === 'line') { pb.m(num(el, 'x1'), num(el, 'y1')); pb.l(num(el, 'x2'), num(el, 'y2')); }
+      else if (tag === 'polyline' || tag === 'polygon') {
+        const v = (el.getAttribute('points') || '').split(/[\s,]+/).filter(Boolean).map(parseFloat);
+        for (let i = 0; i + 1 < v.length; i += 2) { if (i === 0) pb.m(v[0], v[1]); else pb.l(v[i], v[i + 1]); }
+        if (tag === 'polygon') pb.z();
+      } else if (tag === 'rect') {
+        const x = num(el, 'x'), y = num(el, 'y'), ww = num(el, 'width'), hh = num(el, 'height'); if (!(ww > 0) || !(hh > 0)) return;
+        let rx = el.hasAttribute('rx') ? num(el, 'rx') : null, ry = el.hasAttribute('ry') ? num(el, 'ry') : null;
+        if (rx === null && ry === null) rx = ry = 0; else if (rx === null) rx = ry; else if (ry === null) ry = rx;
+        rx = Math.min(rx, ww / 2); ry = Math.min(ry, hh / 2);
+        if (!rx || !ry) { pb.m(x, y); pb.l(x + ww, y); pb.l(x + ww, y + hh); pb.l(x, y + hh); pb.z(); }
+        else { pb.m(x + rx, y); pb.l(x + ww - rx, y); pb.arcTo(rx, ry, 0, 0, 1, x + ww, y + ry); pb.l(x + ww, y + hh - ry); pb.arcTo(rx, ry, 0, 0, 1, x + ww - rx, y + hh);
+          pb.l(x + rx, y + hh); pb.arcTo(rx, ry, 0, 0, 1, x, y + hh - ry); pb.l(x, y + ry); pb.arcTo(rx, ry, 0, 0, 1, x + rx, y); pb.z(); }
+      } else if (tag === 'circle') { const r = num(el, 'r'); if (r > 0) pb.ellipse(num(el, 'cx'), num(el, 'cy'), r, r); }
+      else if (tag === 'ellipse') { const rx = num(el, 'rx'), ry = num(el, 'ry'); if (rx > 0 && ry > 0) pb.ellipse(num(el, 'cx'), num(el, 'cy'), rx, ry); }
+      else return;
+      shapes++; pb.emit(w, layer, color);
+    }
+    function textOf(el, T, st, layer) {
+      const M = mul(BASE, T), color = pickColor(st) || { aci: 7 };
+      const chunks = []; let cur = null;
+      const start = (x, y, s2) => { cur = { x: x, y: y, s: '', st: s2 }; chunks.push(cur); };
+      const visit = (node, s2, px, py) => {
+        for (const ch of node.childNodes) {
+          if (ch.nodeType === 3) { const t = ch.nodeValue.replace(/\s+/g, ' '); if (t.trim() || (cur && cur.s)) { if (!cur) start(px, py, s2); cur.s += t; } }
+          else if (ch.nodeType === 1 && /^(tspan|textpath|a)$/i.test(ch.localName)) {
+            const s3 = styleOf(ch, s2, rules); if (s3.display === 'none') continue;
+            const hx = ch.getAttribute('x'), hy = ch.getAttribute('y');
+            let nx = px, ny = py; if (hx !== null) nx = lenToPx(hx.split(/[\s,]+/)[0]) || 0; if (hy !== null) ny = lenToPx(hy.split(/[\s,]+/)[0]) || 0;
+            if (hx !== null || hy !== null) start(nx, ny, s3);
+            visit(ch, s3, nx, ny);
+          }
+        }
+      };
+      const x0 = lenToPx((el.getAttribute('x') || '0').split(/[\s,]+/)[0]) || 0, y0 = lenToPx((el.getAttribute('y') || '0').split(/[\s,]+/)[0]) || 0;
+      visit(el, st, x0, y0);
+      for (const c of chunks) {
+        const fs = lenToPx(c.st['font-size'] || '16') || 16, p = ap(M, c.x, c.y);
+        const rot = Math.atan2(M[1], M[0]) * 180 / Math.PI, h = fs * mscale(M) * TEXT_CAP;
+        w.text(p[0], p[1], h, c.s, Math.abs(rot) > 0.01 ? rot : 0, layer, color);
+      }
+    }
+    walk(root, I, {}, '0', 0, false);
+    const has0 = isFinite(w.box[0]);
+    if (has0 && vb[2] > 0 && vb[3] > 0) {         // 쪽(뷰박스) 테두리 — 대지 레이어(끌 수 있음)
+      const a = ap(BASE, vb[0], vb[1]), c = ap(BASE, vb[0] + vb[2], vb[1] + vb[3]);
+      const bl = w.layer(opt.boardLayer || '대지', 8), step = pageStep * sx;
+      for (let k = 0; k < Math.max(1, pageN); k++) w.poly([[a[0] + k * step, c[1]], [c[0] + k * step, c[1]], [c[0] + k * step, a[1]], [a[0] + k * step, a[1]]], true, bl, { aci: 8 });
+    }
+    const b = w.box, has = has0;
+    return { buffer: w.build(), kind: 'SVG', unitNote: unitNote, assumed: !physical, counts: w.n, images: images, pages: Math.max(1, pageN),
+      size: has ? [b[2] - b[0], b[3] - b[1]] : [0, 0], empty: !has };
+  }
+
+  // ================================================================ AI (PDF 호환) — pdf.js
+  let pdfLibP = null;
+  function loadPdfJs(base, onStage) {
+    if (global.pdfjsLib) return Promise.resolve(global.pdfjsLib);
+    if (!pdfLibP) {
+      if (onStage) onStage('engine');
+      pdfLibP = new Promise((resolve, reject) => {
+        const s = document.createElement('script'); s.src = base + 'pdf.min.js';
+        s.onload = () => { if (!global.pdfjsLib) { reject(new Error('AI 읽기 엔진을 불러오지 못했습니다.')); return; } global.pdfjsLib.GlobalWorkerOptions.workerSrc = base + 'pdf.worker.min.js'; resolve(global.pdfjsLib); };
+        s.onerror = () => { pdfLibP = null; reject(new Error('AI 읽기 엔진을 받지 못했습니다. 인터넷 연결을 확인해 주세요.')); };
+        document.head.appendChild(s);
+      });
+    }
+    return pdfLibP;
+  }
+  async function pdfToDxf(buf, opt) {
+    opt = opt || {};
+    const lib = await loadPdfJs(opt.base, opt.onStage); if (opt.onStage) opt.onStage('read');
+    const OPS = lib.OPS;
+    let doc;
+    try { doc = await lib.getDocument({ data: new Uint8Array(buf.slice(0)), isEvalSupported: false, disableFontFace: true, stopAtErrors: false }).promise; }
+    catch (e) { throw new Error(/password/i.test(String(e && e.name) + String(e && e.message)) ? '암호가 걸린 파일은 열 수 없습니다.' : 'AI 파일 안의 PDF 내용을 읽지 못했습니다. (' + (e && e.message ? e.message : e) + ')'); }
+    const w = new Writer(); let images = 0, offX = 0, noPdf = false, shaded = 0;
+    let ocNames = null;
+    try { const cfg = await doc.getOptionalContentConfig(); ocNames = (id) => { try { const g = cfg.getGroup(id); return g && g.name ? g.name : null; } catch (_e) { return null; } }; } catch (_e) { ocNames = () => null; }
+    const boardLayer = w.layer(opt.boardLayer || '대지', 8);
+    const PAINT_STROKE = {}, PAINT_FILL = {};
+    for (const k of ['stroke', 'closeStroke', 'fillStroke', 'eoFillStroke', 'closeFillStroke', 'closeEOFillStroke']) PAINT_STROKE[OPS[k]] = 1;
+    for (const k of ['fill', 'eoFill']) PAINT_FILL[OPS[k]] = 1;
+    const CLOSE = {}; for (const k of ['closeStroke', 'closeFillStroke', 'closeEOFillStroke']) CLOSE[OPS[k]] = 1;
+    const maxPages = Math.min(doc.numPages, opt.maxPages || 60);
+    for (let pn = 1; pn <= maxPages; pn++) {
+      const page = await doc.getPage(pn); const v = page.view, pw = (v[2] - v[0]) * MM_PER_PT, ph = (v[3] - v[1]) * MM_PER_PT;
+      // 쪽 좌표(pt, 위가 +) → mm, 쪽을 가로로 늘어놓음. 쪽 회전은 0·90·180·270 만
+      let P = [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT + offX, -v[1] * MM_PER_PT]; let bw = pw, bh = ph;
+      const rot = ((page.rotate || 0) % 360 + 360) % 360;
+      if (rot === 90) { P = mul([0, -1, 1, 0, offX, pw], [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT, -v[1] * MM_PER_PT]); bw = ph; bh = pw; }
+      else if (rot === 180) { P = mul([-1, 0, 0, -1, offX + pw, ph], [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT, -v[1] * MM_PER_PT]); }
+      else if (rot === 270) { P = mul([0, 1, -1, 0, offX + ph, 0], [MM_PER_PT, 0, 0, MM_PER_PT, -v[0] * MM_PER_PT, -v[1] * MM_PER_PT]); bw = ph; bh = pw; }
+      w.poly([[offX, 0], [offX + bw, 0], [offX + bw, bh], [offX, bh]], true, boardLayer, { aci: 8 });
+      const ops = await page.getOperatorList();
+      let st = { ctm: I, stroke: [0, 0, 0], fill: [0, 0, 0] }; const stack = []; const mc = []; let layer = '0';
+      let pb = null;
+      const curLayer = () => { for (let i = mc.length - 1; i >= 0; i--) if (mc[i]) return mc[i]; return '0'; };
+      for (let i = 0; i < ops.fnArray.length; i++) {
+        const fn = ops.fnArray[i], a = ops.argsArray[i];
+        if (fn === OPS.save) stack.push({ ctm: st.ctm, stroke: st.stroke, fill: st.fill });
+        else if (fn === OPS.restore) { if (stack.length) st = stack.pop(); }
+        else if (fn === OPS.transform) st.ctm = mul(st.ctm, a);
+        else if (fn === OPS.paintFormXObjectBegin) { stack.push({ ctm: st.ctm, stroke: st.stroke, fill: st.fill }); if (a && a[0]) st = { ctm: mul(st.ctm, a[0]), stroke: st.stroke, fill: st.fill }; }
+        else if (fn === OPS.paintFormXObjectEnd) { if (stack.length) st = stack.pop(); }
+        else if (fn === OPS.setStrokeRGBColor) st.stroke = [a[0], a[1], a[2]];
+        else if (fn === OPS.setFillRGBColor) st.fill = [a[0], a[1], a[2]];
+        else if (fn === OPS.beginMarkedContentProps) { let nm = null; if (a && a[0] === 'OC' && a[1] && a[1].id) nm = ocNames(a[1].id); mc.push(nm ? w.layer(nm) : null); layer = curLayer(); }
+        else if (fn === OPS.beginMarkedContent) { mc.push(null); }
+        else if (fn === OPS.endMarkedContent) { mc.pop(); layer = curLayer(); }
+        else if (fn === OPS.constructPath) {
+          pb = pb || new PathBuilder(mul(P, st.ctm)); const sub = a[0], c = a[1]; let k = 0;
+          for (let j = 0; j < sub.length; j++) {
+            const o = sub[j];
+            if (o === OPS.moveTo) { pb.m(c[k], c[k + 1]); k += 2; }
+            else if (o === OPS.lineTo) { pb.l(c[k], c[k + 1]); k += 2; }
+            else if (o === OPS.curveTo) { pb.c(c[k], c[k + 1], c[k + 2], c[k + 3], c[k + 4], c[k + 5]); k += 6; }
+            else if (o === OPS.curveTo2) { const p = pb.pos; pb.c(p[0], p[1], c[k], c[k + 1], c[k + 2], c[k + 3]); k += 4; }
+            else if (o === OPS.curveTo3) { pb.c(c[k], c[k + 1], c[k + 2], c[k + 3], c[k + 2], c[k + 3]); k += 4; }
+            else if (o === OPS.closePath) pb.z();
+            else if (o === OPS.rectangle) { const x = c[k], y = c[k + 1], ww = c[k + 2], hh = c[k + 3]; k += 4; pb.m(x, y); pb.l(x + ww, y); pb.l(x + ww, y + hh); pb.l(x, y + hh); pb.z(); }
+          }
+        }
+        else if (PAINT_STROKE[fn] || PAINT_FILL[fn]) {
+          if (pb) { if (CLOSE[fn] && pb.cur) pb.z(); pb.emit(w, layer, dxfColor(PAINT_STROKE[fn] ? st.stroke : st.fill)); pb = null; }
+        }
+        else if (fn === OPS.endPath) pb = null;                       // 자르기(클립)용 경로 — 그리지 않음
+        else if (fn === OPS.paintImageXObject || fn === OPS.paintInlineImageXObject || fn === OPS.paintImageMaskXObject || fn === OPS.paintImageXObjectRepeat || fn === OPS.paintJpegXObject) images++;
+        else if (fn === OPS.shadingFill) shaded++;
+      }
+      // 글자
+      try {
+        const tc = await page.getTextContent();
+        const all = tc.items.map((t) => t.str).join(' ');
+        if (/saved without PDF Content/i.test(all)) { noPdf = true; }
+        else for (const t of tc.items) {
+          if (!t.str || !t.str.trim()) continue; const m = t.transform; const p = ap(P, m[4], m[5]);
+          const size = Math.hypot(m[2], m[3]) * mscale(P); let r = Math.atan2(m[1], m[0]) * 180 / Math.PI + (rot ? -rot : 0);
+          w.text(p[0], p[1], size * TEXT_CAP, t.str, Math.abs(r) > 0.01 ? r : 0, w.layer(opt.textLayer || '글자'), { aci: 7 });
+        }
+      } catch (_e) { /* 글자를 못 읽어도 선은 보여 줌 */ }
+      offX += bw + Math.max(10, bw * 0.05);
+      page.cleanup();
+    }
+    const pages = doc.numPages; try { await doc.destroy(); } catch (_e) {}
+    if (noPdf && w.n.seg <= maxPages * 4 + 8) throw new Error('이 AI 파일은 "PDF 호환 파일 만들기"를 끄고 저장해서 내용을 읽을 수 없습니다. 일러스트에서 [다른 이름으로 저장] 때 "PDF 호환 파일 만들기"를 켜고 다시 저장해 주세요.');
+    const b = w.box;
+    return { buffer: w.build(), kind: 'AI', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: images, shaded: shaded, pages: pages, shownPages: maxPages,
+      size: isFinite(b[0]) ? [b[2] - b[0], b[3] - b[1]] : [0, 0], empty: w.n.seg + w.n.arc + w.n.circle + w.n.text <= maxPages * 4 };
+  }
+
+  // ================================================================ AI 8 이하(포스트스크립트 글) — 선·곡선만
+  function legacyAiToDxf(text) {
+    const w = new Writer(); let color = { aci: 7 }, strokeC = [0, 0, 0], fillC = [0, 0, 0];
+    const bb = /%%(?:HiRes)?BoundingBox:\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)/.exec(text);
+    const ox = bb ? parseFloat(bb[1]) : 0, oy = bb ? parseFloat(bb[2]) : 0;
+    const M = [MM_PER_PT, 0, 0, MM_PER_PT, -ox * MM_PER_PT, -oy * MM_PER_PT];
+    const i0 = Math.max(0, text.indexOf('%%EndSetup')); const lines = text.slice(i0).split(/\r\n|\r|\n/);
+    let pb = new PathBuilder(M), any = false;
+    const cmyk = (c, m, y, k) => [255 * (1 - Math.min(1, c + k)), 255 * (1 - Math.min(1, m + k)), 255 * (1 - Math.min(1, y + k))];
+    const paint = (stroke, close) => { if (close && pb.cur) pb.z(); if (pb.subs.length) { pb.emit(w, '0', dxfColor(stroke ? strokeC : fillC)); any = true; } pb = new PathBuilder(M); };
+    for (const ln of lines) {
+      if (!ln || ln[0] === '%') { if (ln.indexOf('%%Trailer') === 0 || ln.indexOf('%%EOF') === 0) break; continue; }
+      const tk = ln.trim().split(/\s+/); const op = tk[tk.length - 1]; const v = tk.slice(0, -1).map(parseFloat);
+      if (v.some(isNaN)) continue;
+      if (op === 'm' && v.length === 2) pb.m(v[0], v[1]);
+      else if ((op === 'l' || op === 'L') && v.length === 2) pb.l(v[0], v[1]);
+      else if ((op === 'c' || op === 'C') && v.length === 6) pb.c(v[0], v[1], v[2], v[3], v[4], v[5]);
+      else if ((op === 'v' || op === 'V') && v.length === 4) { const p = pb.pos; pb.c(p[0], p[1], v[0], v[1], v[2], v[3]); }
+      else if ((op === 'y' || op === 'Y') && v.length === 4) pb.c(v[0], v[1], v[2], v[3], v[2], v[3]);
+      else if (op === 'K' && v.length === 4) strokeC = cmyk(v[0], v[1], v[2], v[3]);
+      else if (op === 'k' && v.length === 4) fillC = cmyk(v[0], v[1], v[2], v[3]);
+      else if (op === 'G' && v.length === 1) strokeC = [v[0] * 255, v[0] * 255, v[0] * 255];
+      else if (op === 'g' && v.length === 1) fillC = [v[0] * 255, v[0] * 255, v[0] * 255];
+      else if (op === 'XA' && v.length === 3) strokeC = v.map((x) => x * 255);
+      else if (op === 'Xa' && v.length === 3) fillC = v.map((x) => x * 255);
+      else if (op === 'S' || op === 'B') paint(true, false);
+      else if (op === 's' || op === 'b') paint(true, true);
+      else if (op === 'F') paint(false, false);
+      else if (op === 'f') paint(false, true);
+      else if (op === 'N' || op === 'n') pb = new PathBuilder(M);
+    }
+    if (!any) throw new Error('이 AI 파일(옛 포스트스크립트 형식)에서 선을 찾지 못했습니다. 일러스트에서 PDF 호환으로 다시 저장하거나 SVG로 내보내 주세요.');
+    const b = w.box;
+    return { buffer: w.build(), kind: 'AI(옛 형식)', unitNote: '1 pt = 25.4/72 mm 기준 1:1', assumed: false, counts: w.n, images: 0, pages: 1, legacy: true, size: [b[2] - b[0], b[3] - b[1]], empty: false };
+  }
+
+  // ---------------------------------------------------------------- 글 읽기(UTF-8, BOM, UTF-16)
+  function decodeText(buf) {
+    const u = new Uint8Array(buf);
+    if (u[0] === 0xFF && u[1] === 0xFE) return new TextDecoder('utf-16le').decode(buf);
+    if (u[0] === 0xFE && u[1] === 0xFF) return new TextDecoder('utf-16be').decode(buf);
+    try { return new TextDecoder('utf-8', { fatal: true }).decode(buf); } catch (_e) { return new TextDecoder('euc-kr').decode(buf); }
+  }
+  function sniff(buf) {                         // 'pdf' | 'ps' | 'svg' | ''
+    const u = new Uint8Array(buf, 0, Math.min(2048, buf.byteLength)); let s = ''; for (let i = 0; i < u.length; i++) s += String.fromCharCode(u[i]);
+    if (s.indexOf('%PDF-') >= 0 && s.indexOf('%PDF-') < 1024) return 'pdf';
+    if (/^\s*%!PS/.test(s)) return 'ps';
+    if (/<svg[\s>]/i.test(s) || /^\s*(?:\xEF\xBB\xBF)?<\?xml/.test(s)) return 'svg';
+    return '';
+  }
+  async function convert(buf, ext, opt) {
+    const kind = sniff(buf);
+    if (ext === 'svg' || (kind === 'svg' && ext !== 'ai')) return svgToDxf(decodeText(buf), opt);
+    if (kind === 'pdf') return pdfToDxf(buf, opt);
+    if (kind === 'ps') return legacyAiToDxf(decodeText(buf));
+    if (kind === 'svg') return svgToDxf(decodeText(buf), opt);
+    throw new Error('AI 파일 형식을 알아보지 못했습니다. (PDF 호환 저장본 또는 SVG로 내보낸 파일을 열어 주세요)');
+  }
+  global.Vec2Dxf = { convert: convert, svgToDxf: svgToDxf, pdfToDxf: pdfToDxf, legacyAiToDxf: legacyAiToDxf, _asArc: asArc };
+})(typeof window !== 'undefined' ? window : self);
+
+;
+/**
  * 모듈명: cad3d.js — 3D CAD(STEP · IGES · STL) 엔진 + 화면 연결
  * 원본: cad_viewer.html (단독 3D 뷰어)의 스크립트. 통합 뷰어용으로
  *   - 요소 id 앞에 m3- 를 붙이고($3), 선택자는 #m3 안으로 한정(root3)
@@ -9291,7 +9881,7 @@ earcut.flatten = function (data) {
   'use strict';
   const $ = (id) => document.getElementById(id);
   const app = $('app');
-  const EXT2D = ['dxf', 'dwg'];
+  const EXT2D = ['dxf', 'dwg', 'svg', 'ai'];   // svg · ai 는 기기 안에서 DXF 로 바꿔 엶 (vec2dxf.js)
   const EXT3D = ['stp', 'step', 'igs', 'iges', 'stl'];
   const EXTALL = EXT2D.concat(EXT3D);
   const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -9386,7 +9976,7 @@ earcut.flatten = function (data) {
   }
   function setTitle(name, sub) {
     $('sw-file-name').textContent = name || '열린 파일 없음';
-    $('sw-file-sub').textContent = sub || 'DWG · DXF · STEP · IGES · STL';
+    $('sw-file-sub').textContent = sub || 'DWG · DXF · SVG · AI · STEP · IGES · STL';
     document.title = (name ? name + ' — ' : '') + 'STAR Works CAD 뷰어';
   }
 
@@ -9407,7 +9997,7 @@ earcut.flatten = function (data) {
   async function openItems(items, start) {
     const list = items.filter(supported);
     if (list.length === 0) {
-      toast('열 수 있는 파일이 없습니다. (지원: DWG · DXF · STEP · IGES · STL)');
+      toast('열 수 있는 파일이 없습니다. (지원: DWG · DXF · SVG · AI · STEP · IGES · STL)');
       return;
     }
     SW.files = list;
@@ -9441,6 +10031,21 @@ earcut.flatten = function (data) {
           dxfBuf = await convertDwg(buf, (stage) => {
             setTitle(it.name, kind + (stage === 'engine' ? ' · 변환 엔진 받는 중 (처음 한 번, 약 2 MB)...' : ' · DXF로 변환 중...'));
           });
+        } else if (it.ext === 'svg' || it.ext === 'ai') {
+          // SVG · AI → DXF (이 기기 안에서 변환, 파일을 밖으로 보내지 않음)
+          kind = it.ext === 'svg' ? 'SVG' : 'AI';
+          setTitle(it.name, kind + ' · 읽는 중...');
+          const vr = await window.Vec2Dxf.convert(buf, it.ext, { base: PDF_BASE, boardLayer: window.SW_LANG === 'en' ? 'Artboard' : '대지', textLayer: window.SW_LANG === 'en' ? 'Text' : '글자', onStage: (stage) => {
+            setTitle(it.name, kind + (stage === 'engine' ? ' · AI 읽기 엔진 받는 중 (처음 한 번, 약 1.5 MB)...' : ' · 선으로 바꾸는 중...'));
+          } });
+          dxfBuf = vr.buffer; kind = vr.kind + ' · ' + (vr.size[0] >= 0.05 ? (fmtMm(vr.size[0]) + ' × ' + fmtMm(vr.size[1]) + ' mm') : '크기 0');
+          const notes = [];
+          if (vr.assumed) notes.push(vr.unitNote + '. 치수는 이 가정으로 잰 값입니다.');
+          if (vr.images) notes.push('그림(사진) ' + vr.images + '개는 보이지 않습니다.');
+          if (vr.pages > 1) notes.push('대지 ' + vr.pages + '개를 가로로 늘어놓았습니다.');
+          if (vr.legacy) notes.push('옛 형식 AI는 선·곡선만 읽습니다.');
+          if (vr.empty) notes.push('선으로 된 내용을 찾지 못했습니다.');
+          if (notes.length) toast(notes.join(' '), 7000);
         } else {
           if (dwgVersion(buf).indexOf('AutoCA') === 0) throw new Error('이진(Binary) DXF는 열 수 없습니다. 오토캐드에서 일반(ASCII) DXF나 DWG로 저장해 주세요.');
           setTitle(it.name, '2D 도면 · 읽는 중...');
@@ -9497,6 +10102,10 @@ earcut.flatten = function (data) {
     AC1032: { fmt: '2018', app: 'AutoCAD 2018~2026' }
   };
   const DWG_RANGE = 'R14 ~ 2018 형식 (AutoCAD R14 ~ 2026에서 저장한 파일)';
+  // AI 읽기 엔진: pdf.js(Mozilla, Apache-2.0) — 이 페이지 옆 pdfjs/ 폴더. 파일로 연 경우(file://)는 홈페이지의 엔진을 받아 씁니다.
+  const PDF_BASE = window.SW_PDF_BASE ||
+    (/^https?:$/.test(location.protocol) ? new URL('pdfjs/', location.href).href : 'https://starworks-korea.github.io/tools/pdfjs/');
+  const fmtMm = (v) => (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2));
   const DWG_BASE = window.SW_DWG_BASE ||
     (/^https?:$/.test(location.protocol) ? new URL('dwg/', location.href).href : 'https://starworks-korea.github.io/tools/dwg/');
   function dwgVersion(buf) {
@@ -9579,7 +10188,7 @@ earcut.flatten = function (data) {
     const base = { id: id, multiple: true };
     if (!IS_MOBILE) {
       // PC: 선택창에 CAD 파일만 보이게 (휴대폰은 파일 종류를 못 알아봐 가려질 수 있어 걸지 않음)
-      base.types = [{ description: 'CAD 파일 (DWG · DXF · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
+      base.types = [{ description: 'CAD 파일 (DWG · DXF · SVG · AI · STEP · IGES · STL)', accept: { 'application/octet-stream': EXTALL.map((e) => '.' + e) } }];
     }
     // 시작 위치(다운로드 · 기억해 둔 폴더)를 못 받는 기기가 있어, 실패하면 위치 지정 없이 한 번 더
     const tries = startIn ? [Object.assign({ startIn: startIn }, base), base] : [base];
@@ -9716,7 +10325,7 @@ earcut.flatten = function (data) {
     if (SW.folderItems) {
       h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + ' · 최신순 ' + SW.folderItems.length + '개</small></span>' +
         '<button class="sw-link" data-act="rechoose">폴더 바꾸기</button></div>';
-      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.<br />(DWG · DXF · STEP · IGES · STL 만 보입니다)</div>';
+      if (SW.folderItems.length === 0) h += '<div class="sw-empty">이 폴더에 도면·모델 파일이 없습니다.<br />(DWG · DXF · SVG · AI · STEP · IGES · STL 만 보입니다)</div>';
       else h += '<div class="sw-list">' + SW.folderItems.slice(0, limit || 80).map((it, i) => fileRow(it, i, 'folder', false)).join('') + '</div>';
     } else if (SW.folderName) {
       h += '<div class="sw-list-title"><span>카카오톡 폴더 <small>' + esc(SW.folderName) + '</small></span>' +

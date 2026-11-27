@@ -30,7 +30,7 @@ GROUPS = [
 PROGRAMS = [
     # 2026-11-27 대표 지시: DXF 뷰어 + 3D CAD 뷰어 → 통합 「CAD 뷰어」 1개 (원본: 대표 PC 00-유투브제작\\sw_viewer)
     {"key": "viewer", "group": "cad", "name": ("CAD 뷰어 (2D·3D)", "CAD Viewer (2D·3D)"),
-     "desc": ("DWG · DXF · STEP · IGES · STL", "DWG · DXF · STEP · IGES · STL"),
+     "desc": ("DWG · DXF · SVG · AI · STEP · IGES · STL", "DWG · DXF · SVG · AI · STEP · IGES · STL"),
      "src": "tools/sw_viewer.html", "launch": True,
      "video": ("https://youtu.be/RU6GZ8yLlcY", "https://youtu.be/diJ3_QjG0ag"),   # 소개 영상(한국어판, 영어판) 2026-11-27
      "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
@@ -164,8 +164,8 @@ def build(L):
     pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False), **({"launch": 1} if p.get("launch") else {})} for p in PROGRAMS}
     nojs = " · ".join(f'<a href="{src(L, p, False)}">{e(p["name"][ix])}</a>' for p in PROGRAMS)
     title = t(L, "스타웍스 툴", "STAR Works — Tools")
-    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · STEP · IGES · STL) / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
-             "CAD: 2D/3D viewer (DWG · DXF · STEP · IGES · STL) / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
+    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · SVG · AI · STEP · IGES · STL) / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
+             "CAD: 2D/3D viewer (DWG · DXF · SVG · AI · STEP · IGES · STL) / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
     js = JS.replace("@PR@", json.dumps(pr, ensure_ascii=False)).replace("@KEEP@", PS.KEEP_HASH_JS)
     return PS.head(L, FILE, title, desc, CSS, robots="") + f"""
 <body>

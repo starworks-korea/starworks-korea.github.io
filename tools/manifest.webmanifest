@@ -1,7 +1,7 @@
 {
   "name": "스타웍스 CAD 뷰어",
   "short_name": "스타웍스 CAD",
-  "description": "DWG · DXF · STEP · IGES · STL 도면·모델 보기",
+  "description": "DWG · DXF · SVG · AI · STEP · IGES · STL 도면·모델 보기",
   "lang": "ko",
   "start_url": "/tools/sw_viewer.html?app=1",
   "scope": "/tools/",
@@ -30,7 +30,8 @@
             "application/autocad_dwg", "image/vnd.dwg", "image/x-dwg", "application/dxf", "application/x-dxf",
             "image/vnd.dxf", "image/x-dxf", "model/stl", "application/sla", "application/vnd.ms-pki.stl",
             "model/step", "application/step", "model/iges", "application/iges",
-            ".dwg", ".dxf", ".stp", ".step", ".igs", ".iges", ".stl"
+            "image/svg+xml", "application/postscript", "application/illustrator", "application/vnd.adobe.illustrator", "application/pdf",
+            ".dwg", ".dxf", ".svg", ".ai", ".stp", ".step", ".igs", ".iges", ".stl"
           ]
         }
       ]
@@ -40,7 +41,9 @@
     {
       "action": "/tools/sw_viewer.html",
       "accept": {
-        "application/octet-stream": [".dwg", ".dxf", ".stp", ".step", ".igs", ".iges", ".stl"],
+        "application/octet-stream": [".dwg", ".dxf", ".svg", ".ai", ".stp", ".step", ".igs", ".iges", ".stl"],
+        "image/svg+xml": [".svg"],
+        "application/postscript": [".ai"],
         "image/vnd.dwg": [".dwg"],
         "image/vnd.dxf": [".dxf"],
         "model/stl": [".stl"],

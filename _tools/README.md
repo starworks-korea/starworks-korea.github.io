@@ -110,3 +110,10 @@
 - 플레이리스트 › 기술 › 제품 개발: json 한 항목, `ko_card: true` → 한국어 페이지 카드·맨 위 영상은 `ko_id`(길이 `dur_ko`, 언어 `lang_ko`) (`make_videos.py`)
 - 툴 › CAD 뷰어 여는 화면: [소개 영상 보기] 링크 = `make_tools.py` `PROGRAMS`의 `"video": (한국어판, 영어판)`
 - 영상 설명란 링크: `starworks-korea.github.io/cad` (영어판은 `/cad/?lang=en`)
+
+# CAD 뷰어 SVG · AI 열기 (2026-11-27 21:12 대표 지시)
+- 2D 화면에서 SVG · AI(일러스트)를 엶 — 기기 안에서 DXF 글로 바꿔 기존 2D 엔진에 넘김 (원본 `src/vec2dxf.js`)
+- 단위 mm 1:1: SVG는 width/height 단위, 없으면 px 가정(화면에 알림) / AI는 1 pt = 25.4/72 mm
+- AI: 일러스트 9 ~ CC의 PDF 호환 저장본 — `tools/pdfjs/`(pdf.js 3.11.174, Apache-2.0)를 필요할 때만 받음. 8 이하 옛 형식은 선·곡선만
+- 원·원호 모양 곡선은 CIRCLE·ARC로 넣어 Ø · R 재기 가능, 그림·채움은 안 보임(윤곽선만)
+- 기획서: 대표 PC `sw_viewer\기획서_SVG·AI_열기_v1.md`
