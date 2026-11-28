@@ -29,6 +29,11 @@
   - `tools/office/web/manifest.webmanifest` 경로는 모두 `/tools/office/…`, PDF 엔진은 `tools/pdfjs/` 함께 씀(뷰어가 주소로 찾아감)
   - 원본(대표 PC): `D:\\Dropbox\\00-유투브제작\\doc_viewer\\` (`src/` 수정 → `node build.js` → `doc_viewer.html`을 `tools/office/`로 복사)
   - 새 창으로 엶(`"launch": True`), 여는 화면 형식 줄은 `"fmt"`
+- OFFICE: 워드→한글 변환기(`tools/convert/docx2hwpx.html` + `docx_to_hwpx.py`) — 2026-11-28
+  - 원본: 대표 PC `D:\\Dropbox\\00-유투브제작\\docx_hwpx_converter\\` — 변환 엔진 `docx_to_hwpx.py`만 공개(브라우저 안 Pyodide + lxml·Pillow)
+  - 키 보관함(`secret_vault.py`)·AI 보정(`ai_surgeon.py`)·워드/한글 연동 분석기(`office_render`·`parity_analyzer`·`auto_calibrator`·`local_ui`)는 PC 전용, 올리지 않음
+  - 엔진을 고치면 원본 폴더와 `tools/convert/docx_to_hwpx.py`를 같이 바꾸고, 화면의 `ENGINE = 'docx_to_hwpx.py?v=날짜'` 숫자를 올림
+  - `tools/office/` 밖에 둠(오피스 뷰어 서비스 워커 범위 밖). 기획서: `_tools/홈페이지_워드한글변환기_v1.md`
 - 시편 주문: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) — 2026-11-27 18:01 대표 지시로 CAM과 분리
 - CAM: 조각기 CAM(`coupon-tool/cam.html`)
 - 시편 주문·CAM은 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음

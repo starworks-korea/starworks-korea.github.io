@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STAR Works 워드→한글 변환기 — DOCX를 HWPX로 (브라우저 안에서 변환)</title>
+<meta name="description" content="MS 워드(.docx)를 한글(.hwpx)로 바꿉니다. 여백·머리말·행간·자간·장평·표 병합·그림까지 옮기며, 파일은 서버로 보내지 않고 기기 안에서 변환합니다.">
+<link rel="icon" href="../office/web/icons/doc-192.png">
+<meta name="theme-color" content="#1E3252">
+<!--
+  STAR Works 워드→한글 변환기 (2026-11-28)
+  - 변환 엔진: docx_to_hwpx.py (대표 PC 00-유투브제작\docx_hwpx_converter 원본과 같은 코드)
+  - 브라우저 안 파이썬(Pyodide) + lxml·Pillow 로 그대로 실행 — 파일은 서버로 가지 않음
+  - 출력 일치도 분석·자동 보정·AI 보정(키 보관함)은 PC 전용, 홈페이지에 올리지 않음
+  - 기획서: _tools/홈페이지_워드한글변환기_v1.md
+-->
+<style>
+:root{--navy:#1E3252;--green:#16A34A;--bg:#F1F5F9;--card:#fff;--line:#D7DEE8;--ink:#0F172A;--sub:#5B6B82;--blue:#2563EB}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line)}
+.badge{height:26px;padding:0 8px;border-radius:6px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:11.5px;font-weight:900;letter-spacing:.06em}
+header b{font-size:16px;white-space:nowrap}
+header span{color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{max-width:760px;margin:24px auto;padding:0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px}
+h1{margin:0 0 6px;font-size:24px;text-align:center}
+.lead{margin:0 0 16px;text-align:center;color:var(--sub);font-size:14.5px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:18px}
+.chips i{font-style:normal;font-size:12.5px;font-weight:700;color:#1D4ED8;background:#EFF6FF;border-radius:999px;padding:5px 10px}
+#drop{display:block;border:2px dashed #B6C2D3;border-radius:14px;padding:26px 14px;text-align:center;cursor:pointer;background:#F8FAFC}
+#drop.on{border-color:var(--blue);background:#EFF6FF}
+#drop strong{display:block;font-size:18px;margin-bottom:4px}
+#drop small{color:var(--sub);font-size:13px}
+#pick{display:block;width:100%;margin:12px 0 0;padding:15px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-size:17px;font-weight:800;cursor:pointer}
+#pick:disabled{background:#94A3B8;cursor:wait}
+#state{margin:14px 0 0;font-size:13.5px;color:var(--sub);text-align:center;min-height:1.4em}
+#state.err{color:#B91C1C}
+#list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+#list li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+#list li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#list li .st{color:var(--sub);font-size:12.5px;white-space:nowrap}
+#list li.ok .st{color:var(--green);font-weight:700}
+#list li.bad .st{color:#B91C1C;font-weight:700}
+#list li a{padding:7px 12px;border-radius:9px;background:var(--green);color:#fff;font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap}
+.note{margin:18px 0 0;padding:14px 16px;border-radius:12px;background:#F8FAFC;border:1px solid var(--line);font-size:13px;line-height:1.7;color:#334155}
+.note b{color:var(--ink)}
+.note ul{margin:4px 0 0;padding-left:18px}
+.note a{color:var(--blue);font-weight:700;white-space:nowrap}
+@media (max-width:520px){h1{font-size:21px}.card{padding:20px 14px}header span{display:none}}
+</style>
+</head>
+<body>
+<header><span class="badge">OFFICE</span><b>STAR Works 워드→한글 변환기</b><span>DOCX → HWPX</span></header>
+<main>
+<div class="card">
+  <h1>워드(.docx) → 한글(.hwpx)</h1>
+  <p class="lead">워드 문서를 한글 파일로 바꿉니다.<br>파일은 이 기기 안에서만 변환합니다.</p>
+  <div class="chips"><i>여백·머리말·꼬리말</i><i>행간·자간·장평</i><i>들여쓰기·내어쓰기</i><i>표 병합·열 폭</i><i>그림</i></div>
+  <label id="drop" for="file"><strong>📄 .docx 파일을 여기에 끌어 놓기</strong><small>여러 개를 한꺼번에 넣을 수 있습니다</small></label>
+  <input id="file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple hidden>
+  <button id="pick" type="button">워드 파일 고르기</button>
+  <p id="state">처음 한 번은 변환 엔진(약 10 MB)을 내려받습니다.</p>
+  <ul id="list"></ul>
+  <div class="note">
+    <b>알아 두실 점</b>
+    <ul>
+      <li>바꾼 .hwpx는 한글에서 엽니다.</li>
+      <li>휴대폰은 <a href="../office/doc_viewer.html" target="_blank" rel="noopener">오피스 뷰어 ↗</a>로 봅니다.</li>
+      <li>줄바꿈이 워드와 조금 다를 수 있습니다.</li>
+      <li>제출 문서는 한글에서 꼭 확인하세요.</li>
+      <li>수식·각주·글상자·차트는 빠집니다.</li>
+      <li>한글→워드: 한글에서 .docx로 저장</li>
+    </ul>
+  </div>
+</div>
+</main>
+<script>
+(function(){
+  var ENGINE = 'docx_to_hwpx.py?v=20261128';
+  var PYODIDE = ['https://cdn.jsdelivr.net/pyodide/v0.27.7/full/', 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'];
+  var $ = function(id){ return document.getElementById(id); };
+  var state = $('state'), pick = $('pick'), file = $('file'), drop = $('drop'), list = $('list');
+  var ready = null;   // Promise<pyodide>
+
+  function say(t, err){ state.textContent = t; state.className = err ? 'err' : ''; }
+  function loadScript(src){ return new Promise(function(ok, no){ var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+
+  async function boot(){
+    var last;
+    for (var i = 0; i < PYODIDE.length; i++){
+      try {
+        say('변환 엔진 내려받는 중… (처음 한 번, 약 10 MB)');
+        await loadScript(PYODIDE[i] + 'pyodide.js');
+        var py = await loadPyodide({ indexURL: PYODIDE[i] });
+        say('표 · 그림 처리 모듈 준비 중…');
+        await py.loadPackage(['lxml', 'pillow']);
+        var src = await (await fetch(ENGINE, { cache: 'no-cache' })).text();
+        py.FS.mkdirTree('/engine');
+        py.FS.writeFile('/engine/docx_to_hwpx.py', src);
+        py.runPython([
+          'import sys',
+          'sys.path.insert(0, "/engine")',
+          'from pathlib import Path',
+          'import docx_to_hwpx',
+          'def _sw_convert(src, dst):',
+          '    docx_to_hwpx.convert_docx_to_hwpx(Path(src), Path(dst))',
+          '    return dst'
+        ].join('\n'));
+        say('준비 완료 — 워드 파일을 넣어 주세요.');
+        return py;
+      } catch (e) { last = e; console.error(e); }
+    }
+    throw last || new Error('엔진을 불러오지 못했습니다');
+  }
+  function engine(){ if (!ready) ready = boot().catch(function(e){ ready = null; throw e; }); return ready; }
+  window.swEngine = engine;   // 점검용 (개발자 도구에서 엔진 확인)
+
+  function row(name){
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="nm"></span><span class="st">대기</span>';
+    li.querySelector('.nm').textContent = name;
+    list.prepend(li); return li;
+  }
+
+  async function convertFiles(files){
+    files = Array.prototype.filter.call(files, function(f){ return /\.docx$/i.test(f.name); });
+    if (!files.length){ say('.docx 파일만 바꿀 수 있습니다 (.doc 는 워드에서 .docx 로 저장한 뒤 넣어 주세요).', true); return; }
+    pick.disabled = true;
+    var rows = files.map(function(f){ return row(f.name); });
+    try {
+      var py = await engine();
+      var fn = py.globals.get('_sw_convert');
+      for (var i = 0; i < files.length; i++){
+        var f = files[i], li = rows[i], st = li.querySelector('.st');
+        st.textContent = '변환 중…';
+        try {
+          var buf = new Uint8Array(await f.arrayBuffer());
+          py.FS.writeFile('/tmp/in.docx', buf);
+          var t0 = performance.now();
+          fn('/tmp/in.docx', '/tmp/out.hwpx');
+          var out = py.FS.readFile('/tmp/out.hwpx');
+          var blob = new Blob([out], { type: 'application/hwp+zip' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = f.name.replace(/\.docx$/i, '') + '.hwpx';
+          a.textContent = '내려받기';
+          li.className = 'ok';
+          st.textContent = '완료 · ' + Math.max(1, Math.round(out.length / 1024)) + ' KB · ' + ((performance.now() - t0) / 1000).toFixed(1) + '초';
+          li.appendChild(a);
+        } catch (e) {
+          console.error(e);
+          li.className = 'bad';
+          st.textContent = '실패 — ' + String((e && e.message) || e).split('\n').filter(Boolean).slice(-1)[0].slice(0, 80);
+        }
+      }
+      fn.destroy && fn.destroy();
+      say('끝났습니다. [내려받기]를 눌러 저장하세요.');
+    } catch (e) {
+      say('변환 엔진을 불러오지 못했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.', true);
+      rows.forEach(function(li){ li.className = 'bad'; li.querySelector('.st').textContent = '실패'; });
+    } finally { pick.disabled = false; file.value = ''; }
+  }
+
+  pick.onclick = function(){ file.click(); };
+  file.onchange = function(){ convertFiles(file.files); };
+  ['dragenter', 'dragover'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.add('on'); }); });
+  ['dragleave', 'drop'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.remove('on'); }); });
+  drop.addEventListener('drop', function(e){ convertFiles(e.dataTransfer.files); });
+  document.addEventListener('dragover', function(e){ e.preventDefault(); });
+  document.addEventListener('drop', function(e){ e.preventDefault(); if (e.target !== drop && !drop.contains(e.target)) convertFiles(e.dataTransfer.files); });
+  // 화면이 뜨면 미리 엔진을 받아 둠 (첫 변환을 빠르게)
+  if ('requestIdleCallback' in window) requestIdleCallback(function(){ engine().catch(function(){}); }); else setTimeout(function(){ engine().catch(function(){}); }, 800);
+})();
+</script>
+</body>
+</html>

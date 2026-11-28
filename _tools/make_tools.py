@@ -6,6 +6,8 @@
 #   CAM: 조각기 CAM(coupon-tool/cam.html)
 #   2026-11-28 OFFICE 추가: STAR Works 오피스 뷰어(tools/office/doc_viewer.html, 한글·워드·엑셀·PPT·PDF) — CAD 처럼 새 창으로 엶
 #        서비스 워커 범위를 /tools/office/ 로 따로 둠(CAD 뷰어 /tools/ 와 겹치면 서로 덮어씀). 원본: 대표 PC 00-유투브제작\doc_viewer
+#   2026-11-28 OFFICE 에 워드→한글 변환기(tools/convert/docx2hwpx.html) — Pyodide 로 docx_to_hwpx.py 를 브라우저에서 실행, 아래 창에 바로 띄움
+#        tools/office/ 밖에 둠(오피스 뷰어 서비스 워커가 파일을 붙잡지 않게). 기획서: _tools/홈페이지_워드한글변환기_v1.md
 #   시편 주문·CAM 은 위에서 누르면 아래 창에서 바로 실행 — 한 번 연 프로그램은 바꿔도 그대로 남음
 # 사용: python3 _tools/make_tools.py
 #   - tools.html · ko/tools.html 생성
@@ -39,12 +41,16 @@ PROGRAMS = [
      "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
                 ("Open straight from the Downloads folder", "Multi-sheet drawings: jump sheet to sheet", "Endpoint-snap measuring"))},
     # 2026-11-28 대표 지시: 문서 뷰어를 OFFICE 로 (이름 「STAR Works 오피스 뷰어」, 아이콘 초록 띠 OFFICE)
-    {"key": "office", "group": "office", "name": ("오피스 뷰어 (한글·MS)", "Office Viewer (HWP·MS)"),
+    {"key": "office", "group": "office", "name": ("오피스 뷰어 (한글·MS)", "Office Viewer"),
      "desc": ("한글 · 워드 · 엑셀 · PPT · PDF", "HWP · Word · Excel · PPT · PDF"),
      "fmt": "HWP · HWPX · PDF · DOC · DOCX · PPT · PPTX · XLS · XLSX · CSV",
      "src": "tools/office/doc_viewer.html", "launch": True,
      "points": (("한글 HWP·HWPX 바로 보기", "카카오톡으로 받은 파일 [공유]로 열기", "서버 전송 없이 기기 안에서만 처리"),
                 ("Korean HWP · HWPX files", "Open files shared from KakaoTalk", "Processed on your device only — no upload"))},
+    # 2026-11-28 대표 지시: 워드→한글 변환기(원본 대표 PC docx_hwpx_converter, 변환 엔진만 공개 — 키 보관함·AI·분석기는 PC 전용)
+    {"key": "convert", "group": "office", "name": ("워드→한글 변환", "Word → HWP"),
+     "desc": ("DOCX → HWPX · 기기 안 변환", "DOCX → HWPX · on-device"),
+     "src": "tools/convert/docx2hwpx.html"},
     {"key": "coupon", "group": "order", "name": ("시편 설계·견적", "Specimen Design"),
      "desc": ("물성 예상 · 재단 배치 · 주문", "Properties · nesting · order"),
      "src": "coupon-tool.html", "embed": "?embed=1", "both": True},
@@ -57,7 +63,7 @@ CSS = """body{margin:0;background:#F4F6F9;word-break:keep-all;overflow-wrap:anyw
 a{color:inherit;text-decoration:none}
 .hub{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .tbar{background:#FFFFFF;border-bottom:1px solid #DCE1E8;flex:none}
-.tbar-in{max-width:1640px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.tbar-in{max-width:1880px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
 .tgrp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tgl{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;padding-right:2px}
 .tgl b{font-size:15px;font-weight:900;letter-spacing:1px;color:#1E3252}
@@ -92,7 +98,7 @@ a{color:inherit;text-decoration:none}
 .tl-pts{margin:22px 0 0;padding:16px 0 0;border-top:1px solid #DCE1E8;list-style:none;font-size:14px;line-height:1.9;color:#5A6478}
 .nojs{padding:24px;color:#FFFFFF}
 .nojs a{color:#9CC3E8;text-decoration:underline}
-@media (min-width:821px) and (max-width:1680px){.tgl small{display:none}.tprog .tpd{display:none}.tprog{min-height:44px}}
+@media (min-width:821px) and (max-width:2100px){.tgl small{display:none}.tprog .tpd{display:none}.tprog{min-height:44px}}
 @media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tbar-in{display:grid;grid-template-columns:repeat(2,1fr);align-items:stretch}.tgrp{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:4px;min-width:0}.tgl{flex-direction:row;align-items:baseline;gap:6px;padding:0}.tgl b{font-size:13px;white-space:nowrap}.tgl small{display:none}.tprog{flex:1;min-height:44px;padding:6px 6px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{grid-column:1/-1;justify-self:end;margin-left:0;min-height:34px;padding:4px 12px;font-size:13px}.tlaunch{padding:14px;align-items:flex-start}.tl-in{padding:26px 18px}.tl-in h1{font-size:23px}.tl-go{font-size:18px}}
 """
 
@@ -175,8 +181,8 @@ def build(L):
     pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False), **({"launch": 1} if p.get("launch") else {})} for p in PROGRAMS}
     nojs = " · ".join(f'<a href="{src(L, p, False)}">{e(p["name"][ix])}</a>' for p in PROGRAMS)
     title = t(L, "스타웍스 툴", "STAR Works — Tools")
-    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: 한글·워드·엑셀·PPT·PDF 문서 뷰어 / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
-             "CAD: 2D/3D viewer (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: HWP · Word · Excel · PPT · PDF viewer / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
+    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: 한글·워드·엑셀·PPT·PDF 문서 뷰어·워드→한글 변환 / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
+             "CAD: 2D/3D viewer (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: HWP · Word · Excel · PPT · PDF viewer, Word → HWP converter / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
     js = JS.replace("@PR@", json.dumps(pr, ensure_ascii=False)).replace("@KEEP@", PS.KEEP_HASH_JS)
     return PS.head(L, FILE, title, desc, CSS, robots="") + f"""
 <body>
@@ -186,7 +192,7 @@ def build(L):
 <div class="tbar" id="tbar">
 <div class="tbar-in" role="tablist" aria-label="{t(L, "프로그램 선택", "Choose a program")}">
 {bar}
-<a class="topen" id="topen" href="{src(L, PROGRAMS[0], False)}" target="_blank" rel="noopener">{t(L, "새 창으로 열기", "Open in new window")} ↗</a>
+<a class="topen" id="topen" href="{src(L, PROGRAMS[0], False)}" target="_blank" rel="noopener">{t(L, "새 창으로 열기", "New window")} ↗</a>
 </div>
 </div>
 <main class="stage" id="stage" aria-live="polite">
