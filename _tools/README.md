@@ -48,7 +48,7 @@
 - CAD 뷰어(`tools/`)는 자기 매니페스트(`tools/manifest.webmanifest`, 이름 「스타웍스 CAD」) — 따로 설치되는 앱(카카오톡 공유 받기 포함)
   - 설치 아이콘 `tools/icons/viewer-*.png` = 스타웍스 로고 + 아래 하늘색 띠 "CAD" (`make_icons.py`가 같이 만듦, 2026-11-27 대표 지시)
 - 제품군 아이콘 (2026-11-28 대표 지시: 프로그램끼리 헷갈리지 않게, 앞으로 CAD·CAM·CAE 계속 추가) — `make_icons.py`의 `PRODUCTS` 표
-  - 같은 틀(남색 + 별 마크 + STAR Works) + 아래 띠 색·글자만 다름: CAD 하늘 #0EA5E9 · OFFICE 초록 #16A34A · CAM 주황 #F97316(예약) · CAE 보라 #9333EA(예약)
+  - 같은 틀(남색 + 별 마크 + STAR Works) + 아래 띠 색·글자만 다름: CAD 하늘 #0EA5E9 · OFFICE 초록 #16A34A · CAM 주황 #F97316(예약) · CAE 보라 #9333EA(예약) · CAD-PRO 금색 #FACC15 + 남색 글자(예약, 안티그래비티 개발 중)
   - 뷰어 머리 배지도 같은 색. 새 프로그램 = 표에 한 줄(출력 폴더) 후 `make_icons.py` 실행
   - 기획서: `_tools/홈페이지_오피스뷰어_이름·아이콘_v1.md`
   - 짧은 주소 `starworks-korea.github.io/cad` → `tools/sw_viewer.html` (`cad/index.html`, 영상 설명란·안내용)

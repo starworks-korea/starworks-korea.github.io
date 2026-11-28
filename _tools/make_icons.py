@@ -10,7 +10,7 @@
 #   제품 설치 아이콘(PRODUCTS 표) = 스타웍스 로고 + 아래 띠(제품 글자·색)
 #     tools/icons/viewer-*.png              CAD 뷰어 — 하늘 띠 "CAD" (2026-11-27 대표 지시: 설치해도 스타웍스 로고가 보이게)
 #     tools/office/web/icons/doc-*.png      오피스 뷰어 — 초록 띠 "OFFICE" (2026-11-28 대표 지시: CAD 와 헷갈리지 않게)
-#     CAM(주황)·CAE(보라)는 예약 — 프로그램이 생기면 PRODUCTS 의 출력 폴더만 채움
+#     CAM(주황)·CAE(보라)·CAD-PRO(금색 띠 + 남색 글자, 안티그래비티 개발 중)는 예약 — 프로그램이 생기면 PRODUCTS 의 출력 폴더만 채움
 import asyncio, io, os, re
 from playwright.async_api import async_playwright
 from PIL import Image
@@ -51,7 +51,9 @@ PRODUCTS = [  # (띠 글자, 띠 색, 출력 폴더(루트 기준), 파일 앞�
     ("OFFICE", "#16A34A", "tools/office/web/icons", "doc"),    # 오피스 뷰어 (초록)
     ("CAM", "#F97316", None, "cam"),                           # 예약 (주황)
     ("CAE", "#9333EA", None, "cae"),                           # 예약 (보라)
+    ("CAD-PRO", "#FACC15", None, "cadpro"),                    # 예약 (금색 띠 + 남색 글자) — 2026-11-28 안티그래비티에서 개발 중
 ]
+TEXT_COLOR = {"CAD-PRO": NAVY}   # 띠 글자색 (없으면 흰색) — CAD-PRO 는 금색 띠라 남색 글자로 CAD 와 확실히 구분
 
 
 def product_icon(label="CAD", color="#0EA5E9", rx=92, k=1.0):
@@ -74,7 +76,7 @@ def product_icon(label="CAD", color="#0EA5E9", rx=92, k=1.0):
         bandsvg = f'<rect x="{(512 - bw) / 2:.1f}" y="{by:.1f}" width="{bw:.1f}" height="{band * 0.8:.1f}" rx="{band * 0.4:.1f}" fill="{color}"/>'
         fs = min(band * 0.8 * 0.66, bw * 0.84 / (n * 0.80))
         ty = by + band * 0.8 * 0.74 if n <= 3 else by + band * 0.8 / 2 + fs * 0.36   # 3글자(CAD)는 예전 위치 그대로
-    text = f'<text x="256" y="{ty:.1f}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="{fs:.1f}" letter-spacing="{fs * 0.08:.1f}" fill="#FFFFFF">{label}</text>'
+    text = f'<text x="256" y="{ty:.1f}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="{fs:.1f}" letter-spacing="{fs * 0.08:.1f}" fill="{TEXT_COLOR.get(label, "#FFFFFF")}">{label}</text>'
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>{clip}</defs>'
             f'<rect width="512" height="512" rx="{rx}" fill="{NAVY}"/>{body}{bandsvg}{text}</svg>')
 
