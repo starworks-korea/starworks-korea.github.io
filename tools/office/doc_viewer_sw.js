@@ -1,5 +1,5 @@
 /**
- * doc_viewer_sw.js — 한눈뷰어 서비스 워커
+ * doc_viewer_sw.js — STAR Works 오피스 뷰어 서비스 워커
  * 1) 안드로이드 PWA share_target (카카오톡·내 파일 [공유] → 로컬 Cache Storage에 임시 보관 후 뷰어 즉시 열람, 서버 전송 0%)
  * 2) 앱 쉘 및 지연 로딩된 PDF.js 오프라인 캐싱 (비행기 모드에서도 즉시 열람)
  */

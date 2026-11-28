@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="theme-color" content="#0b1120">
   <meta name="description" content="설치·보안경고·서버 전송 없이 안드로이드·윈도우·리눅스·맥·아이폰에서 한글(HWP/HWPX)·워드·PDF·파워포인트·엑셀을 0.3초 만에 여는 초경량 통합 문서 뷰어">
-  <title>한눈뷰어 — 초경량 통합 문서 뷰어 (HWP · HWPX · PDF · Word · PPT · Excel)</title>
+  <title>STAR Works 오피스 뷰어 — 한글·워드·PDF·PPT·엑셀 문서 보기 (HWP · HWPX · PDF · Word · PPT · Excel)</title>
   <link rel="manifest" href="web/manifest.webmanifest">
   <link rel="icon" type="image/png" href="web/icons/doc-192.png">
   <link rel="apple-touch-icon" href="web/icons/doc-192.png">
-  <style>/* shell.css — 한눈뷰어 (Android 최우선 · PC/태블릿 적응형 초경량 통합 문서 뷰어) */
+  <style>/* shell.css — STAR Works 오피스 뷰어 (Android 최우선 · PC/태블릿 적응형 초경량 통합 문서 뷰어) */
 :root {
   --bg: #f1f5f9;
   --surface: #ffffff;
@@ -67,10 +67,10 @@ button, input { font-family: inherit; color: inherit; }
   display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 15px;
   letter-spacing: -0.02em; white-space: nowrap; cursor: pointer;
 }
-.brand-dot {
-  width: 26px; height: 26px; border-radius: 8px;
-  background: linear-gradient(135deg, #2563eb, #0ea5e9);
-  color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 900;
+.brand-dot { /* 스타웍스 제품 배지 — 설치 아이콘 띠와 같은 색 (CAD 하늘 · OFFICE 초록 · CAM 주황 · CAE 보라) */
+  height: 26px; padding: 0 8px; border-radius: 6px;
+  background: #16A34A;
+  color: #fff; display: grid; place-items: center; font-size: 11.5px; font-weight: 900; letter-spacing: 0.06em;
 }
 .doc-title-wrap {
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
@@ -481,8 +481,8 @@ button, input { font-family: inherit; color: inherit; }
     <!-- 상단 헤더 -->
     <header class="topbar">
       <div class="brand" id="brandHome" title="처음 화면으로">
-        <span class="brand-dot">한</span>
-        <span class="brand-text">한눈뷰어</span>
+        <span class="brand-dot">OFFICE</span>
+        <span class="brand-text">STAR Works 오피스 뷰어</span>
       </div>
 
       <div class="doc-title-wrap">
@@ -533,7 +533,7 @@ button, input { font-family: inherit; color: inherit; }
       <main class="stage" id="stage">
         <section class="welcome" id="welcomeView">
           <div class="welcome-card">
-            <h1>한눈뷰어 (초경량 통합 문서 뷰어)</h1>
+            <h1>STAR Works 오피스 뷰어</h1>
             <p class="welcome-sub">한글 · 워드 · PDF · 파워포인트 · 엑셀을 설치·로그인 없이 0.3초 만에 엽니다.</p>
 
             <div class="trust-pills">
@@ -584,7 +584,7 @@ button, input { font-family: inherit; color: inherit; }
 
             <div class="pwa-tip">
               <strong>📱 안드로이드 꿀팁:</strong> 크롬 메뉴에서 <strong>「홈 화면에 추가」</strong>를 눌러두면,
-              카카오톡·내 파일에서 문서를 <strong>[공유] → 한눈뷰어</strong>로 바로 열 수 있고 비행기 모드(오프라인)에서도 동작합니다.<br>
+              카카오톡·내 파일에서 문서를 <strong style="white-space:nowrap">[공유] → 스타웍스 OFFICE</strong>로 바로 열 수 있고 비행기 모드(오프라인)에서도 동작합니다.<br>
               <strong>💻 윈도우·리눅스 꿀팁:</strong> 주소창의 <strong>[앱 설치]</strong>를 누르면 미인증 EXE 경고 없이 탐색기에서 바로 열 수 있습니다.
             </div>
           </div>
@@ -4684,7 +4684,7 @@ button, input { font-family: inherit; color: inherit; }
 
 ;
 /**
- * shell.js — 한눈뷰어 메인 컨트롤러 (PWA share_target · file_handlers · 안드로이드 터치 UX · AI Tier 0)
+ * shell.js — STAR Works 오피스 뷰어 메인 컨트롤러 (PWA share_target · file_handlers · 안드로이드 터치 UX · AI Tier 0)
  */
 (function () {
   'use strict';

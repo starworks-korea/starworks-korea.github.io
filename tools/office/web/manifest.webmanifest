@@ -1,13 +1,13 @@
 {
-  "name": "한눈뷰어 — 초경량 통합 문서 뷰어",
-  "short_name": "한눈뷰어",
+  "name": "스타웍스 오피스 뷰어",
+  "short_name": "스타웍스 OFFICE",
   "description": "한글(HWP/HWPX) · 워드 · PDF · 파워포인트 · 엑셀 · CSV 초경량 로컬 문서 뷰어",
   "lang": "ko",
   "start_url": "/tools/office/doc_viewer.html?app=1",
   "scope": "/tools/office/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0b1120",
+  "background_color": "#1E3252",
   "theme_color": "#0b1120",
   "icons": [
     { "src": "icons/doc-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

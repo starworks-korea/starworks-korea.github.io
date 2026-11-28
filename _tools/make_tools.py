@@ -4,6 +4,8 @@
 #        17:59 지시: 도면은 큰 화면에서 → 아래 창에 끼우지 않고 눌러서 새 창(새 탭)으로 엶 (PROGRAMS 의 "launch")
 #   시편 주문: 시편 설계·견적(coupon-tool.html, 따로 둔 페이지)
 #   CAM: 조각기 CAM(coupon-tool/cam.html)
+#   2026-11-28 OFFICE 추가: STAR Works 오피스 뷰어(tools/office/doc_viewer.html, 한글·워드·엑셀·PPT·PDF) — CAD 처럼 새 창으로 엶
+#        서비스 워커 범위를 /tools/office/ 로 따로 둠(CAD 뷰어 /tools/ 와 겹치면 서로 덮어씀). 원본: 대표 PC 00-유투브제작\doc_viewer
 #   시편 주문·CAM 은 위에서 누르면 아래 창에서 바로 실행 — 한 번 연 프로그램은 바꿔도 그대로 남음
 # 사용: python3 _tools/make_tools.py
 #   - tools.html · ko/tools.html 생성
@@ -23,6 +25,7 @@ FILE = "tools.html"
 
 GROUPS = [
     {"key": "cad", "name": ("CAD", "CAD"), "sub": ("도면·3D 보기", "Drawings & 3D")},
+    {"key": "office", "name": ("OFFICE", "OFFICE"), "sub": ("문서 보기", "Documents")},
     {"key": "order", "name": ("시편 주문", "Specimens"), "sub": ("설계·견적·주문", "Design · quote · order")},
     {"key": "cam", "name": ("CAM", "CAM"), "sub": ("조각기 가공", "Router machining")},
 ]
@@ -35,6 +38,13 @@ PROGRAMS = [
      "video": ("https://youtu.be/N5tZ6Nz3il0", "https://youtu.be/G-vAhCOF7eA"),   # 소개 영상(한국어판, 영어판) 2026-11-27
      "points": (("다운로드 · 카카오톡 폴더에서 바로 열기", "여러 장 도면: 시트별 확대", "끝점 기준 치수 재기"),
                 ("Open straight from the Downloads folder", "Multi-sheet drawings: jump sheet to sheet", "Endpoint-snap measuring"))},
+    # 2026-11-28 대표 지시: 문서 뷰어를 OFFICE 로 (이름 「STAR Works 오피스 뷰어」, 아이콘 초록 띠 OFFICE)
+    {"key": "office", "group": "office", "name": ("오피스 뷰어 (한글·MS)", "Office Viewer (HWP·MS)"),
+     "desc": ("한글 · 워드 · 엑셀 · PPT · PDF", "HWP · Word · Excel · PPT · PDF"),
+     "fmt": "HWP · HWPX · PDF · DOC · DOCX · PPT · PPTX · XLS · XLSX · CSV",
+     "src": "tools/office/doc_viewer.html", "launch": True,
+     "points": (("한글 HWP·HWPX 바로 보기", "카카오톡으로 받은 파일 [공유]로 열기", "서버 전송 없이 기기 안에서만 처리"),
+                ("Korean HWP · HWPX files", "Open files shared from KakaoTalk", "Processed on your device only — no upload"))},
     {"key": "coupon", "group": "order", "name": ("시편 설계·견적", "Specimen Design"),
      "desc": ("물성 예상 · 재단 배치 · 주문", "Properties · nesting · order"),
      "src": "coupon-tool.html", "embed": "?embed=1", "both": True},
@@ -47,13 +57,13 @@ CSS = """body{margin:0;background:#F4F6F9;word-break:keep-all;overflow-wrap:anyw
 a{color:inherit;text-decoration:none}
 .hub{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .tbar{background:#FFFFFF;border-bottom:1px solid #DCE1E8;flex:none}
-.tbar-in{max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
+.tbar-in{max-width:1640px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
 .tgrp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tgl{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;padding-right:2px}
 .tgl b{font-size:15px;font-weight:900;letter-spacing:1px;color:#1E3252}
 .tgl small{font-size:11px;color:#5A6478}
 .tsep{width:1px;align-self:stretch;background:#DCE1E8}
-.tprog{display:inline-flex;flex-direction:column;justify-content:center;min-height:48px;padding:6px 16px;border:1px solid #C9D3E0;border-radius:8px;background:#FFFFFF;color:#1E3252;cursor:pointer}
+.tprog{display:inline-flex;flex-direction:column;justify-content:center;min-height:48px;padding:6px 12px;border:1px solid #C9D3E0;border-radius:8px;background:#FFFFFF;color:#1E3252;cursor:pointer}
 .tprog .tpn{font-size:15px;font-weight:700;white-space:nowrap}
 .tprog .tpd{font-size:12px;color:#5A6478;white-space:nowrap}
 .tprog:hover{border-color:#0070C0;color:#0070C0}
@@ -82,7 +92,8 @@ a{color:inherit;text-decoration:none}
 .tl-pts{margin:22px 0 0;padding:16px 0 0;border-top:1px solid #DCE1E8;list-style:none;font-size:14px;line-height:1.9;color:#5A6478}
 .nojs{padding:24px;color:#FFFFFF}
 .nojs a{color:#9CC3E8;text-decoration:underline}
-@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tbar-in{display:grid;grid-template-columns:repeat(3,1fr);align-items:stretch}.tgrp{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:4px;min-width:0}.tgl{flex-direction:row;align-items:baseline;gap:6px;padding:0}.tgl b{font-size:13px;white-space:nowrap}.tgl small{display:none}.tprog{flex:1;min-height:44px;padding:6px 6px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{grid-column:1/-1;justify-self:end;margin-left:0;min-height:34px;padding:4px 12px;font-size:13px}.tlaunch{padding:14px;align-items:flex-start}.tl-in{padding:26px 18px}.tl-in h1{font-size:23px}.tl-go{font-size:18px}}
+@media (min-width:821px) and (max-width:1680px){.tgl small{display:none}.tprog .tpd{display:none}.tprog{min-height:44px}}
+@media (max-width:820px){.hub{height:auto}.stage{flex:none;height:86vh;height:86dvh}.tbar-in{padding:8px 12px;gap:6px}.tbar-in{display:grid;grid-template-columns:repeat(2,1fr);align-items:stretch}.tgrp{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:4px;min-width:0}.tgl{flex-direction:row;align-items:baseline;gap:6px;padding:0}.tgl b{font-size:13px;white-space:nowrap}.tgl small{display:none}.tprog{flex:1;min-height:44px;padding:6px 6px;align-items:center;text-align:center}.tprog .tpn{font-size:14px;white-space:normal}.tprog .tpd{display:none}.tsep{display:none}.topen{grid-column:1/-1;justify-self:end;margin-left:0;min-height:34px;padding:4px 12px;font-size:13px}.tlaunch{padding:14px;align-items:flex-start}.tl-in{padding:26px 18px}.tl-in h1{font-size:23px}.tl-go{font-size:18px}}
 """
 
 JS = """<script>
@@ -153,7 +164,7 @@ def build(L):
     gname = {g["key"]: g["name"][ix] for g in GROUPS}
     launch = "\n".join(
         f'<section class="tlaunch" id="tl-{p["key"]}" aria-label="{e(p["name"][ix])}"><div class="tl-in">'
-        f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p["desc"][0])}</p>'
+        f'<p class="tl-eye">{e(gname[p["group"]])}</p><h1>{e(p["name"][ix])}</h1><p class="tl-fmt">{e(p.get("fmt", p["desc"][0]))}</p>'
         f'<a class="tl-go" href="{src(L, p, False)}" target="_blank" rel="noopener">{t(L, "새 창에서 크게 열기", "Open full size in a new window")} ↗</a>'
         f'<button type="button" class="tl-here" data-embed="{p["key"]}">{t(L, "이 화면에서 열기", "Open here instead")}</button>'
         + (f'<a class="tl-vid" href="{p["video"][ix]}" target="_blank" rel="noopener">▶ {t(L, "무료 · 소개 영상 보기 (3분 반) · 설치 방법", "Free · watch the 3-minute intro video · how to install")}</a>' if p.get("video") else "") +
@@ -164,8 +175,8 @@ def build(L):
     pr = {p["key"]: {"name": p["name"][ix], "src": src(L, p), "open": src(L, p, False), **({"launch": 1} if p.get("launch") else {})} for p in PROGRAMS}
     nojs = " · ".join(f'<a href="{src(L, p, False)}">{e(p["name"][ix])}</a>' for p in PROGRAMS)
     title = t(L, "스타웍스 툴", "STAR Works — Tools")
-    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
-             "CAD: 2D/3D viewer (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
+    desc = t(L, "CAD: 2D·3D 통합 뷰어(DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: 한글·워드·엑셀·PPT·PDF 문서 뷰어 / 시편 주문: 설계·견적 / CAM: 조각기 CAM — 설치 없이 브라우저에서 바로",
+             "CAD: 2D/3D viewer (DWG · DXF · SVG · AI · PDF · STEP · IGES · STL) / OFFICE: HWP · Word · Excel · PPT · PDF viewer / Specimens: design, quote & order / CAM: router CAM — right in your browser, no install")
     js = JS.replace("@PR@", json.dumps(pr, ensure_ascii=False)).replace("@KEEP@", PS.KEEP_HASH_JS)
     return PS.head(L, FILE, title, desc, CSS, robots="") + f"""
 <body>

@@ -13,7 +13,7 @@
   - `lectures.html#rubber` → `playlist.html#lectures-rubber` (유튜브 설명란 옛 링크 보호) — 손으로 고치지 않음
 - 영상 갱신 검사: 새 id가 `playlist.html`·`ko/playlist.html`에 있는지 확인
 
-## 툴 `tools.html` (CAD · 시편 주문 · CAM)
+## 툴 `tools.html` (CAD · OFFICE · 시편 주문 · CAM)
 - CAD: CAD 뷰어(`tools/sw_viewer.html`) — 2D DWG·DXF + 3D STEP·IGES·STL 통합 (2026-11-27, 옛 DXF 뷰어·3D CAD 뷰어를 합침)
   - 파일 열기 버튼: 다운로드 · 카카오톡(폴더 기억) · 다른 위치, 여러 파일 ◀ ▶, 한 파일의 여러 시트 ◀ ▶
   - 겹친 선은 한 개만 표시(도면 겹쳐 열기 기능 없음)
@@ -23,10 +23,16 @@
   - 새 창으로 엶 (2026-11-27 17:59 대표 지시: 도면은 큰 화면에서) — `PROGRAMS`의 `"launch": True`
     - 위 [CAD 뷰어 ↗] 버튼과 아래 여는 화면의 큰 버튼 = 새 탭, 작은 버튼 [이 화면에서 열기] = 예전처럼 아래 창
     - 페이지를 열 때 자동으로 새 창을 띄우지 않음(브라우저가 팝업으로 막음)
+- OFFICE: STAR Works 오피스 뷰어(`tools/office/doc_viewer.html`) — 한글 HWP·HWPX · 워드 · 엑셀 · PPT · PDF · CSV (2026-11-28)
+  - 옛 가칭 「한눈뷰어」 → 대표 지시로 스타웍스 이름. 설치 이름 「스타웍스 오피스 뷰어」·짧은 이름 「스타웍스 OFFICE」
+  - 반드시 `tools/office/` 폴더: 서비스 워커 범위를 `/tools/office/`로 따로 둠(CAD 뷰어의 `/tools/`와 같으면 서로 덮어써 카톡 공유 받기가 깨짐)
+  - `tools/office/web/manifest.webmanifest` 경로는 모두 `/tools/office/…`, PDF 엔진은 `tools/pdfjs/` 함께 씀(뷰어가 주소로 찾아감)
+  - 원본(대표 PC): `D:\\Dropbox\\00-유투브제작\\doc_viewer\\` (`src/` 수정 → `node build.js` → `doc_viewer.html`을 `tools/office/`로 복사)
+  - 새 창으로 엶(`"launch": True`), 여는 화면 형식 줄은 `"fmt"`
 - 시편 주문: 시편 설계·견적(`coupon-tool.html`, 따로 둔 페이지) — 2026-11-27 18:01 대표 지시로 CAM과 분리
 - CAM: 조각기 CAM(`coupon-tool/cam.html`)
 - 시편 주문·CAM은 위 버튼을 누르면 아래 창에서 실행, 한 번 연 프로그램은 다른 것으로 바꿔도 그대로 남음
-- 주소: `tools.html#viewer` · `#coupon` · `#cam` (옛 `#dxf` · `#cad3d` 는 `#viewer` 로), 해시가 없으면 이 브라우저에서 마지막으로 쓴 프로그램
+- 주소: `tools.html#viewer` · `#office` · `#coupon` · `#cam` (옛 `#dxf` · `#cad3d` 는 `#viewer` 로), 해시가 없으면 이 브라우저에서 마지막으로 쓴 프로그램
 - 시편 설계는 툴 안에서 `coupon-tool.html?embed=1`로 열려 사이트 머리글을 숨김 (`make_tools.py`가 넣음)
 - 생성: `python3 _tools/make_tools.py` (프로그램 추가 = `PROGRAMS`에 한 줄)
 - 뷰어 원본(대표 PC): `D:\\Dropbox\\00-유투브제작\\sw_viewer\\` (`src/` 수정 → `node build.js` → `sw_viewer.html`)
@@ -41,6 +47,10 @@
 - 크롬: ⋮ › 전송, 저장, 공유 › [바로가기 만들기] 또는 [페이지를 앱으로 설치] 때 이 아이콘을 씀. 주소를 바탕화면으로 끌어 만든 바로가기(.url)는 브라우저 모양 그대로(사이트에서 못 바꿈)
 - CAD 뷰어(`tools/`)는 자기 매니페스트(`tools/manifest.webmanifest`, 이름 「스타웍스 CAD」) — 따로 설치되는 앱(카카오톡 공유 받기 포함)
   - 설치 아이콘 `tools/icons/viewer-*.png` = 스타웍스 로고 + 아래 하늘색 띠 "CAD" (`make_icons.py`가 같이 만듦, 2026-11-27 대표 지시)
+- 제품군 아이콘 (2026-11-28 대표 지시: 프로그램끼리 헷갈리지 않게, 앞으로 CAD·CAM·CAE 계속 추가) — `make_icons.py`의 `PRODUCTS` 표
+  - 같은 틀(남색 + 별 마크 + STAR Works) + 아래 띠 색·글자만 다름: CAD 하늘 #0EA5E9 · OFFICE 초록 #16A34A · CAM 주황 #F97316(예약) · CAE 보라 #9333EA(예약)
+  - 뷰어 머리 배지도 같은 색. 새 프로그램 = 표에 한 줄(출력 폴더) 후 `make_icons.py` 실행
+  - 기획서: `_tools/홈페이지_오피스뷰어_이름·아이콘_v1.md`
   - 짧은 주소 `starworks-korea.github.io/cad` → `tools/sw_viewer.html` (`cad/index.html`, 영상 설명란·안내용)
 - 기획서: `_tools/홈페이지_바로가기_아이콘_v1.md`
 
